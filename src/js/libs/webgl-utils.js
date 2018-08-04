@@ -114,7 +114,7 @@ export function attachUniforms(gl, program) {
  */
 export function createShader(gl, type, source) {
     if (/\.(vs|fs|glsl)$/ig.test(source)) {
-        source = require(`../glsl/${source}`);
+        // source = require(`../glsl/${source}`);
     }
     var shader = gl.createShader(type);
     gl.shaderSource(shader, source);
