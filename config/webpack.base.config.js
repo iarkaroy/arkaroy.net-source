@@ -17,6 +17,12 @@ module.exports = {
                     fallback: "style-loader",
                     use: "css-loader!postcss-loader!sass-loader",
                 })
+            },
+            {
+                test: /\.(jpe?g|png|gif|woff2?)$/,
+                use: {
+                    loader: 'file-loader'
+                }
             }
         ]
     },
