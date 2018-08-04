@@ -1,15 +1,47 @@
-*,*::before,*::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
+
 html {
-    font-family: 'Barlow', sans-serif;
-    font-size: 16px;
-    color: $textColor;
+    font-family: $font-family;
+    font-size: $font-size;
+    color: $text-color;
 }
+
 body {
     font-family: inherit;
     font-size: inherit;
     color: inherit;
     margin: 0;
     padding: 0;
+    background-color: $background-color;
+}
+
+b,
+strong {
+    font-weight: 700;
+}
+
+img {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+}
+
+a:active,
+a:focus,
+input:active,
+input:focus,
+select:active,
+select:focus,
+textarea:active,
+textarea:focus {
+    outline: 0;
+}
+
+canvas {
+    display: block;
 }
