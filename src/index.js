@@ -1,16 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
+import "regenerator-runtime/runtime";
 
 import './scss/index.scss';
 
-const App = () => {
-    return (
-        <div>
-            <h3>Our Application Is Alive</h3>
-            <p>This isn’t reality. This — is fantasy.</p>
-            <p>Yes I am quoting Star Trek I cant help it.</p>
-        </div>
-    );
-}
+import App from './js/app';
 
 render(<App />, document.getElementById('app'));
