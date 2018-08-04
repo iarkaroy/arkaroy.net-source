@@ -8,6 +8,7 @@ export function loadImage(src) {
         var img = new Image();
         img.onload = () => resolve(img);
         img.onerror = reject;
+        img.crossOrigin = 'anonymous';
         img.src = src;
     });
 }
