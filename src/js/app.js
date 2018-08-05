@@ -29,12 +29,33 @@ uniform sampler2D u_texture2;
 uniform sampler2D u_disp;
 uniform vec2 u_resolution;
 
+uniform float dispFactor;
+
+const float PI = 3.141592653589793238;
+
+mat2 getRotM(float angle) {
+    float s = sin(angle);
+    float c = cos(angle);
+    return mat2(c, -s, s, c);
+}
+
 void main() {
     vec2 div = 1.0 / u_resolution.xy;
     vec2 uv = gl_FragCoord.xy * div;
     uv.y = 1.0 - uv.y;
-    vec4 color = texture2D(u_disp, uv);
-    gl_FragColor = color;
+
+    float angle1 = PI / 4.0;
+    float angle2 = PI / 4.0;
+    float intensity1 = 0.1;
+    float intensity2 = 0.1;
+
+    vec4 disp = texture2D(u_disp, uv);
+    vec2 dispVec = vec2(disp.r, disp.g);
+    vec2 distortedPosition1 = uv + getRotM(angle1) * dispVec * intensity1 * dispFactor;
+    vec2 distortedPosition2 = uv + getRotM(angle2) * dispVec * intensity2 * (1.0 - dispFactor);
+    vec4 _texture1 = texture2D(u_texture1, distortedPosition1);
+    vec4 _texture2 = texture2D(u_texture2, distortedPosition2);
+    gl_FragColor = mix(_texture1, _texture2, dispFactor);
 }
 `;
 
@@ -60,7 +81,7 @@ class App extends Component {
         }, err => {
             console.log("Something went wrong: ", err);
         });
-        this._displacementCanvas = await displacementCanvas();
+        this._displacementCanvas = await displacementCanvas(9);
         this.initWebGL();
     }
 
@@ -77,16 +98,28 @@ class App extends Component {
         this.texture1 = glUtils.texture(this.gl, width, height, canvases[0]);
         this.texture2 = glUtils.texture(this.gl, width, height, canvases[1]);
         this.dispTexture = glUtils.texture(this.gl, width, height, this._displacementCanvas);
+        this.dispFactor = 0.0;
 
+        requestAnimationFrame(this.loop);
+    };
+
+    loop = () => {
+        requestAnimationFrame(this.loop);
+        this.dispFactor += 0.01;
+        if (this.dispFactor > 1) this.dispFactor = 1.0;
+        // console.log(this.dispFactor);
+        const width = window.innerWidth;
+        const height = window.innerHeight;
         this.gl.useProgram(this.program);
         this.texture1.bind(0, this.program.u_texture1);
         this.texture2.bind(1, this.program.u_texture2);
         this.dispTexture.bind(2, this.program.u_disp);
         this.buffer.data(QUAD, this.program.a_position, 2);
         this.gl.uniform2fv(this.program.u_resolution, new Float32Array([width, height]));
+        this.gl.uniform1f(this.program.dispFactor, this.dispFactor);
         glUtils.reset(this.gl, width, height, true);
         this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, QUAD.length / 2);
-    };
+    }
 
     prepareCanvases = async () => {
         const projects = this.getProjects();
