@@ -205,7 +205,7 @@ function animate(options = {}) {
     if (animations.length > 0) {
         requestAnimationFrame(tick);
     }
-    console.log(animation);
+
     return animation;
 }
 
