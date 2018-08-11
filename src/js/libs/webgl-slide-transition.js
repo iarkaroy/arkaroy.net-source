@@ -40,8 +40,8 @@ void main() {
     vec2 uv = gl_FragCoord.xy * div;
     uv.y = 1.0 - uv.y;
 
-    float angle1 = PI / 4.0;
-    float angle2 = PI / 4.0;
+    float angle1 = 3.0 * PI / 4.0;
+    float angle2 = angle1;
     float intensity1 = 0.1;
     float intensity2 = 0.1;
 
@@ -76,6 +76,8 @@ class SlideTransition {
         animate({
             targets: this.dispFactor,
             pos: 1,
+            duration: duration,
+            easing: 'quintInOut',
             update: () => {
                 this.render();
             }
