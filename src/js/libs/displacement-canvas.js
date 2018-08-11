@@ -1,6 +1,6 @@
 import { loadImage } from './load-image';
 
-export const displacementCanvas = async (name = null) => {
+export const displacementCanvas = async (name = null, width, height) => {
     var dispImage = require('../../images/displacement/01.jpg');
     switch (name) {
         case '01':
@@ -42,8 +42,8 @@ export const displacementCanvas = async (name = null) => {
     }
     const img = await loadImage(dispImage);
     const ctx = document.createElement('canvas').getContext('2d');
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
+    ctx.canvas.width = width;
+    ctx.canvas.height = height;
     ctx.fillStyle = ctx.createPattern(img, "repeat");
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     return ctx.canvas;
