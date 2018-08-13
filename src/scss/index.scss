@@ -3,10 +3,51 @@
 @import "_reset";
 @import "_header";
 
-.home-info {
+.project-info {
     display: block;
     position: fixed;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    left: 0;
+    width: 100%;
+    transform: translate(0, -50%);
+    text-align: left;
+    padding: 2rem 6rem;
+    transition: all 0.6s ease;
+    opacity: 1;
+    h1,
+    h2 {
+        margin: 0.4rem;
+        padding: 0;
+        font-weight: 500;
+    }
+    h1 {
+        font-size: 8rem;
+        font-weight: 700;
+        max-width: 50%;
+        line-height: 9rem;
+        &.op {
+            font-size: 3rem;
+            font-weight: 500;
+            line-height: 4rem;
+        }
+    }
+    h2 {
+        font-size: 2rem;
+        /*
+        overflow: hidden;
+        span {
+            display: block;
+            animation: move-up 1.2s cubic-bezier(.4,-0.25,.6,1.25) forwards;
+        }
+        */
+    }
+    &.fading {
+        opacity: 0;
+        left: -10px
+    }
+}
+@keyframes move-up {
+    100% {
+        transform: translateY(-100%);
+    }
 }
