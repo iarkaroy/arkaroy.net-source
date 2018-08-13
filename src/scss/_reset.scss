@@ -8,6 +8,7 @@ html {
     font-family: $font-family;
     font-size: $font-size;
     color: $text-color;
+    line-height: 1.4;
 }
 
 body {
@@ -16,6 +17,7 @@ body {
     color: inherit;
     margin: 0;
     padding: 0;
+    line-height: inherit;
     background-color: $background-color;
 }
 
