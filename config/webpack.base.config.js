@@ -1,7 +1,11 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
+    output: {
+        publicPath: '/'
+    },
     module: {
         rules: [
             {
@@ -43,6 +47,9 @@ module.exports = {
             template: './src/index.html',
             filename: './index.html'
         }),
-        new ExtractTextPlugin('style.css')
+        new ExtractTextPlugin('style.css'),
+        new CopyWebpackPlugin([
+            { from: 'data/images', to: 'images' }
+        ])
     ]
 }

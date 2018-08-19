@@ -3,10 +3,17 @@
   "version": "1.0.0",
   "description": "Source code for arkaroy.net",
   "main": "index.js",
+  "private": true,
+  "homepage": "/",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "webpack-dev-server --mode development --config config/webpack.base.config.js --hot --history-api-fallback",
-    "build": "webpack --mode production --config config/webpack.prod.config.js --env.NODE_ENV=production --progress"
+    "generate": "node generate-json.js",
+    "serve": "npm run generate && webpack-dev-server --mode development --config config/webpack.base.config.js --hot --history-api-fallback",
+    "build": "rm -rf dist && npm run generate && webpack --mode production --config config/webpack.prod.config.js --env.NODE_ENV=production --progress",
+    "postbuild": "react-snap"
+  },
+  "reactSnap": {
+    "source": "dist"
   },
   "browserslist": [
     "> 5%",
@@ -22,7 +29,6 @@
   "bugs": {
     "url": "https://github.com/iarkaroy/arkaroy.net-source/issues"
   },
-  "homepage": "https://github.com/iarkaroy/arkaroy.net-source#readme",
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.56",
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.56",
@@ -46,6 +52,7 @@
     "@iarkaroy/utils": "^0.2.0",
     "autoprefixer": "^9.1.0",
     "babel-loader": "^8.0.0-beta.4",
+    "copy-webpack-plugin": "^4.5.2",
     "css-loader": "^1.0.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.11",
@@ -53,6 +60,7 @@
     "node-sass": "^4.9.2",
     "optimize-css-assets-webpack-plugin": "^5.0.0",
     "postcss-loader": "^2.1.6",
+    "react-snap": "^1.10.1",
     "regenerator-runtime": "^0.12.1",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.21.0",
@@ -64,9 +72,10 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "prismic-javascript": "^1.5.0",
+    "gray-matter": "^4.0.1",
     "react": "^16.4.2",
-    "react-dom": "^16.4.2"
+    "react-dom": "^16.4.2",
+    "remark": "^9.0.0",
+    "remark-html": "^8.0.0"
   }
 }
