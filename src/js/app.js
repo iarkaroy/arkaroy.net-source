@@ -1,9 +1,4 @@
 import React, { Component } from 'react';
-import Prismic from 'prismic-javascript';
-import { cover, contain } from './libs/canvas-background-size';
-import { loadImage } from './libs/load-image';
-import { displacementCanvas } from './libs/displacement-canvas';
-import SlideTransition from './libs/webgl-slide-transition';
 
 import HeaderComponent from './components/shared/header.component';
 import HomePage from './pages/home.page';

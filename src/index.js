@@ -1,9 +1,15 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { render, hydrate } from 'react-dom';
 import "regenerator-runtime/runtime";
 
 import './scss/index.scss';
 
 import App from './js/app';
 
-render(<App />, document.getElementById('app'));
+const root = document.getElementById('app');
+
+if (root.hasChildNodes()) {
+    hydrate(<App />, root);
+} else {
+    render(<App />, root);
+}

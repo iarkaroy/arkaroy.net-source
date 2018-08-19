@@ -1,9 +1,9 @@
 @import "_variable";
 @import "_font";
 @import "_reset";
+@import "_mixin";
 @import "_header";
-
-.project-info {
+.project-home {
     display: block;
     position: fixed;
     top: 50%;
@@ -12,8 +12,15 @@
     transform: translate(0, -50%);
     text-align: left;
     padding: 2rem 6rem;
-    transition: all 0.6s ease;
+    transition-property: visibility, opacity;
+    transition-timing-function: linear;
+    transition-duration: 0s, 0.5s;
+    transition-delay: 0.5s, 0.5s;
     opacity: 1;
+    visibility: visible;
+    a {
+        display: block;
+    }
     h1,
     h2 {
         margin: 0.4rem;
@@ -25,7 +32,7 @@
         font-weight: 700;
         max-width: 50%;
         line-height: 9rem;
-        &.op {
+        &.front {
             font-size: 3rem;
             font-weight: 500;
             line-height: 4rem;
@@ -33,21 +40,8 @@
     }
     h2 {
         font-size: 2rem;
-        /*
-        overflow: hidden;
-        span {
-            display: block;
-            animation: move-up 1.2s cubic-bezier(.4,-0.25,.6,1.25) forwards;
-        }
-        */
     }
-    &.fading {
-        opacity: 0;
-        left: -10px
-    }
-}
-@keyframes move-up {
-    100% {
-        transform: translateY(-100%);
+    &.invisible {
+        transition-delay: 0.5s, 0s;
     }
 }

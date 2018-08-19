@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import Prismic from 'prismic-javascript';
-import Project from '../models/project.model';
 import { displacementCanvas } from '../libs/displacement-canvas';
 import SlideTransition from '../libs/webgl-slide-transition';
 import { imgToCanvas } from '../libs/img-to-canvas';
-
-const introGreet = 'Hi, there!';
-const introAbout = 'I\'m Arka Roy, a full stack web developer, focusing on responsive web design and web application development.';
+import ProjectPreviewComponent from '../components/project/preview.component';
+import jsonData from '../../../data/data.json';
 
 class HomePage extends Component {
 
@@ -15,22 +12,23 @@ class HomePage extends Component {
         this.state = {
             width: 0,
             height: 0,
-            subtitle: introGreet,
-            title: introAbout,
-            fading: false
+            projects: [],
+            selected: 0
         };
-        this._projects = [];
-        this._selectedProject = -1;
+
         this._displacementCanvas = null;
         this._transition = null;
-        this._homeCanvas = null;
+        this._canvases = [];
     }
 
     componentDidMount() {
         window.addEventListener('resize', this.handleResize);
         document.addEventListener('keydown', this.handleKeyDown);
         this.handleResize();
-        this.prepareProjects();
+        // this.prepareProjects();
+        this.setState({
+            projects: jsonData.projects
+        });
     }
 
     componentWillUnmount() {
@@ -39,6 +37,14 @@ class HomePage extends Component {
     }
 
     gotoNext = () => {
+        var { selected, projects } = this.state;
+        var next = selected + 1;
+        if (next >= projects.length) {
+            next = 0;
+        }
+        this._transition.transit(this._canvases[selected], this._canvases[next], this._displacementCanvas, 1000);
+        this.setState({ selected: next });
+        /*
         if (this._selectedProject < this._projects.length - 1) {
             const nextProject = this._selectedProject + 1;
             const from = this._selectedProject < 0 ? this._homeCanvas : this._projects[this._selectedProject].canvas;
@@ -49,9 +55,11 @@ class HomePage extends Component {
             this.updateInfo(nextTitle, nextSubtitle);
             this._selectedProject = nextProject;
         }
+        */
     };
 
     gotoPrev = () => {
+        /*
         if (this._selectedProject > -1) {
             const nextProject = this._selectedProject - 1;
             const from = this._projects[this._selectedProject].canvas;
@@ -62,36 +70,13 @@ class HomePage extends Component {
             this.updateInfo(nextTitle, nextSubtitle);
             this._selectedProject = nextProject;
         }
-    };
-
-    updateInfo(title, subtitle) {
-        this.setState({fading:true});
-        setTimeout(()=>{
-            this.setState({
-                title,
-                subtitle,
-                fading: false
-            });
-        }, 600);
-    }
-
-    updateH2 = (newText) => {
-        const currText = this._h2.textContent;
-        this._h2.innerHTML = `<span>${currText}</span><span>${newText}</span>`;
-        setTimeout(() => {
-            this._h2.innerHTML = newText;
-        }, 1200);
+        */
     };
 
     renderCurrSlide = () => {
-        if (this._selectedProject < 0) {
-            // Home
-            if (this._homeCanvas) {
-                this._transition.render(this._homeCanvas);
-            }
-        } else {
-            // Project
-
+        const { selected } = this.state;
+        if (this._canvases[selected]) {
+            this._transition.render(this._canvases[selected]);
         }
     }
 
@@ -112,9 +97,7 @@ class HomePage extends Component {
             } else {
                 this._transition = new SlideTransition(this.canvas, width, height);
             }
-
-            this.prepareHomeCanvas();
-            this.renderCurrSlide();
+            this.prepareCanvases();
         });
     };
 
@@ -129,48 +112,40 @@ class HomePage extends Component {
         }
     };
 
-    getProjects = () => {
-        return new Promise((resolve, reject) => {
-            var apiEndpoint = "https://iarkaroy.cdn.prismic.io/api/v2";
-            Prismic.getApi(apiEndpoint).then(api => {
-                return api.query(""); // An empty query will return all the documents
-            }).then(response => {
-                resolve(response.results);
-            }, reject);
-        });
+    prepareCanvases = () => {
+        const { projects } = this.state;
+        for (let i = 0; i < projects.length; ++i) {
+            const src = `/images/${projects[i].data.thumb}`;
+            this.prepareCanvas(src, i);
+        }
     };
 
-    prepareProjects = () => {
-        this.getProjects().then(data => {
-            var projectsData = data.filter(d => {
-                return d.type === 'project';
-            });
-            var projects = [];
-            for (let i = 0; i < projectsData.length; ++i) {
-                var project = Project.fromJson(projectsData[i]);
-                projects.push(project);
-            }
-            this._projects = projects;
-        });
-    };
-
-    prepareHomeCanvas = () => {
+    prepareCanvas = (src, index) => {
         const { width, height } = this.state;
-        imgToCanvas(require('../../images/bg.jpg'), width, height).then(canvas => {
-            this._homeCanvas = canvas;
+        imgToCanvas(src, width, height, true).then(canvas => {
+            this._canvases[index] = canvas;
             this.renderCurrSlide();
-        }, console.log);
+        });
     };
 
     render() {
-        const { width, height, title, subtitle, fading } = this.state;
+        const { width, height, projects, selected } = this.state;
         return (
             <main>
                 <canvas ref={o => { this.canvas = o }} width={width} height={height} />
-                <div className={fading ? 'project-info fading' : 'project-info'}>
-                    <h2>{subtitle}</h2>
-                    <h1 className={this._selectedProject < 0 ? 'op' : ''}>{title}</h1>
-                </div>
+                
+                    {projects.map((project, index) => {
+                        return <ProjectPreviewComponent
+                            key={index}
+                            title={project.data.title}
+                            slug={project.data.slug}
+                            image={project.data.thumb}
+                            category={project.data.categories.join(', ')}
+                            front={index === 0}
+                            selected={index === selected}
+                        />;
+                    })}
+                
             </main>
         );
     }
