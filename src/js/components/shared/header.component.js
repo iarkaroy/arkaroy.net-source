@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import { Link } from '../../router';
 
 class HeaderComponent extends Component {
 
     render() {
         return (
             <header className="header">
-                <a href="#"><strong>Arka Roy</strong></a>
+                <Link to="/"><strong>Arka Roy</strong></Link>
             </header>
         );
     }
