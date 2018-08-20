@@ -1,6 +1,17 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Link } from '../../router';
 
 class ProjectPreviewComponent extends Component {
+
+    static propTypes = {
+        title: PropTypes.string.isRequired,
+        slug: PropTypes.string.isRequired,
+        category: PropTypes.string.isRequired,
+        image: PropTypes.string.isRequired,
+        front: PropTypes.bool,
+        selected: PropTypes.bool
+    };
 
     render() {
         const { title, slug, category, image, front = false, selected = false } = this.props;
@@ -17,11 +28,11 @@ class ProjectPreviewComponent extends Component {
         }
         return (
             <div className={classes}>
-                <a href={`/projects/${slug}`}>
+                <Link to={`/projects/${slug}`}>
                     <img className="hidden" src={imageSrc} />
                     <h2>{category}</h2>
                     <h1>{title}</h1>
-                </a>
+                </Link>
             </div>
         );
     }
