@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { displacementCanvas } from '../libs/displacement-canvas';
 import SlideTransition from '../libs/webgl-slide-transition';
-import { imgToCanvas } from '../libs/img-to-canvas';
+import { imgToCanvas } from '../libs/imgToCanvas';
 import ProjectPreviewComponent from '../components/project/preview.component';
 import jsonData from '../../../data/data.json';
 
