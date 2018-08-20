@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
 import HeaderComponent from './components/shared/header.component';
-import HomePage from './pages/home.page';
+import { Router, Outlet } from './router';
 
+import routes from './router/routes';
 
 class App extends Component {
 
@@ -12,10 +13,10 @@ class App extends Component {
 
     render() {
         return (
-            <div>
+            <Router>
                 <HeaderComponent />
-                <HomePage />
-            </div>
+                <Outlet routes={routes} />
+            </Router>
         );
     }
 
