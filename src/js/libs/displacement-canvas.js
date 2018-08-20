@@ -1,4 +1,4 @@
-import { loadImage } from './load-image';
+import { loadImage } from './loadImage';
 
 export const displacementCanvas = async (name = null, width, height) => {
     var dispImage = require('../../images/displacement/01.jpg');

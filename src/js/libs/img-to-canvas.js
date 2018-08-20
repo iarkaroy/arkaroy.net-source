@@ -1,4 +1,4 @@
-import { loadImage } from "./load-image";
+import { loadImage } from "./loadImage";
 import { cover } from "./canvas-background-size";
 
 
