@@ -4,6 +4,7 @@ import SlideTransition from '../libs/webgl-slide-transition';
 import { imgToCanvas } from '../libs/imgToCanvas';
 import ProjectPreviewComponent from '../components/project/preview.component';
 import jsonData from '../../../data/data.json';
+import EventSystem from '../libs/event-system';
 
 const TRANSITION_DURATION = 1000;
 
@@ -21,6 +22,11 @@ class HomePage extends Component {
         this._displacementCanvas = null;
         this._transition = null;
         this._canvases = [];
+    }
+
+    componentWillLeave(callback) {
+        EventSystem.publish('overlay:open');
+        setTimeout(callback, 1200);
     }
 
     componentDidMount() {
