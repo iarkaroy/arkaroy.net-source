@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import HeaderComponent from './components/shared/header.component';
+import {Header} from './components/shared';
 import { Router, Outlet } from './router';
 
 import routes from './router/routes';
@@ -14,7 +14,7 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <HeaderComponent />
+                <Header />
                 <Outlet routes={routes} />
             </Router>
         );
