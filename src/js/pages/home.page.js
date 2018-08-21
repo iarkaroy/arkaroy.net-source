@@ -5,6 +5,8 @@ import { imgToCanvas } from '../libs/imgToCanvas';
 import ProjectPreviewComponent from '../components/project/preview.component';
 import jsonData from '../../../data/data.json';
 
+const TRANSITION_DURATION = 1000;
+
 class HomePage extends Component {
 
     constructor(props) {
@@ -25,7 +27,6 @@ class HomePage extends Component {
         window.addEventListener('resize', this.handleResize);
         document.addEventListener('keydown', this.handleKeyDown);
         this.handleResize();
-        // this.prepareProjects();
         this.setState({
             projects: jsonData.projects
         });
@@ -42,35 +43,18 @@ class HomePage extends Component {
         if (next >= projects.length) {
             next = 0;
         }
-        this._transition.transit(this._canvases[selected], this._canvases[next], this._displacementCanvas, 1000);
+        this._transition.transit(this._canvases[selected], this._canvases[next], this._displacementCanvas, TRANSITION_DURATION);
         this.setState({ selected: next });
-        /*
-        if (this._selectedProject < this._projects.length - 1) {
-            const nextProject = this._selectedProject + 1;
-            const from = this._selectedProject < 0 ? this._homeCanvas : this._projects[this._selectedProject].canvas;
-            const to = this._projects[nextProject].canvas;
-            this._transition.transit(from, to, this._displacementCanvas, 1200);
-            const nextTitle = this._projects[nextProject].title;
-            const nextSubtitle = this._projects[nextProject].title + ' sub';
-            this.updateInfo(nextTitle, nextSubtitle);
-            this._selectedProject = nextProject;
-        }
-        */
     };
 
     gotoPrev = () => {
-        /*
-        if (this._selectedProject > -1) {
-            const nextProject = this._selectedProject - 1;
-            const from = this._projects[this._selectedProject].canvas;
-            const to = nextProject < 0 ? this._homeCanvas : this._projects[nextProject].canvas;
-            this._transition.transit(from, to, this._displacementCanvas, 1200);
-            const nextTitle = nextProject < 0 ? introAbout : this._projects[nextProject].title;
-            const nextSubtitle = nextProject < 0 ? introGreet : this._projects[nextProject].title + ' sub';
-            this.updateInfo(nextTitle, nextSubtitle);
-            this._selectedProject = nextProject;
+        var { selected, projects } = this.state;
+        var prev = selected - 1;
+        if (prev < 0) {
+            prev = projects.length - 1;
         }
-        */
+        this._transition.transit(this._canvases[selected], this._canvases[prev], this._displacementCanvas, TRANSITION_DURATION);
+        this.setState({ selected: prev });
     };
 
     renderCurrSlide = () => {
@@ -133,19 +117,19 @@ class HomePage extends Component {
         return (
             <main>
                 <canvas ref={o => { this.canvas = o }} width={width} height={height} />
-                
-                    {projects.map((project, index) => {
-                        return <ProjectPreviewComponent
-                            key={index}
-                            title={project.data.title}
-                            slug={project.data.slug}
-                            image={project.data.thumb}
-                            category={project.data.categories.join(', ')}
-                            front={index === 0}
-                            selected={index === selected}
-                        />;
-                    })}
-                
+
+                {projects.map((project, index) => {
+                    return <ProjectPreviewComponent
+                        key={index}
+                        title={project.data.title}
+                        slug={project.data.slug}
+                        image={project.data.thumb}
+                        category={project.data.categories.join(', ')}
+                        front={index === 0}
+                        selected={index === selected}
+                    />;
+                })}
+
             </main>
         );
     }
