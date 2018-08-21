@@ -37,11 +37,22 @@
             font-weight: 500;
             line-height: 4rem;
         }
+        @media screen and (max-width: 60rem) {
+            max-width: 100%;
+            font-size: 4rem;
+            line-height: 5rem;
+        }
     }
     h2 {
         font-size: 2rem;
+        @media screen and (max-width: 60rem) {
+            font-size: 1.4rem;
+        }
     }
     &.invisible {
         transition-delay: 0.5s, 0s;
+    }
+    @media screen and (max-width: 60rem) {
+        padding: 2rem 4rem;
     }
 }
