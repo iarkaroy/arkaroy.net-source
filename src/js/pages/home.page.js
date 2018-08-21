@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { displacementCanvas } from '../libs/displacement-canvas';
+import { displacementCanvas } from '../libs/displacementCanvas';
 import SlideTransition from '../libs/webgl-slide-transition';
 import { imgToCanvas } from '../libs/imgToCanvas';
 import ProjectPreviewComponent from '../components/project/preview.component';
