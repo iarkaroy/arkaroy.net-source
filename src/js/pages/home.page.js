@@ -43,7 +43,10 @@ class HomePage extends Component {
         document.removeEventListener('keydown', this.handleKeyDown);
     }
 
-    gotoNext = () => {
+    gotoNext = (event) => {
+        if(event) {
+            event.preventDefault();
+        }
         var { selected, projects } = this.state;
         var next = selected + 1;
         if (next >= projects.length) {
@@ -53,7 +56,10 @@ class HomePage extends Component {
         this.setState({ selected: next });
     };
 
-    gotoPrev = () => {
+    gotoPrev = (event) => {
+        if(event) {
+            event.preventDefault();
+        }
         var { selected, projects } = this.state;
         var prev = selected - 1;
         if (prev < 0) {
@@ -135,6 +141,15 @@ class HomePage extends Component {
                         selected={index === selected}
                     />;
                 })}
+
+                <div className="project-nav">
+                    <a href="#" className="prev" onClick={this.gotoPrev}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z" /></svg>
+                    </a>
+                    <a href="#" className="next" onClick={this.gotoNext}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z" /></svg>
+                    </a>
+                </div>
 
             </main>
         );
