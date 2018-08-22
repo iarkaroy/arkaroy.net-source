@@ -44,7 +44,7 @@ class HomePage extends Component {
     }
 
     gotoNext = (event) => {
-        if(event) {
+        if (event) {
             event.preventDefault();
         }
         var { selected, projects } = this.state;
@@ -57,7 +57,7 @@ class HomePage extends Component {
     };
 
     gotoPrev = (event) => {
-        if(event) {
+        if (event) {
             event.preventDefault();
         }
         var { selected, projects } = this.state;
@@ -78,11 +78,18 @@ class HomePage extends Component {
 
     handleResize = (event) => {
         this.setState({
+            width: 0,
+            height: 0
+        }, this.updateDimension);
+    };
+
+    updateDimension = () => {
+        this.setState({
             width: window.innerWidth,
             height: window.innerHeight
         }, () => {
             const { width, height } = this.state;
-
+            
             displacementCanvas(9, width, height).then(canvas => {
                 this._displacementCanvas = canvas;
             }, console.log);
@@ -91,7 +98,7 @@ class HomePage extends Component {
                 this._transition.width = width;
                 this._transition.height = height;
             } else {
-                this._transition = new SlideTransition(this.canvas, width, height);
+                this._transition = this.canvas ? new SlideTransition(this.canvas, width, height) : null;
             }
             this.prepareCanvases();
         });
