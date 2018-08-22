@@ -85,7 +85,7 @@ class HomePage extends Component {
         }, () => {
             const { width, height } = this.state;
 
-            displacementCanvas(9, width, height).then(canvas => {
+            displacementCanvas(4, width, height).then(canvas => {
                 this._displacementCanvas = canvas;
             }, console.log);
 
