@@ -7,9 +7,12 @@ import './scss/index.scss';
 import App from './js/app';
 
 const root = document.getElementById('app');
+render(<App />, root);
 
+/*
 if (root.hasChildNodes()) {
     hydrate(<App />, root);
 } else {
     render(<App />, root);
 }
+*/
