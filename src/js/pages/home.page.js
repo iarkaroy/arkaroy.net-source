@@ -22,6 +22,8 @@ class HomePage extends Component {
         this._displacementCanvas = null;
         this._transition = null;
         this._canvases = [];
+        this._preparing = false;
+        this._prepareQueue = 0;
     }
 
     componentWillLeave(callback) {
@@ -32,10 +34,10 @@ class HomePage extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.handleResize);
         document.addEventListener('keydown', this.handleKeyDown);
-        this.handleResize();
         this.setState({
             projects: jsonData.projects
         });
+        this.handleResize();
     }
 
     componentWillUnmount() {
@@ -69,13 +71,6 @@ class HomePage extends Component {
         this.setState({ selected: prev });
     };
 
-    renderCurrSlide = () => {
-        const { selected } = this.state;
-        if (this._canvases[selected]) {
-            this._transition.render(this._canvases[selected]);
-        }
-    }
-
     handleResize = (event) => {
         this.setState({
             width: 0,
@@ -89,7 +84,7 @@ class HomePage extends Component {
             height: window.innerHeight
         }, () => {
             const { width, height } = this.state;
-            
+
             displacementCanvas(9, width, height).then(canvas => {
                 this._displacementCanvas = canvas;
             }, console.log);
@@ -100,35 +95,57 @@ class HomePage extends Component {
             } else {
                 this._transition = this.canvas ? new SlideTransition(this.canvas, width, height) : null;
             }
-            this.prepareCanvases();
+
+            this._prepareQueue++;
+            if (!this._preparing) {
+                this.prepareCanvases();
+            }
         });
     };
 
     handleKeyDown = (event) => {
         switch (event.keyCode) {
+
+            // Up arrow
             case 38:
                 this.gotoPrev();
                 break;
+
+            // Down arrow
             case 40:
                 this.gotoNext();
                 break;
         }
     };
 
-    prepareCanvases = () => {
-        const { projects } = this.state;
+    prepareCanvases = async () => {
+
+        // If no pending queue, exit
+        if (this._prepareQueue < 1) {
+            return false;
+        }
+
+        // Set flag to prevent being called before finishing
+        this._preparing = true;
+        this._prepareQueue--;
+
+        const { projects, width, height, selected } = this.state;
+        this._canvases = [];
+
         for (let i = 0; i < projects.length; ++i) {
             const src = `/images/${projects[i].data.thumb}`;
-            this.prepareCanvas(src, i);
+            const canvas = await imgToCanvas(src, width, height, true);
+            this._canvases[i] = canvas;
         }
-    };
 
-    prepareCanvas = (src, index) => {
-        const { width, height } = this.state;
-        imgToCanvas(src, width, height, true).then(canvas => {
-            this._canvases[index] = canvas;
-            this.renderCurrSlide();
-        });
+        // Render currently selected one
+        this._transition.render(this._canvases[selected]);
+
+        // Set flag to be available to be called
+        this._preparing = false;
+
+        // Recursive call to handle pending queue
+        this.prepareCanvases();
     };
 
     render() {
