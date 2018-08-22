@@ -5,9 +5,9 @@
  */
 export function loadImage(src) {
     return new Promise((resolve, reject) => {
-        var img = new Image();
+        const img = new Image();
         img.onload = () => resolve(img);
-        img.onerror = reject;
+        img.onerror = () => reject(img);
         img.crossOrigin = 'anonymous';
         img.src = src;
     });
