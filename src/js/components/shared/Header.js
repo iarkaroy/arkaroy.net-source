@@ -10,6 +10,7 @@ class Header extends Component {
         EventSystem.subscribe('overlay:toggle', this.toggleOverlay);
         EventSystem.subscribe('overlay:open', this.openOverlay);
         EventSystem.subscribe('overlay:close', this.closeOverlay);
+        EventSystem.subscribe('overlay:block', this.blockOverlay);
     }
 
     toggleOverlay = () => {
@@ -31,6 +32,10 @@ class Header extends Component {
             return false;
         }
         this.overlay.close();
+    };
+
+    blockOverlay = () => {
+        this.overlay.block();
     };
 
     render() {
