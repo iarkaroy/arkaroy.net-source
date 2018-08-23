@@ -28,16 +28,23 @@ class HomePage extends Component {
 
     componentWillLeave(callback) {
         EventSystem.publish('overlay:open');
-        setTimeout(callback, 1200);
+        setTimeout(callback, 850);
     }
 
     componentDidMount() {
+        EventSystem.publish('overlay:block');
+
         window.addEventListener('resize', this.handleResize);
         document.addEventListener('keydown', this.handleKeyDown);
         this.setState({
             projects: jsonData.projects
         });
         this.handleResize();
+        if (navigator.userAgent !== 'ReactSnap') {
+            setTimeout(() => {
+                EventSystem.publish('overlay:close');
+            }, 200);
+        }
     }
 
     componentWillUnmount() {

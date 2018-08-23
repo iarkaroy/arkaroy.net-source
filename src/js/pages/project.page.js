@@ -1,11 +1,15 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import EventSystem from '../libs/event-system';
 
 class ProjectPage extends Component {
 
     componentDidMount() {
-        EventSystem.publish('overlay:close');
-        console.log(11);
+        EventSystem.publish('overlay:block');
+        if (navigator.userAgent !== 'ReactSnap') {
+            setTimeout(() => {
+                EventSystem.publish('overlay:close');
+            }, 200);
+        }
     }
 
     render() {
