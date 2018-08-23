@@ -94,6 +94,12 @@ class ShapeOverlays {
             this.isAnimating = false;
         }
     }
+
+    block() {
+        for (var i = 0; i < this.path.length; i++) {
+            this.path[i].setAttribute('d', 'M 0 0 V 100 C 50 100 50 100 100 100 V 0 H 0');
+        }
+    }
 }
 
 export default ShapeOverlays;
