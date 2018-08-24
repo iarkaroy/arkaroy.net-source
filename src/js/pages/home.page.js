@@ -25,6 +25,7 @@ class HomePage extends Component {
         this._canvases = [];
         this._preparing = false;
         this._prepareQueue = 0;
+        this._inTransition = false;
     }
 
     componentWillLeave(callback) {
@@ -36,11 +37,13 @@ class HomePage extends Component {
         EventSystem.publish('overlay:block');
 
         window.addEventListener('resize', this.handleResize);
+        document.addEventListener('wheel', this.handleWheel);
         document.addEventListener('keydown', this.handleKeyDown);
         this.setState({
             projects: jsonData.projects
         });
         this.handleResize();
+
         if (!isPrerender()) {
             setTimeout(() => {
                 EventSystem.publish('overlay:close');
@@ -50,32 +53,83 @@ class HomePage extends Component {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.handleResize);
+        document.removeEventListener('wheel', this.handleWheel);
         document.removeEventListener('keydown', this.handleKeyDown);
     }
+
+    handleScroll = event => {
+        console.log(event);
+    };
+
+    handleWheel = event => {
+        //console.log('wheel', event);
+        const { deltaY } = event;
+        if (deltaY > 20) {
+            this.gotoNext();
+        }
+        if (deltaY < -20) {
+            this.gotoPrev();
+        }
+    };
 
     gotoNext = (event) => {
         if (event) {
             event.preventDefault();
         }
+
+        // Do nothing if in the middle of a transition
+        if (this._inTransition) {
+            return false;
+        }
+
+        // Set transition flag so that another transition cannot be triggered
+        this._inTransition = true;
+
         var { selected, projects } = this.state;
         var next = selected + 1;
         if (next >= projects.length) {
             next = 0;
         }
-        this._transition.transit(this._canvases[selected], this._canvases[next], this._displacementCanvas, TRANSITION_DURATION);
+
+        // Transition
+        const from = this._canvases[selected];
+        const to = this._canvases[next];
+        const callback = () => {
+            this._inTransition = false;
+        };
+        this._transition.transit(from, to, this._displacementCanvas, TRANSITION_DURATION, callback);
+
         this.setState({ selected: next });
+
     };
 
     gotoPrev = (event) => {
         if (event) {
             event.preventDefault();
         }
+
+        // Do nothing if in the middle of a transition
+        if (this._inTransition) {
+            return false;
+        }
+
+        // Set transition flag so that another transition cannot be triggered
+        this._inTransition = true;
+
         var { selected, projects } = this.state;
         var prev = selected - 1;
         if (prev < 0) {
             prev = projects.length - 1;
         }
-        this._transition.transit(this._canvases[selected], this._canvases[prev], this._displacementCanvas, TRANSITION_DURATION);
+
+        // Transition
+        const from = this._canvases[selected];
+        const to = this._canvases[prev];
+        const callback = () => {
+            this._inTransition = false;
+        };
+        this._transition.transit(from, to, this._displacementCanvas, TRANSITION_DURATION, callback);
+        
         this.setState({ selected: prev });
     };
 
