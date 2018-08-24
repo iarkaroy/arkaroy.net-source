@@ -68,7 +68,7 @@ class SlideTransition {
         this.dispFactor = { pos: 0 };
     }
 
-    transit(from, to, disp, duration = 1000) {
+    transit(from, to, disp, duration = 1000, callback = null) {
         this.texture1 = glUtils.texture(this.gl, this.width, this.height, from);
         this.texture2 = glUtils.texture(this.gl, this.width, this.height, to);
         this.disp = glUtils.texture(this.gl, this.width, this.height, disp);
@@ -80,7 +80,8 @@ class SlideTransition {
             easing: 'quintInOut',
             update: () => {
                 this.render();
-            }
+            },
+            complete: callback
         });
     }
 
