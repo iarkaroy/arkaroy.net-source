@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import EventSystem from '../libs/event-system';
+import { isPrerender } from '../libs/isPrerender';
 
 class ProjectPage extends Component {
 
     componentDidMount() {
         EventSystem.publish('overlay:block');
-        if (navigator.userAgent !== 'ReactSnap') {
+        if (!isPrerender()) {
             setTimeout(() => {
                 EventSystem.publish('overlay:close');
             }, 200);

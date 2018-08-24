@@ -5,6 +5,7 @@ import { imgToCanvas } from '../libs/imgToCanvas';
 import ProjectPreviewComponent from '../components/project/preview.component';
 import jsonData from '../../../data/data.json';
 import EventSystem from '../libs/event-system';
+import { isPrerender } from '../libs/isPrerender';
 
 const TRANSITION_DURATION = 1000;
 
@@ -40,7 +41,7 @@ class HomePage extends Component {
             projects: jsonData.projects
         });
         this.handleResize();
-        if (navigator.userAgent !== 'ReactSnap') {
+        if (!isPrerender()) {
             setTimeout(() => {
                 EventSystem.publish('overlay:close');
             }, 200);
