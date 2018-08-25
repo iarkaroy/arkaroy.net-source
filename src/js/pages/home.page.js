@@ -3,7 +3,7 @@ import { displacementCanvas } from '../libs/displacementCanvas';
 import SlideTransition from '../libs/webgl-slide-transition';
 import { imgToCanvas } from '../libs/imgToCanvas';
 import ProjectPreviewComponent from '../components/project/preview.component';
-import jsonData from '../../../data/data.json';
+import * as store from '../store';
 import EventSystem from '../libs/event-system';
 import { isPrerender } from '../libs/isPrerender';
 import { swipeDetector } from '../libs/swipeDetector';
@@ -54,7 +54,7 @@ class HomePage extends Component {
             })
         }
         this.setState({
-            projects: jsonData.projects
+            projects: store.projects()
         });
         this.handleResize();
 
