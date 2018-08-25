@@ -19,6 +19,7 @@ body {
     padding: 0;
     line-height: inherit;
     background-color: $background-color;
+    touch-action: none;
 }
 
 b,
