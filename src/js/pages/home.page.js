@@ -6,6 +6,7 @@ import ProjectPreviewComponent from '../components/project/preview.component';
 import jsonData from '../../../data/data.json';
 import EventSystem from '../libs/event-system';
 import { isPrerender } from '../libs/isPrerender';
+import { swipeDetector } from '../libs/swipeDetector';
 
 const TRANSITION_DURATION = 1000;
 
@@ -39,6 +40,19 @@ class HomePage extends Component {
         window.addEventListener('resize', this.handleResize);
         document.addEventListener('wheel', this.handleWheel);
         document.addEventListener('keydown', this.handleKeyDown);
+        if ('ontouchmove' in document) {
+            swipeDetector.bind();
+            swipeDetector.onSwipe(direction => {
+                switch (direction) {
+                    case 'up':
+                        this.gotoPrev();
+                        break;
+                    case 'dn':
+                        this.gotoNext();
+                        break;
+                }
+            })
+        }
         this.setState({
             projects: jsonData.projects
         });
@@ -55,6 +69,9 @@ class HomePage extends Component {
         window.removeEventListener('resize', this.handleResize);
         document.removeEventListener('wheel', this.handleWheel);
         document.removeEventListener('keydown', this.handleKeyDown);
+        if ('ontouchmove' in document) {
+            swipeDetector.unbind();
+        }
     }
 
     handleScroll = event => {
@@ -129,7 +146,7 @@ class HomePage extends Component {
             this._inTransition = false;
         };
         this._transition.transit(from, to, this._displacementCanvas, TRANSITION_DURATION, callback);
-        
+
         this.setState({ selected: prev });
     };
 
