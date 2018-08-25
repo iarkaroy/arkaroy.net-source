@@ -11,7 +11,27 @@ class Header extends Component {
         EventSystem.subscribe('overlay:open', this.openOverlay);
         EventSystem.subscribe('overlay:close', this.closeOverlay);
         EventSystem.subscribe('overlay:block', this.blockOverlay);
+        window.addEventListener('scroll', this.handleScroll);
     }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleScroll);
+    }
+
+    handleScroll = event => {
+        const { scrollY } = window;
+        const rect = this.logoBack.getBoundingClientRect();
+        const { top, height } = rect;
+        const winHeight = window.innerHeight;
+        const edge = winHeight - (top + height);
+        const diff = scrollY - edge;
+        if (diff >= 0) {
+            const newHeight = height - diff;
+            this.logoFront.style.height = newHeight >= 0 ? `${newHeight}px` : 0;
+        } else {
+            this.logoFront.style.height = `100%`;
+        }
+    };
 
     toggleOverlay = () => {
         if (this.overlay.isAnimating) {
@@ -41,7 +61,10 @@ class Header extends Component {
     render() {
         return (
             <header className="header">
-                <Link to="/"><strong>Arka Roy</strong></Link>
+                <Link to="/" className="home-link">
+                    <span ref={o => { this.logoBack = o; }}>Arka Roy</span>
+                    <span className="front" ref={o => { this.logoFront = o; }}>Arka Roy</span>
+                </Link>
                 <svg className="shape-overlays" viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
                     <path className="shape-overlays__path"></path>
                     <path className="shape-overlays__path"></path>
