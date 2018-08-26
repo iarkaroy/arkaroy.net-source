@@ -9,6 +9,8 @@ html {
     font-size: $font-size;
     color: $text-color;
     line-height: 1.4;
+    width: 100%;
+    overflow: hidden;
 }
 
 body {
@@ -19,6 +21,10 @@ body {
     padding: 0;
     line-height: inherit;
     background-color: $background-color;
+    height: 100%;
+    position: fixed;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
 }
 
 b,
