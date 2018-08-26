@@ -11,20 +11,20 @@ class Header extends Component {
         EventSystem.subscribe('overlay:open', this.openOverlay);
         EventSystem.subscribe('overlay:close', this.closeOverlay);
         EventSystem.subscribe('overlay:block', this.blockOverlay);
-        window.addEventListener('scroll', this.handleScroll);
+        document.body.addEventListener('scroll', this.handleScroll);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this.handleScroll);
+        document.body.removeEventListener('scroll', this.handleScroll);
     }
 
     handleScroll = event => {
-        const { scrollY } = window;
+        const { scrollTop } = document.body;
         const rect = this.logoBack.getBoundingClientRect();
         const { top, height } = rect;
         const winHeight = window.innerHeight;
         const edge = winHeight - (top + height);
-        const diff = scrollY - edge;
+        const diff = scrollTop - edge;
         if (diff >= 0) {
             const newHeight = height - diff;
             this.logoFront.style.height = newHeight >= 0 ? `${newHeight}px` : 0;
