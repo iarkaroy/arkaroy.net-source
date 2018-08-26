@@ -8,7 +8,11 @@ class ProjectPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            project: null
+            project: null,
+            next: null,
+            prev: null,
+            width: 0,
+            height: 0
         };
     }
 
@@ -21,13 +25,16 @@ class ProjectPage extends Component {
         }
         const slug = this.props.params.id
         this.setState({
-            project: store.project(slug)
+            project: store.project(slug),
+            next: store.next(slug),
+            prev: store.prev(slug)
         });
-        document.body.classList.add('project');
+        window.addEventListener('resize', this.handleResize);
+        this.handleResize();
     }
 
     componentWillUnmount() {
-        document.body.classList.remove('project');
+        window.removeEventListener('resize', this.handleResize);
     }
 
     componentWillLeave(callback) {
@@ -35,26 +42,35 @@ class ProjectPage extends Component {
         setTimeout(callback, 850);
     }
 
+    handleResize = event => {
+        this.setState({
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
+    }
+
     render() {
-        const { project } = this.state;
+        const { project, width, height } = this.state;
         if (!project) {
             return null;
         }
-        console.log(project);
+        
         const { data } = project;
         const thumb = `/images/${data.thumb}`;
         return (
             <main className="project-single">
-                <div className="background" style={{ backgroundImage: `url('${thumb}')` }}></div>
-                <div className="header">
+                <div className="background" style={{ backgroundImage: `url('${thumb}')`, height: height }}></div>
+                <div className="header" style={{ height: height }}>
                     <div className="content">
                         <h1>{data.title}</h1>
-                        <h4>{data.overview}</h4>
+                        {data.overview && <h4>{data.overview}</h4>}
                     </div>
                 </div>
-                <div className="body" dangerouslySetInnerHTML={{ __html: project.html }}></div>
-                <div className="body" dangerouslySetInnerHTML={{ __html: project.html }}></div>
-                <div className="body" dangerouslySetInnerHTML={{ __html: project.html }}></div>
+                <div className="body">
+                    {data.summary && <div className="summary">{data.summary}</div>}
+                    <div className="content" dangerouslySetInnerHTML={{ __html: project.html }}></div>
+                </div>
+                
             </main>
         );
     }
