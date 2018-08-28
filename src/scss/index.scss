@@ -3,6 +3,7 @@
 @import "_reset";
 @import "_mixin";
 @import "_header";
+
 .project-home {
     display: block;
     position: fixed;
@@ -28,6 +29,7 @@
         margin: 0.4rem;
         padding: 0;
         font-weight: 500;
+        text-shadow: 0 0 30px rgba($color: #000000, $alpha: 0.3), 0 0 15px rgba($color: #000000, $alpha: 0.2);
     }
     h1 {
         font-size: 8rem;
@@ -155,6 +157,7 @@
             font-weight: 500;
             margin: 0;
             padding: 0;
+            text-shadow: 0 0 30px rgba($color: #000000, $alpha: 0.3), 0 0 15px rgba($color: #000000, $alpha: 0.2);
         }
         h1 {
             font-size: 8rem;
@@ -192,7 +195,7 @@
             font-size: 1.6rem;
             img {
                 display: inline-block;
-                box-shadow: 0 0 5px rgba(0, 0, 0, 0.3)
+                box-shadow: 0 0 40px rgba($color: #000000, $alpha: 0.3), 0 0 15px rgba($color: #000000, $alpha: 0.2);
             }
         }
     }

@@ -43,18 +43,18 @@ class ProjectPage extends Component {
     }
 
     handleResize = event => {
+        const { clientWidth, clientHeight } = window.document.documentElement;
         this.setState({
-            width: window.innerWidth,
-            height: window.innerHeight
+            width: clientWidth,
+            height: clientHeight
         });
     }
 
     render() {
-        const { project, width, height } = this.state;
+        const { project, next, prev, width, height } = this.state;
         if (!project) {
             return null;
         }
-        
         const { data } = project;
         const thumb = `/images/${data.thumb}`;
         return (
@@ -70,7 +70,7 @@ class ProjectPage extends Component {
                     {data.summary && <div className="summary">{data.summary}</div>}
                     <div className="content" dangerouslySetInnerHTML={{ __html: project.html }}></div>
                 </div>
-                
+
             </main>
         );
     }
