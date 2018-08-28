@@ -14,8 +14,10 @@ header.header {
     .home-link {
         display: inline-block;
         position: relative;
-        font-weight: 700;
-        color: #222222;
+        font-weight: 600;
+        font-size: 1.6rem;
+        text-transform: uppercase;
+        color: $background-color;
         span {
             display: block;
         }
