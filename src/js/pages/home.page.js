@@ -7,6 +7,7 @@ import * as store from '../store';
 import EventSystem from '../libs/event-system';
 import { isPrerender } from '../libs/isPrerender';
 import { swipeDetector } from '../libs/swipeDetector';
+import { Helmet } from 'react-helmet';
 
 const TRANSITION_DURATION = 1000;
 
@@ -231,6 +232,11 @@ class HomePage extends Component {
         const { width, height, projects, selected } = this.state;
         return (
             <main>
+
+                <Helmet>
+                    <title>Arka Roy - Web Developer</title>
+                </Helmet>
+
                 <canvas ref={o => { this.canvas = o }} width={width} height={height} />
 
                 <div className="project-nav">

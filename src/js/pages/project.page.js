@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import EventSystem from '../libs/event-system';
 import { isPrerender } from '../libs/isPrerender';
 import * as store from '../store';
+import { Helmet } from 'react-helmet';
 
 class ProjectPage extends Component {
 
@@ -59,6 +60,9 @@ class ProjectPage extends Component {
         const thumb = `/images/${data.thumb}`;
         return (
             <main className="project-single">
+                <Helmet>
+                    <title>{data.title} - Arka Roy - Web Developer</title>
+                </Helmet>
                 <div className="background" style={{ backgroundImage: `url('${thumb}')`, height: height }}></div>
                 <div className="header" style={{ height: height }}>
                     <div className="content">
