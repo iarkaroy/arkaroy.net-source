@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from '../../router';
 import ShapeOverlays from '../../libs/shape-overlays';
 import EventSystem from '../../libs/event-system';
+import styles from '../../../scss/index.scss';
 
 class Header extends Component {
 
@@ -60,14 +61,14 @@ class Header extends Component {
 
     render() {
         return (
-            <header className="header">
-                <Link to="/" className="home-link">
+            <header className={styles.siteHeader}>
+                <Link to="/" className={styles.homeLink}>
                     <span ref={o => { this.logoBack = o; }}>Arka Roy</span>
-                    <span className="front" ref={o => { this.logoFront = o; }}>Arka Roy</span>
+                    <span className={styles.front} ref={o => { this.logoFront = o; }}>Arka Roy</span>
                 </Link>
-                <svg className="shape-overlays" viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
-                    <path className="shape-overlays__path"></path>
-                    <path className="shape-overlays__path"></path>
+                <svg className={styles.shapeOverlays} viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
+                    <path></path>
+                    <path></path>
                 </svg>
             </header>
         );

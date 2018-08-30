@@ -1,4 +1,4 @@
-header.header {
+.siteHeader {
     display: block;
     position: fixed;
     width: 100%;
@@ -11,7 +11,7 @@ header.header {
         font-size: 1.8rem;
         padding: 2rem 3rem;
     }
-    .home-link {
+    .homeLink {
         display: inline-block;
         position: relative;
         font-weight: 600;
@@ -30,5 +30,21 @@ header.header {
             color: $text-color;
             overflow: hidden;
         }
+    }
+}
+
+.shapeOverlays {
+	width: 100vw;
+	height: 100vh;
+	pointer-events: none;
+	position: fixed;
+	top: 0;
+    left: 0;
+    z-index: 998;
+    path:nth-of-type(1) {
+        fill: #ffffff;
+    }
+    path:nth-of-type(2) {
+        fill: #dddddd;
     }
 }

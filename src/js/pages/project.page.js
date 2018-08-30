@@ -3,6 +3,7 @@ import EventSystem from '../libs/event-system';
 import { isPrerender } from '../libs/isPrerender';
 import * as store from '../store';
 import { Helmet } from 'react-helmet';
+import styles from '../../scss/index.scss';
 
 class ProjectPage extends Component {
 
@@ -59,20 +60,20 @@ class ProjectPage extends Component {
         const { data } = project;
         const thumb = `/images/${data.thumb}`;
         return (
-            <main className="project-single">
+            <main className={styles.projectSingle}>
                 <Helmet>
                     <title>{data.title} - Arka Roy - Web Developer</title>
                 </Helmet>
-                <div className="background" style={{ backgroundImage: `url('${thumb}')`, height: height }}></div>
-                <div className="header" style={{ height: height }}>
-                    <div className="content">
+                <div className={styles.background} style={{ backgroundImage: `url('${thumb}')`, height: height }}></div>
+                <div className={styles.header} style={{ height: height }}>
+                    <div className={styles.content}>
                         <h1>{data.title}</h1>
                         {data.overview && <h4>{data.overview}</h4>}
                     </div>
                 </div>
-                <div className="body">
-                    {data.summary && <div className="summary">{data.summary}</div>}
-                    <div className="content" dangerouslySetInnerHTML={{ __html: project.html }}></div>
+                <div className={styles.body}>
+                    {data.summary && <div className={styles.summary}>{data.summary}</div>}
+                    <div className={styles.content} dangerouslySetInnerHTML={{ __html: project.html }}></div>
                 </div>
 
             </main>

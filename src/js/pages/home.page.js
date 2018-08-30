@@ -8,6 +8,7 @@ import EventSystem from '../libs/event-system';
 import { isPrerender } from '../libs/isPrerender';
 import { swipeDetector } from '../libs/swipeDetector';
 import { Helmet } from 'react-helmet';
+import styles from '../../scss/index.scss';
 
 const TRANSITION_DURATION = 1000;
 
@@ -239,11 +240,11 @@ class HomePage extends Component {
 
                 <canvas ref={o => { this.canvas = o }} width={width} height={height} />
 
-                <div className="project-nav">
-                    <a href="#" className="prev" onClick={this.gotoPrev}>
+                <div className={styles.projectNavHome}>
+                    <a href="#" className={styles.prev} onClick={this.gotoPrev}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z" /></svg>
                     </a>
-                    <a href="#" className="next" onClick={this.gotoNext}>
+                    <a href="#" className={styles.next} onClick={this.gotoNext}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z" /></svg>
                     </a>
                 </div>
