@@ -7,9 +7,9 @@
     z-index: 99;
     padding: 4rem 6rem;
     font-size: 2rem;
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: $mobile-breakpoint) {
         font-size: 1.8rem;
-        padding: 2rem 3rem;
+        padding: 2rem 2rem;
     }
     .homeLink {
         display: inline-block;

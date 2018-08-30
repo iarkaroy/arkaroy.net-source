@@ -3,6 +3,14 @@ import PropTypes from 'prop-types';
 import { Link } from '../../router';
 import styles from '../../../scss/index.scss';
 
+const classNames = {
+    wrapper: 'project-card--wrapper',
+    link: 'project-card--link',
+    title: 'project-card--title',
+    frontTitle: 'project-card--front-title',
+    subtitle: 'project-card--subtitle',
+};
+
 class ProjectPreviewComponent extends Component {
 
     static propTypes = {
@@ -16,23 +24,23 @@ class ProjectPreviewComponent extends Component {
 
     render() {
         const { title, slug, category, image, front = false, selected = false } = this.props;
-        const classes = selected ? styles.projectCard : [styles.projectCard, styles.invisible].join(' ');
+        const classes = selected ? styles[classNames.wrapper] : [styles[classNames.wrapper], styles.invisible].join(' ');
         const imageSrc = `/images/${image}`;
         if (front) {
             return (
                 <div className={classes}>
                     <img className={styles.hidden} src={imageSrc} />
-                    <h2>{category}</h2>
-                    <h1 className={styles.front}>{title}</h1>
+                    <h2 className={styles[classNames.subtitle]}>{category}</h2>
+                    <h1 className={[styles[classNames.title], styles[classNames.frontTitle]].join(' ')}>{title}</h1>
                 </div>
             );
         }
         return (
             <div className={classes}>
-                <Link to={`/projects/${slug}`}>
+                <Link to={`/projects/${slug}`} className={styles[classNames.link]}>
                     <img className={styles.hidden} src={imageSrc} />
-                    <h2>{category}</h2>
-                    <h1>{title}</h1>
+                    <h2 className={styles[classNames.subtitle]}>{category}</h2>
+                    <h1 className={styles[classNames.title]}>{title}</h1>
                 </Link>
             </div>
         );

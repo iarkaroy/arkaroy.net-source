@@ -12,6 +12,10 @@ import styles from '../../scss/index.scss';
 
 const TRANSITION_DURATION = 1000;
 
+const classNames = {
+    nav: 'project-list--navigation'
+};
+
 class HomePage extends Component {
 
     constructor(props) {
@@ -240,7 +244,7 @@ class HomePage extends Component {
 
                 <canvas ref={o => { this.canvas = o }} width={width} height={height} />
 
-                <div className={styles.projectNavHome}>
+                <div className={styles[classNames.nav]}>
                     <a href="#" className={styles.prev} onClick={this.gotoPrev}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z" /></svg>
                     </a>
