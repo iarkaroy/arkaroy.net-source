@@ -21,7 +21,6 @@ class Outlet extends Component {
         const { history } = router;
         this.history = history;
         this.unlisten = this.history.listen((location, action) => {
-            console.log(location, action);
             if (this.child && this.child.componentWillLeave) {
                 this.child.componentWillLeave(() => {
                     this.forceUpdate();
