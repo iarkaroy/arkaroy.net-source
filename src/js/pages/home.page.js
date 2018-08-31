@@ -13,7 +13,10 @@ import styles from '../../scss/index.scss';
 const TRANSITION_DURATION = 1000;
 
 const classNames = {
-    nav: 'project-list--navigation'
+    nav: 'project-list--navigation',
+    indiWrapper: 'project-list--indicator-wrapper',
+    indiBullet: 'project-list--indicator-bullet',
+    indicator: 'project-list--indicator-selected'
 };
 
 class HomePage extends Component {
@@ -244,14 +247,6 @@ class HomePage extends Component {
 
                 <canvas ref={o => { this.canvas = o }} width={width} height={height} />
 
-                <div className={styles[classNames.nav]}>
-                    <a href="#" className={styles.prev} onClick={this.gotoPrev}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z" /></svg>
-                    </a>
-                    <a href="#" className={styles.next} onClick={this.gotoNext}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z" /></svg>
-                    </a>
-                </div>
 
                 {projects.map((project, index) => {
                     return <ProjectPreviewComponent
@@ -264,6 +259,22 @@ class HomePage extends Component {
                         selected={index === selected}
                     />;
                 })}
+
+                <div className={styles[classNames.nav]}>
+                    <a href="#" className={styles.prev} onClick={this.gotoPrev}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z" /></svg>
+                    </a>
+                    <a href="#" className={styles.next} onClick={this.gotoNext}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z" /></svg>
+                    </a>
+                </div>
+
+                <ul className={selected > 0 ? [styles[classNames.indiWrapper], styles.active].join(' ') : styles[classNames.indiWrapper]}>
+                    {projects.map((project, index) => {
+                        return index > 0 ? <li key={index} className={styles[classNames.indiBullet]}><a href="#"></a></li> : null;
+                    })}
+                    <li className={styles[classNames.indicator]} style={{ top: `${(selected - 1) * 1.8 + 0.6}rem` }}></li>
+                </ul>
 
             </main>
         );
