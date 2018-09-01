@@ -3,6 +3,7 @@ import { Link } from '../../router';
 import ShapeOverlays from '../../libs/shape-overlays';
 import EventSystem from '../../libs/event-system';
 import styles from '../../../scss/index.scss';
+import Logo from './Logo';
 
 class Header extends Component {
 
@@ -63,8 +64,12 @@ class Header extends Component {
         return (
             <header className={styles.siteHeader}>
                 <Link to="/" className={styles.homeLink}>
-                    <span ref={o => { this.logoBack = o; }}>Arka Roy</span>
-                    <span className={styles.front} ref={o => { this.logoFront = o; }}>Arka Roy</span>
+                    <span ref={o => { this.logoBack = o; }}>
+                        <Logo/>
+                    </span>
+                    <span className={styles.front} ref={o => { this.logoFront = o; }}>
+                    <Logo/>
+                    </span>
                 </Link>
                 <svg className={styles.shapeOverlays} viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
                     <path></path>
