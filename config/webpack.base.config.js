@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const incstr = require('incstr');
 
 const createUniqueIdGenerator = () => {
@@ -112,6 +113,13 @@ module.exports = {
         new ExtractTextPlugin('style.css'),
         new CopyWebpackPlugin([
             { from: 'data/images', to: 'images' }
-        ])
+        ]),
+        new ImageminPlugin({
+            disable: process.env.NODE_ENV !== 'production',
+            test: /\.(jpe?g|png|gif|svg)$/i,
+            pngquant: {
+              quality: '95-100'
+            }
+        })
     ]
 }
