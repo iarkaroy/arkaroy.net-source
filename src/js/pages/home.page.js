@@ -34,6 +34,7 @@ class HomePage extends Component {
         this._transition = null;
         this._canvases = [];
         this._preparing = false;
+        this._isReady = false;
         this._prepareQueue = 0;
         this._inTransition = false;
     }
@@ -104,7 +105,7 @@ class HomePage extends Component {
         }
 
         // Do nothing if in the middle of a transition
-        if (this._inTransition) {
+        if (this._inTransition || !this._isReady) {
             return false;
         }
 
@@ -135,7 +136,7 @@ class HomePage extends Component {
         }
 
         // Do nothing if in the middle of a transition
-        if (this._inTransition) {
+        if (this._inTransition || !this._isReady) {
             return false;
         }
 
@@ -231,6 +232,8 @@ class HomePage extends Component {
 
         // Set flag to be available to be called
         this._preparing = false;
+
+        this._isReady = true;
 
         // Recursive call to handle pending queue
         this.prepareCanvases();
