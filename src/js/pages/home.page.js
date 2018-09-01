@@ -90,10 +90,10 @@ class HomePage extends Component {
     handleWheel = event => {
         //console.log('wheel', event);
         const { deltaY } = event;
-        if (deltaY > 20) {
+        if (deltaY > 0) {
             this.gotoNext();
         }
-        if (deltaY < -20) {
+        if (deltaY < 0) {
             this.gotoPrev();
         }
     };
