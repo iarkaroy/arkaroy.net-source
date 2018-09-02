@@ -217,7 +217,7 @@ $indicator-color: #dddddd;
     }
     .body {
         position: relative;
-        background: #f0f0f0;
+        background: #fafafa;
         color: #222222;
         padding: 6rem 0;
         .summary {
@@ -232,10 +232,90 @@ $indicator-color: #dddddd;
             max-width: 1040px;
             padding: 0 2rem;
             font-size: 1.6rem;
-            img {
-                display: inline-block;
-                box-shadow: 0 0 40px rgba($color: #000000, $alpha: 0.3), 0 0 15px rgba($color: #000000, $alpha: 0.2);
-            }
+            margin-bottom: 6rem;
+        }
+    }
+}
+
+.project-meta--wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: auto;
+    padding: 0 2rem;
+    margin-bottom: 6rem;
+}
+.project-meta--info {
+    width: 30%;
+    h4, h5 {
+        font-weight: normal;
+        margin: 0;
+        padding: 0;
+    }
+    h4 {
+        font-size: 1.8rem;
+        font-weight: 500;
+    }
+    h5 {
+        font-size: 1.4rem;
+        text-transform: uppercase;
+    }
+}
+
+.next-project--wrapper {
+    @extend .container-lg;
+}
+.next-project--info-wrapper {
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(100%);
+}
+.next-project--info {
+    position: relative;
+    display: block;
+    padding: 3rem 6rem;
+    background: rgba($color: #000000, $alpha: 0.4);
+    color: #ffffff;
+    strong {
+        display: block;
+        font-size: 1.4rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+    h3, h4 {
+        margin: 0;
+        padding: 0;
+    }
+    h3 {
+        font-size: 3.6rem;
+        font-weight: 700;
+    }
+    h4 {
+        font-size: 1.8rem;
+        font-weight: 500;
+    }
+    svg {
+        position: absolute;
+        right: 6rem;
+        top: 50%;
+        transform: translate(0, -50%);
+        fill: #ffffff;
+    }
+    @media screen and (max-width: $mobile-breakpoint) {
+        text-align: center;
+        padding: 2rem 3rem;
+        svg {
+            display: none;
+        }
+        strong {
+            font-size: 1.2rem;
+        }
+        h3 {
+            font-size: 2.4rem;
+        }
+        h4 {
+            font-size: 1.6rem;
         }
     }
 }
