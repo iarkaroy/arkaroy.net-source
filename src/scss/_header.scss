@@ -14,18 +14,10 @@
     .homeLink {
         display: inline-block;
         position: relative;
-        font-weight: 600;
-        font-size: 1.6rem;
-        text-transform: uppercase;
-        span, svg {
+        font-size: 4rem;
+        color: $background-color;
+        span {
             display: block;
-        }
-        svg {
-            width: 4rem;
-            height: 4rem;
-        }
-        path {
-            fill: $background-color;
         }
         .front {
             position: absolute;
@@ -33,10 +25,11 @@
             left: 0;
             width: 100%;
             height: 100%;
+            color: $text-color;
             overflow: hidden;
-            path {
-                fill: $text-color;
-            }
+        }
+        @media screen and (max-width: $mobile-breakpoint) {
+            font-size: 2.8rem;
         }
     }
 }

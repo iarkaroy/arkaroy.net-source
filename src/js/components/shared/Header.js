@@ -64,17 +64,18 @@ class Header extends Component {
         return (
             <header className={styles.siteHeader}>
                 <Link to="/" className={styles.homeLink}>
-                    <span ref={o => { this.logoBack = o; }}>
-                        <Logo/>
+                    <span className={styles.back} ref={o => { this.logoBack = o; }}>
+                        <i className={styles.logo} />
                     </span>
                     <span className={styles.front} ref={o => { this.logoFront = o; }}>
-                    <Logo/>
+                        <i className={styles.logo} />
                     </span>
                 </Link>
                 <svg className={styles.shapeOverlays} viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
                     <path></path>
                     <path></path>
                 </svg>
+
             </header>
         );
     }
