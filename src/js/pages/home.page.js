@@ -9,6 +9,7 @@ import { isPrerender } from '../libs/isPrerender';
 import { swipeDetector } from '../libs/swipeDetector';
 import { Helmet } from 'react-helmet';
 import styles from '../../scss/index.scss';
+import StructuredData from 'react-google-structured-data'
 
 const TRANSITION_DURATION = 1000;
 
@@ -247,6 +248,14 @@ class HomePage extends Component {
                 <Helmet>
                     <title>Arka Roy - Web Developer</title>
                 </Helmet>
+
+                <StructuredData
+                    type="WebSite"
+                    data={{
+                        name: 'Arka Roy',
+                        url: 'https://www.arkaroy.net/'
+                    }}
+                />
 
                 <canvas ref={o => { this.canvas = o }} width={width} height={height} />
 
