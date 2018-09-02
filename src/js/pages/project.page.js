@@ -85,7 +85,7 @@ class ProjectPage extends Component {
             <main className={styles.projectSingle}>
 
                 <Helmet>
-                    <title>{data.title} - Arka Roy - Web Developer</title>
+                    <title>{data.title} &#8211; Arka Roy &#8211; Web Developer</title>
                 </Helmet>
 
                 <div className={styles.background} style={{ backgroundImage: `url('${thumb}')`, height: height }}></div>

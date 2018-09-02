@@ -246,7 +246,7 @@ class HomePage extends Component {
             <main>
 
                 <Helmet>
-                    <title>Arka Roy - Web Developer</title>
+                    <title>Arka Roy &#8211; Web Developer</title>
                 </Helmet>
 
                 <StructuredData
