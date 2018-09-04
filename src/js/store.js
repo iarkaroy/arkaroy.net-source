@@ -8,6 +8,10 @@ export const projects = () => {
     return json.projects || [];
 };
 
+export const articles = () => {
+    return json.articles || [];
+};
+
 /**
  * Get specific project
  * @param {string} slug 
@@ -15,6 +19,12 @@ export const projects = () => {
  */
 export const project = slug => {
     return projects().find(obj => {
+        return obj.data.slug == slug;
+    });
+};
+
+export const article = slug => {
+    return articles().find(obj => {
         return obj.data.slug == slug;
     });
 };
