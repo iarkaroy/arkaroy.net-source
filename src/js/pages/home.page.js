@@ -234,8 +234,11 @@ class HomePage extends Component {
         // Set flag to be available to be called
         this._preparing = false;
 
-        this._isReady = true;
-
+        if(!this._isReady) {
+            this._isReady = true;
+            // Notify analytics the time taken for getting things ready :)
+        }
+        
         // Recursive call to handle pending queue
         this.prepareCanvases();
     };
