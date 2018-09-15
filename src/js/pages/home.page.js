@@ -161,17 +161,11 @@ class HomePage extends Component {
         this.setState({ selected: prev });
     };
 
-    handleResize = (event) => {
+    handleResize = event => {
+        const { clientWidth, clientHeight } = window.document.documentElement;
         this.setState({
-            width: 0,
-            height: 0
-        }, this.updateDimension);
-    };
-
-    updateDimension = () => {
-        this.setState({
-            width: window.innerWidth,
-            height: window.innerHeight
+            width: clientWidth,
+            height: clientHeight
         }, () => {
             const { width, height } = this.state;
 
@@ -180,8 +174,7 @@ class HomePage extends Component {
             }, console.log);
 
             if (this._transition) {
-                this._transition.width = width;
-                this._transition.height = height;
+                this._transition.resize(width, height);
             } else {
                 this._transition = this.canvas ? new SlideTransition(this.canvas, width, height) : null;
             }
@@ -234,11 +227,11 @@ class HomePage extends Component {
         // Set flag to be available to be called
         this._preparing = false;
 
-        if(!this._isReady) {
+        if (!this._isReady) {
             this._isReady = true;
             // Notify analytics the time taken for getting things ready :)
         }
-        
+
         // Recursive call to handle pending queue
         this.prepareCanvases();
     };
@@ -261,7 +254,6 @@ class HomePage extends Component {
                 />
 
                 <canvas ref={o => { this.canvas = o }} width={width} height={height} />
-
 
                 {projects.map((project, index) => {
                     return <ProjectPreviewComponent
