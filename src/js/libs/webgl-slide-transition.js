@@ -1,12 +1,10 @@
-import * as glUtils from './webgl-utils';
+import { getWebGLContext, Program, Texture, Framebuffer } from '../webgl';
 import animate from './animate';
 
 const QUAD = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
 const vertex = `
-#ifdef GL_ES
-precision highp float;
-#endif
+precision lowp float;
 
 attribute vec2 a_position;
 
@@ -16,9 +14,7 @@ void main() {
 `;
 
 const fragment = `
-#ifdef GL_ES
-precision highp float;
-#endif
+precision lowp float;
 
 uniform sampler2D u_texture1;
 uniform sampler2D u_texture2;
@@ -61,17 +57,26 @@ class SlideTransition {
         this.canvas = canvas;
         this.width = width || 0;
         this.height = height || 0;
-        this.gl = glUtils.getWebGLContext(this.canvas);
-        this.program = glUtils.program(this.gl, vertex, fragment);
-        this.buffer = glUtils.buffer(this.gl);
+        this.gl = null;
+        this.program = null;
         this.texture1 = this.texture2 = this.disp = null;
         this.dispFactor = { pos: 0 };
+        this.init();
+    }
+
+    init() {
+        this.gl = getWebGLContext(this.canvas);
+        this.program = new Program(this.gl, vertex, fragment);
+        this.gl.viewport(0, 0, this.width, this.height);
+        this.gl.clearColor(0, 0, 0, 0);
+        this.gl.enable(this.gl.BLEND);
+        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     }
 
     transit(from, to, disp, duration = 1000, callback = null) {
-        this.texture1 = glUtils.texture(this.gl, this.width, this.height, from);
-        this.texture2 = glUtils.texture(this.gl, this.width, this.height, to);
-        this.disp = glUtils.texture(this.gl, this.width, this.height, disp);
+        this.texture1 = new Texture(this.gl, this.width, this.height, from);
+        this.texture2 = new Texture(this.gl, this.width, this.height, to);
+        this.disp = new Texture(this.gl, this.width, this.height, disp);
         this.dispFactor = { pos: 0 };
         animate({
             targets: this.dispFactor,
@@ -86,17 +91,21 @@ class SlideTransition {
     }
 
     render(image = null) {
-        if(image) {
-            this.texture1 = this.texture2 = this.disp = glUtils.texture(this.gl, this.width, this.height, image);
+        if (image) {
+            this.texture1 = this.texture2 = this.disp = new Texture(this.gl, this.width, this.height, image);
         }
-        this.gl.useProgram(this.program);
-        this.texture1.bind(0, this.program.u_texture1);
-        this.texture2.bind(1, this.program.u_texture2);
-        this.disp.bind(2, this.program.u_disp);
-        this.buffer.data(QUAD, this.program.a_position, 2);
-        this.gl.uniform2fv(this.program.u_resolution, new Float32Array([this.width, this.height]));
-        this.gl.uniform1f(this.program.dispFactor, this.dispFactor.pos);
-        glUtils.reset(this.gl, this.width, this.height, true);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+        this.program.use();
+        this.program.setTextures({
+            u_texture1: this.texture1,
+            u_texture2: this.texture2,
+            u_disp: this.disp
+        });
+        this.program.setBuffer('a_position', QUAD, 2);
+        this.program.setUniforms({
+            u_resolution: new Float32Array([this.width, this.height]),
+            dispFactor: this.dispFactor.pos
+        });
         this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, QUAD.length / 2);
     }
 
