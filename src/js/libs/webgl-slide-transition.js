@@ -109,6 +109,14 @@ class SlideTransition {
         this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, QUAD.length / 2);
     }
 
+    resize(width, height) {
+        this.width = width;
+        this.height = height;
+        if (this.gl) {
+            this.gl.viewport(0, 0, this.width, this.height);
+        }
+    }
+
 }
 
 export default SlideTransition;
