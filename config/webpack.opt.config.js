@@ -9,6 +9,9 @@ module.exports = {
                     mangle: {
                         keep_fnames: true,
                     },
+                    output: {
+                        comments: false
+                    }
                 },
             })
         ],
