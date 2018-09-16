@@ -319,3 +319,9 @@ $indicator-color: #dddddd;
         }
     }
 }
+
+.fixed-center {
+    display: block;
+    position: fixed;
+    z-index: 2;
+}
