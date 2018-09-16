@@ -4,6 +4,8 @@ import { listen, unlisten } from '../libs/broadcast';
 import styles from '../../scss/index.scss';
 import { getWebGLContext, Program, Framebuffer, Texture } from '../webgl';
 import Mat4 from '../libs/mat4';
+import { getOilDispMap } from '../libs/getOilDispMap';
+import { getOilSphereMap } from '../libs/getOilSphereMap';
 
 const vs = `
 precision lowp float;
@@ -181,9 +183,12 @@ class OilCanvas extends Component {
         this.m4 = null;
         this.mvp = null;
         this.curlStrength = 200;
+
     }
 
     updateViewport = () => {
+        this.reset();
+
         const { width, height } = this.state;
         const size = Math.min(width, height);
         const size2 = size * 2;
@@ -231,10 +236,6 @@ class OilCanvas extends Component {
         this.gl = getWebGLContext(this.canvas);
         this.gl.clearColor(0, 0, 0, 0);
 
-        const { width, height } = this.state;
-        const size = Math.min(width, height);
-        const size2 = size * 2;
-
         // Init programs
         this.programs[0] = new Program(this.gl, vs, fs0);
         this.programs[1] = new Program(this.gl, vs, fs1);
@@ -250,49 +251,34 @@ class OilCanvas extends Component {
         const size2 = size * 2;
         this.sphereSize = 0.65 * size2;
 
-        var ctxSphere = document.createElement('canvas').getContext('2d');
-        ctxSphere.canvas.width = this.sphereSize;
-        ctxSphere.canvas.height = this.sphereSize;
-        var grad = ctxSphere.createRadialGradient(this.sphereSize / 2, this.sphereSize / 2, this.sphereSize / 2, this.sphereSize / 2, this.sphereSize / 2, 0);
-        grad.addColorStop(0, "rgba(255, 255, 255, 0)");
-        grad.addColorStop(.5, "rgba(255, 255, 255, 0.75)");
-        grad.addColorStop(1, "rgba(255, 255, 255, 1)");
-        ctxSphere.fillStyle = grad;
-        ctxSphere.arc(this.sphereSize / 2, this.sphereSize / 2, this.sphereSize / 2, 0, 2 * Math.PI);
-        ctxSphere.fill();
+        const oilSphere = getOilSphereMap(this.sphereSize);
 
-        this.textureSphere = new Texture(this.gl, this.sphereSize, this.sphereSize, ctxSphere.canvas);
+        this.textureSphere = new Texture(this.gl, this.sphereSize, this.sphereSize, oilSphere);
     };
 
     initTextureMap = () => {
-        var ctxMap = document.createElement('canvas').getContext('2d');
-        ctxMap.canvas.width = 512;
-        ctxMap.canvas.height = 512;
-        ctxMap.fillStyle = '#808080';
-        ctxMap.fillRect(0, 0, 512, 512);
-        for (var j = 0; j < 32; j++) {
-            var max = 512;
-            var i = Math.random() * max;
-            var o = Math.random() * max;
-            var s = Math.random() * max / 8 + max / 12;
-            var grad = ctxMap.createRadialGradient(i, o, s, i, o, 0);
-            var a = Math.random() > .5 ? 255 : 0;
-            grad.addColorStop(0, "rgba(128, 128, 128, 0)");
-            grad.addColorStop(1, "rgba(" + a + ", " + a + ", " + a + ", 0.5)");
-            ctxMap.fillStyle = grad;
-            [[0, 0], [-max, 0], [max, 0], [0, -max], [0, max]].forEach(function (t) {
-                ctxMap.save();
-                ctxMap.translate(t[0], t[1]);
-                ctxMap.beginPath();
-                ctxMap.arc(i, o, s, 0, 2 * Math.PI);
-                ctxMap.closePath();
-                ctxMap.fill();
-                ctxMap.restore();
-            });
-        }
-
-        this.textureMap = new Texture(this.gl, 512, 512, ctxMap.canvas, this.gl.REPEAT);
+        const oilDispMap = getOilDispMap();
+        this.textureMap = new Texture(this.gl, 512, 512, oilDispMap, this.gl.REPEAT);
     };
+
+    reset = () => {
+        const { width, height } = this.state;
+        const size = Math.min(width, height);
+        const size2 = size * 2;
+        this.positions = new Float32Array([
+            0, 0,
+            size2, 0,
+            0, size2,
+            size2, size2
+        ]);
+        this.texcoords = new Float32Array([
+            0, 1,
+            1, 1,
+            0, 0,
+            1, 0
+        ]);
+        this.curlStrength = 200;
+    }
 
     loop = () => {
         this.frameId = requestAnimationFrame(this.loop);
@@ -313,15 +299,6 @@ class OilCanvas extends Component {
         });
         this.mvp.copy(this.m4);
         this.mvp.multiply(mat);
-
-        /*
-        if (performance.now() / 1e3 > 5) {
-            alphaValue *= 0.99;
-            if (alphaValue < 0.1) {
-                alphaValue = 0.1;
-            }
-        }
-        */
 
         const alphaValue = 1;
         const alphaData = new Float32Array(2048);
@@ -348,8 +325,6 @@ class OilCanvas extends Component {
                 elementBufferData[e * 6 + i] = e * 4 + indexes[i];
             }
         }
-
-        const boundRect = new Float32Array([0, 0, size2, 0, 0, size2, size2, size2]);
 
         this.framebuffers[0].bind();
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
@@ -385,8 +360,8 @@ class OilCanvas extends Component {
             m_mvp: this.m4.array
         });
         this.programs[1].setBuffers({
-            a_position: boundRect,
-            a_tex_coord: new Float32Array([0, 1, 1, 1, 0, 0, 1, 0]),
+            a_position: this.positions,
+            a_tex_coord: this.texcoords,
             a_alpha: new Float32Array([1, 1, 1, 1, 1, 1, 1, 1, 1])
         });
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
@@ -398,16 +373,16 @@ class OilCanvas extends Component {
         this.programs[2].use();
         this.programs[2].setUniforms({
             u_time: time,
-            u_color_1: new Float32Array([0.2, 0.2, 0.2]),
-            u_color_2: new Float32Array([0.2, 0.2, 0.2]),
+            u_color_1: new Float32Array([0.3, 0.3, 0.3]),
+            u_color_2: new Float32Array([0.25, 0.25, 0.25]),
             u_color_3: new Float32Array([1, 1, 1]),
             u_color_4: new Float32Array([1, 1, 1]),
             u_division: 0,
             m_mvp: this.m4.array
         });
         this.programs[2].setBuffers({
-            a_position: boundRect,
-            a_tex_coord: new Float32Array([0, 1, 1, 1, 0, 0, 1, 0]),
+            a_position: this.positions,
+            a_tex_coord: this.texcoords,
             a_alpha: new Float32Array([1, 1, 1, 1, 1, 1, 1, 1, 1])
         });
         this.programs[2].setTextures({
@@ -427,8 +402,8 @@ class OilCanvas extends Component {
             m_mvp: this.m4.array
         });
         this.programs[3].setBuffers({
-            a_position: boundRect,
-            a_tex_coord: new Float32Array([0, 1, 1, 1, 0, 0, 1, 0]),
+            a_position: this.positions,
+            a_tex_coord: this.texcoords,
             a_alpha: new Float32Array([1, 1, 1, 1, 1, 1, 1, 1, 1])
         });
         this.programs[3].setTextures({
