@@ -4,12 +4,14 @@ import SlideTransition from '../libs/webgl-slide-transition';
 import { imgToCanvas } from '../libs/imgToCanvas';
 import ProjectPreviewComponent from '../components/project/preview.component';
 import * as store from '../store';
-import EventSystem from '../libs/event-system';
+import { OVERLAY_TOGGLE, OVERLAY_OPEN, OVERLAY_CLOSE, OVERLAY_BLOCK } from '../libs/shape-overlays';
 import { isPrerender } from '../libs/isPrerender';
 import { swipeDetector } from '../libs/swipeDetector';
 import { Helmet } from 'react-helmet';
 import styles from '../../scss/index.scss';
-import StructuredData from 'react-google-structured-data'
+import StructuredData from 'react-google-structured-data';
+import { broadcast, listen, unlisten } from '../libs/broadcast';
+import { getDimension } from '../libs/getDimension';
 
 const TRANSITION_DURATION = 1000;
 
@@ -41,16 +43,15 @@ class HomePage extends Component {
     }
 
     componentWillLeave(callback) {
-        EventSystem.publish('overlay:open');
+        broadcast(OVERLAY_OPEN);
         setTimeout(callback, 850);
     }
 
     componentDidMount() {
-        EventSystem.publish('overlay:block');
-
-        window.addEventListener('resize', this.handleResize);
-        document.addEventListener('wheel', this.handleWheel);
-        document.addEventListener('keydown', this.handleKeyDown);
+        broadcast(OVERLAY_BLOCK);
+        listen('resize', this.handleResize);
+        listen('wheel', this.handleWheel);
+        listen('keydown', this.handleKeyDown);
         if ('ontouchmove' in document) {
             swipeDetector.bind();
             swipeDetector.onSwipe(direction => {
@@ -67,30 +68,26 @@ class HomePage extends Component {
         this.setState({
             projects: store.projects()
         });
+
         this.handleResize();
 
         if (!isPrerender()) {
             setTimeout(() => {
-                EventSystem.publish('overlay:close');
+                broadcast(OVERLAY_CLOSE);
             }, 200);
         }
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.handleResize);
-        document.removeEventListener('wheel', this.handleWheel);
-        document.removeEventListener('keydown', this.handleKeyDown);
+        unlisten('resize', this.handleResize);
+        unlisten('wheel', this.handleWheel);
+        unlisten('keydown', this.handleKeyDown);
         if ('ontouchmove' in document) {
             swipeDetector.unbind();
         }
     }
 
-    handleScroll = event => {
-        console.log(event);
-    };
-
     handleWheel = event => {
-        //console.log('wheel', event);
         const { deltaY } = event;
         if (deltaY > 0) {
             this.gotoNext();
@@ -162,10 +159,10 @@ class HomePage extends Component {
     };
 
     handleResize = event => {
-        const { clientWidth, clientHeight } = window.document.documentElement;
+        const { width, height } = event || getDimension();
         this.setState({
-            width: clientWidth,
-            height: clientHeight
+            width,
+            height
         }, () => {
             const { width, height } = this.state;
 

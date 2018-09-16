@@ -1,23 +1,26 @@
 import React, { Component } from 'react';
 import { Link } from '../../router';
-import ShapeOverlays from '../../libs/shape-overlays';
-import EventSystem from '../../libs/event-system';
+import ShapeOverlays, { OVERLAY_TOGGLE, OVERLAY_OPEN, OVERLAY_CLOSE, OVERLAY_BLOCK } from '../../libs/shape-overlays';
 import styles from '../../../scss/index.scss';
-import Logo from './Logo';
+import { broadcast, listen, unlisten } from '../../libs/broadcast';
 
 class Header extends Component {
 
     componentDidMount() {
         this.overlay = new ShapeOverlays(this.overlays);
-        EventSystem.subscribe('overlay:toggle', this.toggleOverlay);
-        EventSystem.subscribe('overlay:open', this.openOverlay);
-        EventSystem.subscribe('overlay:close', this.closeOverlay);
-        EventSystem.subscribe('overlay:block', this.blockOverlay);
-        window.addEventListener('scroll', this.handleScroll);
+        listen(OVERLAY_TOGGLE, this.toggleOverlay);
+        listen(OVERLAY_OPEN, this.openOverlay);
+        listen(OVERLAY_CLOSE, this.closeOverlay);
+        listen(OVERLAY_BLOCK, this.blockOverlay);
+        listen('scroll', this.handleScroll);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this.handleScroll);
+        unlisten(OVERLAY_TOGGLE, this.toggleOverlay);
+        unlisten(OVERLAY_OPEN, this.openOverlay);
+        unlisten(OVERLAY_CLOSE, this.closeOverlay);
+        unlisten(OVERLAY_BLOCK, this.blockOverlay);
+        unlisten('scroll', this.handleScroll);
     }
 
     handleScroll = event => {

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import EventSystem from '../libs/event-system';
 import { isPrerender } from '../libs/isPrerender';
 import * as store from '../store';
 import { Helmet } from 'react-helmet';
 import styles from '../../scss/index.scss';
+import { OVERLAY_TOGGLE, OVERLAY_OPEN, OVERLAY_CLOSE, OVERLAY_BLOCK } from '../libs/shape-overlays';
 import { Link } from '../router';
+import { broadcast } from '../libs/broadcast';
 
 const classNames = {
     metaWrapper: 'project-meta--wrapper',
@@ -28,7 +29,7 @@ class ProjectPage extends Component {
     }
 
     componentDidMount() {
-        EventSystem.publish('overlay:block');
+        broadcast(OVERLAY_BLOCK);
         const slug = this.props.params.id
         this.loadProject(slug);
         window.addEventListener('resize', this.handleResize);
@@ -40,7 +41,7 @@ class ProjectPage extends Component {
     }
 
     componentWillLeave(callback) {
-        EventSystem.publish('overlay:open');
+        broadcast(OVERLAY_OPEN);
         setTimeout(callback, 850);
     }
 
@@ -61,7 +62,7 @@ class ProjectPage extends Component {
         window.scrollTo(0, 0);
         if (!isPrerender()) {
             setTimeout(() => {
-                EventSystem.publish('overlay:close');
+                broadcast(OVERLAY_CLOSE);
             }, 200);
         }
     };
