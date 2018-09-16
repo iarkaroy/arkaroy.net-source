@@ -12,6 +12,7 @@ import styles from '../../scss/index.scss';
 import StructuredData from 'react-google-structured-data';
 import { broadcast, listen, unlisten } from '../libs/broadcast';
 import { getDimension } from '../libs/getDimension';
+import OilCanvas from '../components/OilCanvas';
 
 const TRANSITION_DURATION = 1000;
 
@@ -251,6 +252,7 @@ class HomePage extends Component {
                 />
 
                 <canvas ref={o => { this.canvas = o }} width={width} height={height} />
+                <OilCanvas />
 
                 {projects.map((project, index) => {
                     return <ProjectPreviewComponent
