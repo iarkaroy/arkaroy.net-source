@@ -1,3 +1,4 @@
+@import url('https://rsms.me/inter/inter-ui.css');
 @import "_variable";
 @import "_font";
 @import "_reset";
@@ -33,20 +34,20 @@
     @extend .heading-text-shadow;
     margin: 0.4rem;
     padding: 0;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .project-card--title {
     @extend .project-card--title-typo;
     font-size: 8rem;
-    font-weight: 600;
+    font-weight: 700;
     max-width: 80%;
     line-height: 9rem;
 }
 
 .project-card--front-title {
     font-size: 3rem;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 4rem;
     max-width: 50%;
 }
@@ -194,7 +195,7 @@ $indicator-color: #dddddd;
         h1,
         h4 {
             @extend .heading-text-shadow;
-            font-weight: 500;
+            font-weight: 400;
             margin: 0;
             padding: 0;
         }
@@ -254,7 +255,7 @@ $indicator-color: #dddddd;
     }
     h4 {
         font-size: 1.8rem;
-        font-weight: 500;
+        font-weight: 700;
     }
     h5 {
         font-size: 1.4rem;
@@ -277,13 +278,15 @@ $indicator-color: #dddddd;
     background: rgba($color: #000000, $alpha: 0.4);
     color: #ffffff;
     strong {
+        @extend .heading-text-shadow;
         display: block;
         font-size: 1.4rem;
-        font-weight: 600;
+        font-weight: 400;
         text-transform: uppercase;
         margin-bottom: 1rem;
     }
     h3, h4 {
+        @extend .heading-text-shadow;
         margin: 0;
         padding: 0;
     }
@@ -293,7 +296,7 @@ $indicator-color: #dddddd;
     }
     h4 {
         font-size: 1.8rem;
-        font-weight: 500;
+        font-weight: 400;
     }
     svg {
         position: absolute;
