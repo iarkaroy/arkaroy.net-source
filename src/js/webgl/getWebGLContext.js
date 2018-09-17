@@ -5,8 +5,8 @@
  * @param {HTMLCanvasElement} canvas 
  * @returns {WebGLRenderingContext}
  */
-export const getWebGLContext = canvas => {
-    var param = {
+export const getWebGLContext = (canvas, param) => {
+    var param = param || {
         alpha: true,
         antialias: true
     };
