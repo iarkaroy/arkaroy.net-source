@@ -186,8 +186,29 @@ class OilCanvas extends Component {
 
     }
 
-    updateViewport = () => {
+    start = () => {
+        this.stop();
         this.reset();
+        this.frameId = requestAnimationFrame(this.loop);
+    };
+
+    stop = () => {
+        if (this.frameId) {
+            cancelAnimationFrame(this.frameId);
+            this.frameId = null;
+        }
+    };
+
+    isRunning = () => {
+        return this.frameId !== null;
+    };
+
+    clear = () => {
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
+    };
+
+    updateViewport = () => {
+        
 
         const { width, height } = this.state;
         const size = Math.min(width, height);
@@ -197,43 +218,27 @@ class OilCanvas extends Component {
             this.initWebGL();
         }
 
-        // Init framebuffers
-        this.framebuffers[0] = new Framebuffer(this.gl, size2, size2);
-        this.framebuffers[1] = new Framebuffer(this.gl, size2, size2);
-        this.framebuffers[2] = new Framebuffer(this.gl, size2, size2);
+        this.reset();
 
         this.initTextureSphere();
 
         this.gl.viewport(0, 0, size2, size2);
 
-        this.m4 = new Mat4();
-        this.m4.translate({ x: -1, y: 1, z: 0 });
-        this.m4.scale({
-            x: 2 / size2,
-            y: -2 / size2,
-            z: 0
-        });
+        
 
-        this.pos = {
-            x: (size2 - this.sphereSize) / 2,
-            y: (size2 - this.sphereSize) / 2
-        };
+        
 
-        this.mvp = new Mat4();
-        this.mvp.copy(this.m4);
-
-        if (this.frameId) {
-            cancelAnimationFrame(this.frameId);
-            this.frameId = null;
-        }
-        this.frameId = requestAnimationFrame(this.loop);
     };
 
     initWebGL = () => {
         if (!this.canvas) {
             return false;
         }
-        this.gl = getWebGLContext(this.canvas);
+        this.gl = getWebGLContext(this.canvas, {
+            alpha: true,
+            antialias: true,
+            preserveDrawingBuffer: true
+        });
         this.gl.clearColor(0, 0, 0, 0);
 
         // Init programs
@@ -278,6 +283,27 @@ class OilCanvas extends Component {
             1, 0
         ]);
         this.curlStrength = 200;
+
+        this.m4 = new Mat4();
+        this.m4.translate({ x: -1, y: 1, z: 0 });
+        this.m4.scale({
+            x: 2 / size2,
+            y: -2 / size2,
+            z: 0
+        });
+
+        this.pos = {
+            x: (size2 - this.sphereSize) / 2,
+            y: (size2 - this.sphereSize) / 2
+        };
+
+        this.mvp = new Mat4();
+        this.mvp.copy(this.m4);
+
+        // Init framebuffers
+        this.framebuffers[0] = new Framebuffer(this.gl, size2, size2);
+        this.framebuffers[1] = new Framebuffer(this.gl, size2, size2);
+        this.framebuffers[2] = new Framebuffer(this.gl, size2, size2);
     }
 
     loop = () => {
@@ -373,8 +399,8 @@ class OilCanvas extends Component {
         this.programs[2].use();
         this.programs[2].setUniforms({
             u_time: time,
-            u_color_1: new Float32Array([0.3, 0.3, 0.3]),
-            u_color_2: new Float32Array([0.25, 0.25, 0.25]),
+            u_color_1: new Float32Array([1, 1, 1]),
+            u_color_2: new Float32Array([1, 1, 1]),
             u_color_3: new Float32Array([1, 1, 1]),
             u_color_4: new Float32Array([1, 1, 1]),
             u_division: 0,
