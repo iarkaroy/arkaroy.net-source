@@ -76,6 +76,9 @@ class HomePage extends Component {
             setTimeout(() => {
                 broadcast(OVERLAY_CLOSE);
             }, 200);
+            setTimeout(() => {
+                this.oil.start();
+            }, 800);
         }
     }
 
@@ -117,8 +120,31 @@ class HomePage extends Component {
             next = 0;
         }
 
+        var from = this._canvases[selected];
+
+        if (selected === 0) {
+            if (this.oil.isRunning()) {
+                this.oil.stop();
+                const ctx = document.createElement('canvas').getContext('2d');
+                const { width, height } = this.state;
+                const size = Math.min(width, height);
+                ctx.canvas.width = width;
+                ctx.canvas.height = height;
+                ctx.drawImage(this._canvases[0], 0, 0, width, height);
+                ctx.drawImage(this.oil.canvas, 0, 0, size * 2, size * 2, (width - size) / 2, (height - size) / 2, size, size);
+                this.oil.clear();
+                from = ctx.canvas;
+            }
+        }
+
+        if (next === 0) {
+            setTimeout(() => {
+                this.oil.start();
+            }, 1000);
+        }
+
         // Transition
-        const from = this._canvases[selected];
+
         const to = this._canvases[next];
         const callback = () => {
             this._inTransition = false;
@@ -148,8 +174,31 @@ class HomePage extends Component {
             prev = projects.length - 1;
         }
 
+        var from = this._canvases[selected];
+
+        if (selected === 0) {
+            if (this.oil.isRunning()) {
+                this.oil.stop();
+                const ctx = document.createElement('canvas').getContext('2d');
+                const { width, height } = this.state;
+                const size = Math.min(width, height);
+                ctx.canvas.width = width;
+                ctx.canvas.height = height;
+                ctx.drawImage(this._canvases[0], 0, 0, width, height);
+                ctx.drawImage(this.oil.canvas, 0, 0, size * 2, size * 2, (width - size) / 2, (height - size) / 2, size, size);
+                this.oil.clear();
+                from = ctx.canvas;
+            }
+        }
+
+        if (prev === 0) {
+            setTimeout(() => {
+                this.oil.start();
+            }, 1000);
+        }
+
         // Transition
-        const from = this._canvases[selected];
+
         const to = this._canvases[prev];
         const callback = () => {
             this._inTransition = false;
@@ -252,7 +301,8 @@ class HomePage extends Component {
                 />
 
                 <canvas ref={o => { this.canvas = o }} width={width} height={height} />
-                <OilCanvas />
+                <OilCanvas ref={o => { this.oil = o; }} />
+                <div className={styles.curtain} />
 
                 {projects.map((project, index) => {
                     return <ProjectPreviewComponent

@@ -26,7 +26,7 @@ export async function imgToCanvas(src, owidth, oheight, isGrey = false) {
                     // blue
                     data[i + 2] = brightness;
                     // alpha
-                    data[i + 3] = data[i + 3] > 120 ? data[i + 3] - 120 : 0;
+                    // data[i + 3] = data[i + 3] > 120 ? data[i + 3] - 120 : 0;
                 }
 
                 ctx.putImageData(imageData, 0, 0);
