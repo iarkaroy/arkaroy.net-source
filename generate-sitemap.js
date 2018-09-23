@@ -20,4 +20,4 @@ generator.on('add', (url) => {
 generator.on('error', console.log);
 
 // start the crawler
-generator.start();
+// generator.start();
