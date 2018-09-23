@@ -223,11 +223,6 @@ class OilCanvas extends Component {
         this.initTextureSphere();
 
         this.gl.viewport(0, 0, size2, size2);
-
-        
-
-        
-
     };
 
     initWebGL = () => {
