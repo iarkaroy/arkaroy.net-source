@@ -12,7 +12,6 @@ import styles from '../../scss/index.scss';
 import StructuredData from 'react-google-structured-data';
 import { broadcast, listen, unlisten } from '../libs/broadcast';
 import { getDimension } from '../libs/getDimension';
-import OilCanvas from '../components/OilCanvas';
 
 const TRANSITION_DURATION = 1000;
 
@@ -76,9 +75,6 @@ class HomePage extends Component {
             setTimeout(() => {
                 broadcast(OVERLAY_CLOSE);
             }, 200);
-            setTimeout(() => {
-                this.oil.start();
-            }, 800);
         }
     }
 
@@ -122,6 +118,7 @@ class HomePage extends Component {
 
         var from = this._canvases[selected];
 
+        /*
         if (selected === 0) {
             if (this.oil.isRunning()) {
                 this.oil.stop();
@@ -136,12 +133,7 @@ class HomePage extends Component {
                 from = ctx.canvas;
             }
         }
-
-        if (next === 0) {
-            setTimeout(() => {
-                this.oil.start();
-            }, 1000);
-        }
+        */
 
         // Transition
 
@@ -176,6 +168,7 @@ class HomePage extends Component {
 
         var from = this._canvases[selected];
 
+        /*
         if (selected === 0) {
             if (this.oil.isRunning()) {
                 this.oil.stop();
@@ -190,12 +183,7 @@ class HomePage extends Component {
                 from = ctx.canvas;
             }
         }
-
-        if (prev === 0) {
-            setTimeout(() => {
-                this.oil.start();
-            }, 1000);
-        }
+        */
 
         // Transition
 
@@ -301,7 +289,7 @@ class HomePage extends Component {
                 />
 
                 <canvas ref={o => { this.canvas = o }} width={width} height={height} />
-                <OilCanvas ref={o => { this.oil = o; }} />
+                
                 <div className={styles.curtain} />
 
                 {projects.map((project, index) => {
