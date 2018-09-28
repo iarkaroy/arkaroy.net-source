@@ -109,52 +109,6 @@
     }
 }
 
-$indicator-color: #dddddd;
-.project-list--indicator-wrapper {
-    display: block;
-    position: fixed;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    top: 50%;
-    right: -6rem;
-    z-index: 11;
-    transform: translate(0, -50%);
-    transition: all 0.4s ease-in-out;
-    &.active {
-        right: 6rem;
-    }
-}
-.project-list--indicator-bullet {
-    display: block;
-    margin: 0;
-    padding: 0.6rem;
-    a {
-        display: block;
-        width: 0.6rem;
-        height: 0.6rem;
-        overflow: hidden;
-        border: 1px solid $indicator-color;
-    }
-}
-.project-list--indicator-selected {
-    position: absolute;
-    top: 0.6rem;
-    left: 0.6rem;
-    width: 0.6rem;
-    height: 0.6rem;
-    overflow: hidden;
-    background: $indicator-color;
-    border: 1px solid $indicator-color;
-    transition: top 0.6s ease-in-out;
-}
-
-@media screen and (max-width: $mobile-breakpoint) {
-    .project-list--indicator-wrapper {
-        display: none;
-    }
-}
-
 /*
  * Project Single
  */

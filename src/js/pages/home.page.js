@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import { displacementCanvas } from '../libs/displacementCanvas';
-import SlideTransition from '../libs/webgl-slide-transition';
-import { imgToCanvas } from '../libs/imgToCanvas';
 import ProjectPreviewComponent from '../components/project/preview.component';
 import * as store from '../store';
-import { OVERLAY_TOGGLE, OVERLAY_OPEN, OVERLAY_CLOSE, OVERLAY_BLOCK } from '../libs/shape-overlays';
+import { OVERLAY_OPEN, OVERLAY_CLOSE, OVERLAY_BLOCK } from '../libs/shape-overlays';
 import { isPrerender } from '../libs/isPrerender';
 import { swipeDetector } from '../libs/swipeDetector';
 import { Helmet } from 'react-helmet';
@@ -13,13 +10,8 @@ import StructuredData from 'react-google-structured-data';
 import { broadcast, listen, unlisten } from '../libs/broadcast';
 import { getDimension } from '../libs/getDimension';
 
-const TRANSITION_DURATION = 1000;
-
 const classNames = {
-    nav: 'project-list--navigation',
-    indiWrapper: 'project-list--indicator-wrapper',
-    indiBullet: 'project-list--indicator-bullet',
-    indicator: 'project-list--indicator-selected'
+    nav: 'project-list--navigation'
 };
 
 class HomePage extends Component {
@@ -32,14 +24,6 @@ class HomePage extends Component {
             projects: [],
             selected: 0
         };
-
-        this._displacementCanvas = null;
-        this._transition = null;
-        this._canvases = [];
-        this._preparing = false;
-        this._isReady = false;
-        this._prepareQueue = 0;
-        this._inTransition = false;
     }
 
     componentWillLeave(callback) {
@@ -102,46 +86,11 @@ class HomePage extends Component {
             event.preventDefault();
         }
 
-        // Do nothing if in the middle of a transition
-        if (this._inTransition || !this._isReady) {
-            return false;
-        }
-
-        // Set transition flag so that another transition cannot be triggered
-        this._inTransition = true;
-
         var { selected, projects } = this.state;
         var next = selected + 1;
         if (next >= projects.length) {
             next = 0;
         }
-
-        var from = this._canvases[selected];
-
-        /*
-        if (selected === 0) {
-            if (this.oil.isRunning()) {
-                this.oil.stop();
-                const ctx = document.createElement('canvas').getContext('2d');
-                const { width, height } = this.state;
-                const size = Math.min(width, height);
-                ctx.canvas.width = width;
-                ctx.canvas.height = height;
-                ctx.drawImage(this._canvases[0], 0, 0, width, height);
-                ctx.drawImage(this.oil.canvas, 0, 0, size * 2, size * 2, (width - size) / 2, (height - size) / 2, size, size);
-                this.oil.clear();
-                from = ctx.canvas;
-            }
-        }
-        */
-
-        // Transition
-
-        const to = this._canvases[next];
-        const callback = () => {
-            this._inTransition = false;
-        };
-        this._transition.transit(from, to, this._displacementCanvas, TRANSITION_DURATION, callback);
 
         this.setState({ selected: next });
 
@@ -152,46 +101,11 @@ class HomePage extends Component {
             event.preventDefault();
         }
 
-        // Do nothing if in the middle of a transition
-        if (this._inTransition || !this._isReady) {
-            return false;
-        }
-
-        // Set transition flag so that another transition cannot be triggered
-        this._inTransition = true;
-
         var { selected, projects } = this.state;
         var prev = selected - 1;
         if (prev < 0) {
             prev = projects.length - 1;
         }
-
-        var from = this._canvases[selected];
-
-        /*
-        if (selected === 0) {
-            if (this.oil.isRunning()) {
-                this.oil.stop();
-                const ctx = document.createElement('canvas').getContext('2d');
-                const { width, height } = this.state;
-                const size = Math.min(width, height);
-                ctx.canvas.width = width;
-                ctx.canvas.height = height;
-                ctx.drawImage(this._canvases[0], 0, 0, width, height);
-                ctx.drawImage(this.oil.canvas, 0, 0, size * 2, size * 2, (width - size) / 2, (height - size) / 2, size, size);
-                this.oil.clear();
-                from = ctx.canvas;
-            }
-        }
-        */
-
-        // Transition
-
-        const to = this._canvases[prev];
-        const callback = () => {
-            this._inTransition = false;
-        };
-        this._transition.transit(from, to, this._displacementCanvas, TRANSITION_DURATION, callback);
 
         this.setState({ selected: prev });
     };
@@ -201,23 +115,6 @@ class HomePage extends Component {
         this.setState({
             width,
             height
-        }, () => {
-            const { width, height } = this.state;
-
-            displacementCanvas(width, height).then(canvas => {
-                this._displacementCanvas = canvas;
-            }, console.log);
-
-            if (this._transition) {
-                this._transition.resize(width, height);
-            } else {
-                this._transition = this.canvas ? new SlideTransition(this.canvas, width, height) : null;
-            }
-
-            this._prepareQueue++;
-            if (!this._preparing) {
-                this.prepareCanvases();
-            }
         });
     };
 
@@ -236,41 +133,6 @@ class HomePage extends Component {
         }
     };
 
-    prepareCanvases = async () => {
-
-        // If no pending queue, exit
-        if (this._prepareQueue < 1) {
-            return false;
-        }
-
-        // Set flag to prevent being called before finishing
-        this._preparing = true;
-        this._prepareQueue--;
-
-        const { projects, width, height, selected } = this.state;
-        this._canvases = [];
-
-        for (let i = 0; i < projects.length; ++i) {
-            const src = `/images/${projects[i].data.thumb}`;
-            const canvas = await imgToCanvas(src, width, height, true);
-            this._canvases[i] = canvas;
-        }
-
-        // Render currently selected one
-        this._transition.render(this._canvases[selected]);
-
-        // Set flag to be available to be called
-        this._preparing = false;
-
-        if (!this._isReady) {
-            this._isReady = true;
-            // Notify analytics the time taken for getting things ready :)
-        }
-
-        // Recursive call to handle pending queue
-        this.prepareCanvases();
-    };
-
     render() {
         const { width, height, projects, selected } = this.state;
         return (
@@ -287,10 +149,6 @@ class HomePage extends Component {
                         url: 'https://www.arkaroy.net/'
                     }}
                 />
-
-                <canvas ref={o => { this.canvas = o }} width={width} height={height} />
-                
-                <div className={styles.curtain} />
 
                 {projects.map((project, index) => {
                     return <ProjectPreviewComponent
@@ -312,13 +170,6 @@ class HomePage extends Component {
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z" /></svg>
                     </a>
                 </div>
-
-                <ul className={selected > 0 ? [styles[classNames.indiWrapper], styles.active].join(' ') : styles[classNames.indiWrapper]}>
-                    {projects.map((project, index) => {
-                        return index > 0 ? <li key={index} className={styles[classNames.indiBullet]}><a href="#"></a></li> : null;
-                    })}
-                    <li className={styles[classNames.indicator]} style={{ top: `${(selected - 1) * 1.8 + 0.6}rem` }}></li>
-                </ul>
 
             </main>
         );
