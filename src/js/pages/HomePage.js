@@ -24,6 +24,7 @@ class HomePage extends Component {
             scale: 0,
             opacity: 1
         };
+        this.lastNav = Date.now();
     }
 
     componentDidMount() {
@@ -73,6 +74,13 @@ class HomePage extends Component {
         if (event) {
             event.preventDefault();
         }
+
+        const now = Date.now();
+        if (now - this.lastNav < 2000) {
+            return false;
+        }
+        this.lastNav = now;
+
         const { projects, selected } = this.state;
         if (selected < 0) {
             this.liquifyOptions = {
@@ -110,6 +118,13 @@ class HomePage extends Component {
         if (event) {
             event.preventDefault();
         }
+
+        const now = Date.now();
+        if (now - this.lastNav < 2000) {
+            return false;
+        }
+        this.lastNav = now;
+        
         const { projects, selected } = this.state;
         var prev = selected - 1;
         if (prev < -1) {
