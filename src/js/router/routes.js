@@ -1,5 +1,5 @@
 
-import HomePage from '../pages/home.page';
+import HomePage from '../pages/HomePage';
 import ProjectPage from '../pages/project.page';
 import ArticlesPage from '../pages/ArticlesPage';
 import ArticlePage from '../pages/ArticlePage';

@@ -19,6 +19,7 @@ class App extends Component {
         document.addEventListener('touchstart', this.handleEvent);
         document.addEventListener('touchmove', this.handleEvent);
         document.addEventListener('touchend', this.handleEvent);
+        document.addEventListener('mousemove', this.handleEvent);
 
         console.log('%cSite', 'color:white;background:black');
     }
@@ -32,6 +33,7 @@ class App extends Component {
         document.removeEventListener('touchstart', this.handleEvent);
         document.removeEventListener('touchmove', this.handleEvent);
         document.removeEventListener('touchend', this.handleEvent);
+        document.removeEventListener('mousemove', this.handleEvent);
     }
 
     handleEvent = event => {
