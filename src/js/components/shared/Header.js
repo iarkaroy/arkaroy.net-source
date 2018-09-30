@@ -12,7 +12,7 @@ class Header extends Component {
         listen(OVERLAY_OPEN, this.openOverlay);
         listen(OVERLAY_CLOSE, this.closeOverlay);
         listen(OVERLAY_BLOCK, this.blockOverlay);
-        listen('scroll', this.handleScroll);
+        // listen('scroll', this.handleScroll);
     }
 
     componentWillUnmount() {
@@ -20,7 +20,7 @@ class Header extends Component {
         unlisten(OVERLAY_OPEN, this.openOverlay);
         unlisten(OVERLAY_CLOSE, this.closeOverlay);
         unlisten(OVERLAY_BLOCK, this.blockOverlay);
-        unlisten('scroll', this.handleScroll);
+        // unlisten('scroll', this.handleScroll);
     }
 
     handleScroll = event => {
@@ -67,12 +67,7 @@ class Header extends Component {
         return (
             <header className={styles.siteHeader}>
                 <Link to="/" className={styles.homeLink}>
-                    <span className={styles.back} ref={o => { this.logoBack = o; }}>
-                        <i className={styles.logo} />
-                    </span>
-                    <span className={styles.front} ref={o => { this.logoFront = o; }}>
-                        <i className={styles.logo} />
-                    </span>
+                    <i className={styles.logo} />
                 </Link>
                 <svg className={styles.shapeOverlays} viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
                     <path></path>
