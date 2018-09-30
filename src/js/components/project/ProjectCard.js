@@ -26,7 +26,8 @@ class ProjectCard extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            selected: false
+            selected: false,
+            displayed: false,
         };
     }
 
@@ -35,17 +36,24 @@ class ProjectCard extends Component {
             const { selected } = this.props;
             if (selected) {
                 setTimeout(() => {
-                    this.setState({ selected });
+                    this.setState({ displayed: true }, () => {
+                        setTimeout(() => {
+                            this.setState({ selected });
+                        }, 100);
+                    });
                 }, 1000);
             } else {
                 this.setState({ selected });
+                setTimeout(() => {
+                    this.setState({ displayed: false });
+                }, 1600);
             }
         }
     }
 
     render() {
         const { title, slug, category, image, index, rotateX, rotateY } = this.props;
-        const { selected } = this.state;
+        const { selected, displayed } = this.state;
         const imageSrc = `/images/${image}`;
         const thumbClasses = [styles['project-thumb'], styles['reveal']];
         if (selected) {
@@ -54,8 +62,15 @@ class ProjectCard extends Component {
         const titleParts = title.trim().split(' ');
         var currIndex = index + 1;
         currIndex = currIndex < 10 ? `0${currIndex}` : currIndex;
+        var wrapperStyle = {
+            transform: `translate(-50%, -50%) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
+        };
+        if (!displayed) {
+            wrapperStyle.display = 'none';
+        }
+        //display: displayed ? 'block' : 'none',
         return (
-            <div className={styles['project-card']} style={{ transform: `translate(-50%, -50%) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)` }}>
+            <div className={styles['project-card']} style={wrapperStyle}>
                 <Link to={`/projects/${slug}`}>
                     <div className={thumbClasses.join(' ')} style={{ backgroundImage: `url(${imageSrc})`, display: 'block' }}></div>
                     <Title title={`${currIndex}|${titleParts.join('|')}|${category}`} split={false} reveal={selected} className={styles['project-title']} />
