@@ -12,7 +12,7 @@ class App extends Component {
 
     componentDidMount() {
         // Register event handlers
-        window.addEventListener('scroll', this.handleEvent);
+        window.addEventListener('scroll', this.handleEvent, { capture: true, passive: true });
         window.addEventListener('resize', this.handleEvent);
         document.addEventListener('wheel', this.handleEvent);
         document.addEventListener('keydown', this.handleEvent);
