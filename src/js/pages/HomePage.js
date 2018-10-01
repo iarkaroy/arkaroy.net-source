@@ -37,6 +37,20 @@ class HomePage extends Component {
         this.setState({
             projects: store.projects()
         });
+
+        listen('resize', this.handleResize);
+        this.handleResize();
+    }
+
+    componentWillUnmount() {
+        swipeDetector.unbind();
+        unlisten('mousemove', this.onMouseMove);
+        unlisten('resize', this.handleResize);
+    }
+
+    bindListeners = () => {
+        swipeDetector.unbind();
+        unlisten('mousemove', this.onMouseMove);
         listen('mousemove', this.onMouseMove);
         if ('ontouchmove' in document) {
             swipeDetector.bind();
@@ -51,11 +65,17 @@ class HomePage extends Component {
                 }
             })
         }
-    }
+    };
 
-    componentWillUnmount() {
-        unlisten('mousemove', this.onMouseMove);
-    }
+    handleResize = event => {
+        this.bindListeners();
+        if ('ontouchmove' in document) {
+            this.setState({
+                rotateY: 0,
+                rotateX: 0
+            });
+        }
+    };
 
     onMouseMove = event => {
         const { pageX, pageY } = event;
@@ -65,8 +85,8 @@ class HomePage extends Component {
         y = y * 2 - 1;
         x *= -1;
         this.setState({
-            rotateY: x * 5,
-            rotateX: y * 5
+            rotateY: ('ontouchmove' in document) ? 0 : x * 5,
+            rotateX: ('ontouchmove' in document) ? 0 : y * 5
         });
     };
 
@@ -124,7 +144,7 @@ class HomePage extends Component {
             return false;
         }
         this.lastNav = now;
-        
+
         const { projects, selected } = this.state;
         var prev = selected - 1;
         if (prev < -1) {

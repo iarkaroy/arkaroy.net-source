@@ -68,7 +68,7 @@ $reveal-duration: 0.3s;
 
 .project-card {
     display: block;
-    width: 100%;
+    width: 90%;
     max-width: 600px;
     position: fixed;
     top: 50%;
@@ -107,6 +107,18 @@ $reveal-duration: 0.3s;
             font-weight: 400;
             font-size: 1.6rem;
         }
+        @media screen and (max-width: $mobile-breakpoint) {
+            font-size: 2.4rem;
+            &:last-child {
+                display: none;
+            }
+            &:first-child {
+                display: none;
+            }
+        }
+    }
+    @media screen and (max-width: $mobile-breakpoint) {
+        left: 3rem;
     }
 }
 
