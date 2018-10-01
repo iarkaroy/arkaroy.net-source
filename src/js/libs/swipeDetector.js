@@ -4,7 +4,7 @@ export const swipeDetector = {
         "touchstart": { "x": -1, "y": -1 },
         "touchmove": { "x": -1, "y": -1 },
         "touchend": false,
-        "direction": "undetermined"
+        "direction": null
     },
     touchHandler: function (event) {
         var touch;
@@ -17,11 +17,19 @@ export const swipeDetector = {
                     case 'touchmove':
                         swipeDetector.touches[event.type].x = touch.pageX;
                         swipeDetector.touches[event.type].y = touch.pageY;
+                        swipeDetector.touches.direction = null;
                         break;
                     case 'touchend':
                         swipeDetector.touches[event.type] = true;
                         if (swipeDetector.touches.touchstart.y > -1 && swipeDetector.touches.touchmove.y > -1) {
-                            swipeDetector.touches.direction = swipeDetector.touches.touchstart.y < swipeDetector.touches.touchmove.y ? "up" : "dn";
+                            const diffY = swipeDetector.touches.touchmove.y - swipeDetector.touches.touchstart.y;
+                            if (diffY > 0) {
+                                swipeDetector.touches.direction = 'up';
+                            } else if (diffY < 0) {
+                                swipeDetector.touches.direction = 'dn';
+                            }
+                            swipeDetector.touches.touchstart = { x: -1, y: -1 };
+                            swipeDetector.touches.touchmove = { x: -1, y: -1 };
                             swipeDetector.callbacks.forEach(callback => callback(swipeDetector.touches.direction));
                         }
                     default:
