@@ -47,20 +47,21 @@ class ProjectPage extends Component {
     }
 
     handleScroll = event => {
+        const { scrollY } = window;
+        var opacity = 1 - scrollY * .003;
+        if (opacity < 0) {
+            opacity = 0;
+        }
+        this.setState({
+            bgOpacity: opacity,
+            bgTop: -scrollY * .2,
+            // liquifyScale: scrollY
+        });
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
         }
         setTimeout(() => {
-            const { scrollY } = window;
-            var opacity = 1 - scrollY * .003;
-            if (opacity < 0) {
-                opacity = 0;
-            }
-            this.setState({
-                bgOpacity: opacity,
-                bgTop: -scrollY * .2,
-                liquifyScale: scrollY
-            });
+
         }, 80);
 
     };
