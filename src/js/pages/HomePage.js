@@ -6,6 +6,7 @@ import * as store from '../store';
 import ProjectCard from '../components/project/ProjectCard';
 import { listen, unlisten } from '../libs/broadcast';
 import { swipeDetector } from '../libs/swipeDetector';
+import NoiseCanvas from '../components/NoiseCanvas';
 
 class HomePage extends Component {
 
@@ -178,11 +179,14 @@ class HomePage extends Component {
         const { liquifyScale, liquifyOpacity, titleReveal, projects, selected, rotateX, rotateY } = this.state;
         return (
             <div>
+
+                <NoiseCanvas />
+
                 <div className={styles['home-intro']} style={{ filter: `url(#liquify)`, opacity: liquifyOpacity }}>
                     <Title title="Arka Roy|Web Developer" h1={true} split={false} reveal={titleReveal} />
                 </div>
 
-                <svg>
+                <svg style={{ display: 'none' }}>
                     <defs>
                         <filter id="liquify">
                             <feTurbulence baseFrequency="0.015" numOctaves="3" result="warp" type="fractalNoise" />
