@@ -6,6 +6,13 @@ import { broadcast, listen, unlisten } from '../../libs/broadcast';
 
 class Header extends Component {
 
+    constructor(props, context) {
+        super(props, context);
+        this.state = {
+            active: false
+        };
+    }
+
     componentDidMount() {
         this.overlay = new ShapeOverlays(this.overlays);
         listen(OVERLAY_TOGGLE, this.toggleOverlay);
@@ -13,6 +20,10 @@ class Header extends Component {
         listen(OVERLAY_CLOSE, this.closeOverlay);
         listen(OVERLAY_BLOCK, this.blockOverlay);
         // listen('scroll', this.handleScroll);
+
+        setTimeout(() => {
+            this.setState({ active: true });
+        }, 1500);
     }
 
     componentWillUnmount() {
@@ -64,12 +75,14 @@ class Header extends Component {
     };
 
     render() {
+        const headerClass = this.state.active ? [styles['site-header'], styles['active']].join(' ') : styles['site-header'];
         return (
-            <header className={styles.siteHeader}>
-                <Link to="/" className={styles.homeLink}>
+            <header className={headerClass}>
+
+                <Link to="/" className={styles['home-link']}>
                     <i className={styles.logo} />
                 </Link>
-                <svg className={styles.shapeOverlays} viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
+                <svg className={styles['shape-overlays']} viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
                     <path></path>
                     <path></path>
                 </svg>

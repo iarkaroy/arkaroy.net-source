@@ -1,4 +1,4 @@
-.siteHeader {
+.site-header {
     display: block;
     position: fixed;
     width: 100%;
@@ -7,21 +7,31 @@
     z-index: 99;
     padding: 2rem 3rem;
     font-size: 2rem;
+    transform: translateY(-100%);
+    transition: transform 0.8s cubic-bezier(.5,-0.5,.5,1.5);
     @media screen and (max-width: $mobile-breakpoint) {
         font-size: 1.8rem;
         padding: 2rem 2rem;
     }
-    .homeLink {
-        display: inline-block;
+    .home-link {
+        display: block;
+        width: 3rem;
         font-size: 3rem;
+        line-height: 1;
         color: #ffffff;
+        i {
+            display: block;
+        }
         @media screen and (max-width: $mobile-breakpoint) {
             font-size: 2.8rem;
         }
     }
+    &.active {
+        transform: translateY(0);
+    }
 }
 
-.shapeOverlays {
+.shape-overlays {
 	width: 100vw;
 	height: 100vh;
 	pointer-events: none;
