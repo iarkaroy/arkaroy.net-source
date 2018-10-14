@@ -2,32 +2,18 @@
     display: block;
     position: fixed;
     width: 100%;
+    height: 4rem;
     top: 0;
     left: 0;
     z-index: 99;
-    padding: 2rem 3rem;
-    font-size: 2rem;
-    transform: translateY(-100%);
-    transition: transform 0.8s cubic-bezier(.5,-0.5,.5,1.5);
-    @media screen and (max-width: $mobile-breakpoint) {
-        font-size: 1.8rem;
-        padding: 2rem 2rem;
-    }
+    padding: 0 4rem;
     .home-link {
-        display: block;
-        width: 3rem;
-        font-size: 3rem;
-        line-height: 1;
+        display: inline-block;
+        font-size: 1.6rem;
+        text-transform: uppercase;
+        font-weight: 500;
+        line-height: 4rem;
         color: #ffffff;
-        i {
-            display: block;
-        }
-        @media screen and (max-width: $mobile-breakpoint) {
-            font-size: 2.8rem;
-        }
-    }
-    &.active {
-        transform: translateY(0);
     }
 }
 

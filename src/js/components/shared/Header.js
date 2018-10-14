@@ -4,6 +4,7 @@ import ShapeOverlays, { OVERLAY_TOGGLE, OVERLAY_OPEN, OVERLAY_CLOSE, OVERLAY_BLO
 import styles from '../../../scss/index.scss';
 import { broadcast, listen, unlisten } from '../../libs/broadcast';
 
+
 class Header extends Component {
 
     constructor(props, context) {
@@ -19,11 +20,6 @@ class Header extends Component {
         listen(OVERLAY_OPEN, this.openOverlay);
         listen(OVERLAY_CLOSE, this.closeOverlay);
         listen(OVERLAY_BLOCK, this.blockOverlay);
-        // listen('scroll', this.handleScroll);
-
-        setTimeout(() => {
-            this.setState({ active: true });
-        }, 1500);
     }
 
     componentWillUnmount() {
@@ -31,23 +27,7 @@ class Header extends Component {
         unlisten(OVERLAY_OPEN, this.openOverlay);
         unlisten(OVERLAY_CLOSE, this.closeOverlay);
         unlisten(OVERLAY_BLOCK, this.blockOverlay);
-        // unlisten('scroll', this.handleScroll);
     }
-
-    handleScroll = event => {
-        const { scrollY } = window;
-        const rect = this.logoBack.getBoundingClientRect();
-        const { top, height } = rect;
-        const winHeight = window.document.documentElement.clientHeight;
-        const edge = winHeight - (top + height);
-        const diff = scrollY - edge;
-        if (diff >= 0) {
-            const newHeight = height - diff;
-            this.logoFront.style.height = newHeight >= 0 ? `${newHeight}px` : 0;
-        } else {
-            this.logoFront.style.height = `100%`;
-        }
-    };
 
     toggleOverlay = () => {
         if (this.overlay.isAnimating) {
@@ -75,19 +55,25 @@ class Header extends Component {
     };
 
     render() {
-        const headerClass = this.state.active ? [styles['site-header'], styles['active']].join(' ') : styles['site-header'];
         return (
-            <header className={headerClass}>
+            <div>
+                <header className={styles['site-header']}>
 
-                <Link to="/" className={styles['home-link']}>
-                    <i className={styles.logo} />
-                </Link>
-                <svg className={styles['shape-overlays']} viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
-                    <path></path>
-                    <path></path>
-                </svg>
+                    <Link to="/" className={styles['home-link']}>
 
-            </header>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400.00001" height="12" width="12">
+                            <path d="M 167.48331,5e-4 20.41,400 86.033198,400 197.5616,79.29619 l 4.68481,0 45.47287,130.1334 61.84552,0 L 232.52164,5e-4 Z m 15.71651,250.80764 -18.2678,52.31472 115.24345,0 L 313.76886,400 379.589,400 324.75579,250.8678 Z" fill="white" />
+                        </svg>
+                        rka Roy
+                    </Link>
+                    <svg className={styles['shape-overlays']} viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
+                        <path></path>
+                        <path></path>
+                    </svg>
+
+                </header>
+                
+            </div>
         );
     }
 
