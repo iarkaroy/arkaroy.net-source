@@ -7,6 +7,7 @@ import { broadcast, listen, unlisten } from './libs/broadcast';
 import { getDimension } from './libs/getDimension';
 
 import routes from './router/routes';
+import Footer from './components/shared/Footer';
 
 class App extends Component {
 
@@ -50,6 +51,7 @@ class App extends Component {
             <Router>
                 <Header />
                 <Outlet routes={routes} />
+                <Footer />
             </Router>
         );
     }

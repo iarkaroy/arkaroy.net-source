@@ -1,58 +1,41 @@
 import React, { Component } from 'react';
 import Title from '../components/Title';
 import styles from '../../scss/index.scss';
-import animate from '../libs/animate';
 import * as store from '../store';
-import ProjectCard from '../components/project/ProjectCard';
 import { listen, unlisten } from '../libs/broadcast';
-import { swipeDetector } from '../libs/swipeDetector';
+import ProjectSlider from '../components/project/ProjectSlider';
 import NoiseCanvas from '../components/NoiseCanvas';
+import { Link } from '../router';
+import { swipeDetector } from '../libs/swipeDetector';
+import { getDimension } from '../libs/getDimension';
+import animate from '../libs/animate';
 
 class HomePage extends Component {
 
     constructor(props, context) {
         super(props, context);
         this.state = {
-            liquifyScale: 0,
-            liquifyOpacity: 1,
-            titleReveal: false,
+            width: 0,
+            height: 0,
+            ready: false,
             projects: [],
             selected: -1,
-            rotateX: 0,
-            rotateY: 0
+            liquify: 0
         };
-        this.liquifyOptions = {
-            scale: 0,
-            opacity: 1
+        this.lastTransition = 0;
+        this.values = {
+            liquify: 0
         };
-        this.lastNav = Date.now();
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            this.setState({
-                titleReveal: true
-            });
-        }, 2000);
-
         this.setState({
+            ready: true,
             projects: store.projects()
         });
-
         listen('resize', this.handleResize);
-        this.handleResize();
-    }
-
-    componentWillUnmount() {
-        swipeDetector.unbind();
-        unlisten('mousemove', this.onMouseMove);
-        unlisten('resize', this.handleResize);
-    }
-
-    bindListeners = () => {
-        swipeDetector.unbind();
-        unlisten('mousemove', this.onMouseMove);
-        listen('mousemove', this.onMouseMove);
+        listen('wheel', this.handleWheel);
+        listen('keydown', this.handleKeyDown);
         if ('ontouchmove' in document) {
             swipeDetector.bind();
             swipeDetector.onSwipe(direction => {
@@ -66,29 +49,41 @@ class HomePage extends Component {
                 }
             })
         }
-    };
+        this.handleResize();
+    }
 
-    handleResize = event => {
-        this.bindListeners();
+    componentWillUnmount() {
+        unlisten('resize', this.handleResize);
+        unlisten('wheel', this.handleWheel);
+        unlisten('keydown', this.handleKeyDown);
         if ('ontouchmove' in document) {
-            this.setState({
-                rotateY: 0,
-                rotateX: 0
-            });
+            swipeDetector.unbind();
+        }
+    }
+
+    handleWheel = event => {
+        const { deltaY } = event;
+        if (deltaY > 0) {
+            this.gotoNext();
+        }
+        if (deltaY < 0) {
+            this.gotoPrev();
         }
     };
 
-    onMouseMove = event => {
-        const { pageX, pageY } = event;
-        var x = pageX / window.innerWidth;
-        var y = pageY / window.innerHeight;
-        x = x * 2 - 1;
-        y = y * 2 - 1;
-        x *= -1;
-        this.setState({
-            rotateY: ('ontouchmove' in document) ? 0 : x * 5,
-            rotateX: ('ontouchmove' in document) ? 0 : y * 5
-        });
+    handleKeyDown = (event) => {
+        switch (event.keyCode) {
+
+            // Up arrow
+            case 38:
+                this.gotoPrev();
+                break;
+
+            // Down arrow
+            case 40:
+                this.gotoNext();
+                break;
+        }
     };
 
     gotoNext = event => {
@@ -97,41 +92,28 @@ class HomePage extends Component {
         }
 
         const now = Date.now();
-        if (now - this.lastNav < 2000) {
+        if (now - this.lastTransition < 1200) {
             return false;
         }
-        this.lastNav = now;
 
-        const { projects, selected } = this.state;
-        if (selected < 0) {
-            this.liquifyOptions = {
-                scale: 0,
-                opacity: 1
-            };
-            animate({
-                targets: this.liquifyOptions,
-                scale: 400,
-                opacity: 0,
-                duration: 1200,
-                easing: 'quintOut',
-                update: () => {
-                    this.setState({
-                        liquifyScale: this.liquifyOptions.scale,
-                        liquifyOpacity: this.liquifyOptions.opacity
-                    });
-                },
-                complete: () => {
-                    this.setState({ selected: 0 })
-                }
-            });
-        } else {
-            var next = selected + 1;
-            if (next >= projects.length) {
-                next = projects.length - 1;
+        this.lastTransition = now;
+
+        var { selected, projects } = this.state;
+        var next = selected + 1;
+        if (next < projects.length) {
+            if (selected === -1) {
+                animate({
+                    targets: this.values,
+                    liquify: 400,
+                    duration: 600,
+                    update: () => {
+                        this.setState({
+                            liquify: this.values.liquify
+                        })
+                    }
+                });
             }
-            this.setState({
-                selected: next
-            });
+            this.setState({ selected: next });
         }
     };
 
@@ -141,85 +123,70 @@ class HomePage extends Component {
         }
 
         const now = Date.now();
-        if (now - this.lastNav < 2000) {
+        if (now - this.lastTransition < 1200) {
             return false;
         }
-        this.lastNav = now;
 
-        const { projects, selected } = this.state;
+        this.lastTransition = now;
+
+        var { selected, projects } = this.state;
         var prev = selected - 1;
-        if (prev < -1) {
-            prev = -1;
-        }
-        if (prev === -1) {
-            setTimeout(() => {
-                this.liquifyOptions = {
-                    scale: 400,
-                    opacity: 0
-                };
+        if (prev >= -1) {
+            if (prev === -1) {
                 animate({
-                    targets: this.liquifyOptions,
-                    scale: 0,
-                    opacity: 1,
-                    duration: 1200,
-                    easing: 'quintOut',
+                    targets: this.values,
+                    liquify: 0,
+                    duration: 600,
+                    delay: 500,
                     update: () => {
                         this.setState({
-                            liquifyScale: this.liquifyOptions.scale,
-                            liquifyOpacity: this.liquifyOptions.opacity
-                        });
+                            liquify: this.values.liquify
+                        })
                     }
                 });
-            }, 800);
+            }
+            this.setState({ selected: prev });
         }
-        this.setState({ selected: prev });
+    };
+
+    handleResize = () => {
+        this.setState(getDimension());
     };
 
     render() {
-        const { liquifyScale, liquifyOpacity, titleReveal, projects, selected, rotateX, rotateY } = this.state;
+        const { width, height, projects, ready, selected, liquify } = this.state;
+        const titleOpacity = 1 - liquify / 400;
         return (
-            <div>
-
-                <NoiseCanvas />
-
-                <div className={styles['home-intro']} style={{ filter: `url(#liquify)`, opacity: liquifyOpacity }}>
-                    <Title title="Arka Roy|Web Developer" h1={true} split={false} reveal={titleReveal} />
+            <main className={styles['main']}>
+                <div className={styles['home-intro']} style={{ filter: `url(#liquify)`, opacity: titleOpacity, display: titleOpacity === 0 ? 'none' : 'block' }}>
+                    <Title title="ARKA ROY|WEB DEVELOPER" h1={true} split={false} reveal={ready} />
                 </div>
 
                 <svg style={{ display: 'none' }}>
                     <defs>
                         <filter id="liquify">
                             <feTurbulence baseFrequency="0.015" numOctaves="3" result="warp" type="fractalNoise" />
-                            <feDisplacementMap in="SourceGraphic" in2="warp" scale={liquifyScale} xChannelSelector="R" yChannelSelector="R" />
+                            <feDisplacementMap in="SourceGraphic" in2="warp" scale={liquify} xChannelSelector="R" yChannelSelector="R" />
                         </filter>
                     </defs>
                 </svg>
 
+                <ProjectSlider selected={selected} />
+                <NoiseCanvas />
 
-                {projects.map((project, index) => {
-                    return <ProjectCard
-                        key={index}
-                        title={project.data.title}
-                        slug={project.data.slug}
-                        image={project.data.thumb}
-                        category={project.data.categories.join(', ')}
-                        index={index}
-                        selected={index === selected}
-                        rotateX={rotateX}
-                        rotateY={rotateY}
-                    />;
-                })}
+                <div className={styles['project-slider-info']}>
+                    <div className={styles['project-slider-meta']} style={{ transform: `translate3d(0, ${-selected * (height || 9999)}px, 0)` }}>
+                        {projects.map((project, index) => {
+                            return (
+                                <Link to={`/projects/${project.data.slug}`} key={index}>
+                                    <h2>{project.data.title}</h2>
+                                </Link>
+                            );
+                        })}
+                    </div>
 
-                <div className={styles['project-navigation']}>
-                    <a href="#" className={styles.prev} onClick={this.gotoPrev}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z" /></svg>
-                    </a>
-                    <a href="#" className={styles.next} onClick={this.gotoNext}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z" /></svg>
-                    </a>
                 </div>
-
-            </div>
+            </main>
         );
     }
 

@@ -12,68 +12,46 @@ class ProjectCard extends Component {
         slug: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired,
         image: PropTypes.string.isRequired,
-        selected: PropTypes.bool,
-        rotateX: PropTypes.number,
-        rotateY: PropTypes.number
-    };
-
-    static defaultProps = {
-        selected: false,
-        rotateX: 0,
-        rotateY: 0
     };
 
     constructor(props, context) {
         super(props, context);
-        this.state = {
-            selected: false,
-            displayed: false,
-        };
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.selected !== this.props.selected) {
-            const { selected } = this.props;
-            if (selected) {
-                setTimeout(() => {
-                    this.setState({ displayed: true }, () => {
-                        setTimeout(() => {
-                            this.setState({ selected });
-                        }, 100);
-                    });
-                }, 1000);
-            } else {
-                this.setState({ selected });
-                setTimeout(() => {
-                    this.setState({ displayed: false });
-                }, 1600);
-            }
-        }
     }
 
     render() {
-        const { title, slug, category, image, index, rotateX, rotateY } = this.props;
-        const { selected, displayed } = this.state;
+        const { title, slug, category, image, index, width, height, scrollTop } = this.props;
+        const offset = 0;// height * 2 * (index + 1) + scrollTop;
         const imageSrc = `/images/${image}`;
-        const thumbClasses = [styles['project-thumb'], styles['reveal']];
-        if (selected) {
-            thumbClasses.push(styles['active']);
-        }
-        const titleParts = title.trim().split(' ');
-        var currIndex = index + 1;
-        currIndex = currIndex < 10 ? `0${currIndex}` : currIndex;
-        var wrapperStyle = {
-            transform: `translate(-50%, -50%) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
-        };
-        if (!displayed) {
-            wrapperStyle.display = 'none';
-        }
-        //display: displayed ? 'block' : 'none',
+        const titleParts = title.split(' ');
         return (
-            <div className={styles['project-card']} style={wrapperStyle}>
-                <Link to={`/projects/${slug}`}>
-                    <div className={thumbClasses.join(' ')} style={{ backgroundImage: `url(${imageSrc})`, display: 'block' }}></div>
-                    <Title title={`${currIndex}|${titleParts.join('|')}|${category}`} split={false} reveal={selected} className={styles['project-title']} />
+            <div className={styles['project-wrapper']}>
+                <Link
+                    to={`/projects/${slug}`}
+                    className={styles['project-card']}
+                    style={{
+                        backgroundImage: `url(${imageSrc})`,
+                    }}
+                >
+                    <div className={styles['project-info']}>
+                        {titleParts.map((t, i) => {
+                            return (
+                                <div className={styles['project-title-part']}>
+                                    <h2 style={{ clipPath: `url(#slicebot)` }}>{t}</h2>
+                                    <h2 style={{ clipPath: `url(#slicetop)`, position: `absolute`, top: 0, left: 5 }}>{t}</h2>
+                                    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: 'absolute', top: 0, left: 0 }}>
+                                        <defs>
+                                            <clipPath id="slicetop" clipPathUnits="objectBoundingBox" transform="scale(0.01, 0.01)">
+                                                <polygon points="0 0 100 0 100 80 0 40 0 0" />
+                                            </clipPath>
+                                            <clipPath id="slicebot" clipPathUnits="objectBoundingBox" transform="scale(0.01, 0.01)">
+                                                <polygon points="0 40 100 80 100 100 0 100 0 40" />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </Link>
             </div>
         );

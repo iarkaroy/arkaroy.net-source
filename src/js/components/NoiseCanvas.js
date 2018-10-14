@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { listen, unlisten } from '../libs/broadcast';
 import { getDimension } from '../libs/getDimension';
+import styles from '../../scss/index.scss';
 
 class NoiseCanvas extends Component {
 
@@ -41,7 +42,7 @@ class NoiseCanvas extends Component {
             this.pattern.data[i] = v;
             this.pattern.data[i + 1] = v;
             this.pattern.data[i + 2] = v;
-            this.pattern.data[i + 3] = v * .03;
+            this.pattern.data[i + 3] = 10//v * .04;
         }
         this.grain.putImageData(this.pattern, 0, 0);
     };
@@ -70,7 +71,12 @@ class NoiseCanvas extends Component {
     render() {
         const { width, height } = this.state;
         return (
-            <canvas ref={o => { this.canvas = o; }} width={width} height={height} />
+            <canvas
+                ref={o => { this.canvas = o; }}
+                width={width}
+                height={height}
+                className={styles['noise-canvas']}
+            />
         );
     }
 

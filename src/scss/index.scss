@@ -4,6 +4,7 @@
 @import "_reset";
 @import "_mixin";
 @import "_header";
+@import "_footer";
 
 $reveal-duration: 0.3s;
 
@@ -45,6 +46,7 @@ $reveal-duration: 0.3s;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    z-index: 6;
     h1, h2 {
         margin: 0;
         padding: 0;
@@ -52,38 +54,64 @@ $reveal-duration: 0.3s;
         line-height: 1.2;
         margin-bottom: 5px;
         font-weight: 900;
+        white-space: nowrap;
         @media screen and (max-width: $mobile-breakpoint) {
             font-size: 3rem;
         }
     }
     h2 {
-        font-size: 2rem;
-        font-weight: 400;
+        font-size: 1.6rem;
+        font-weight: 500;
         @media screen and (max-width: $mobile-breakpoint) {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
         }
     }
     
 }
 
+.project-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+.project-wrapper {
+    display: block;
+    width: 30%;
+    margin-left: 15%;
+}
 .project-card {
     display: block;
-    width: 90%;
-    max-width: 600px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
     transform-style: preserve-3d;
-    a {
-        display: block;
-    }
-}
-.project-thumb {
-    padding-top: 60%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     filter: grayscale(100%);
+    padding-top: 100%;
+}
+.project-info {
+    display: block;
+    position: absolute;
+    text-align: left;
+    top: 50%;
+    left: 10%;
+    transform: translate3d(0, -50%, 0);
+    h2, h3 {
+        margin: 0;
+        padding: 0;
+        font-weight: 900;
+        font-size: 6rem;
+        line-height: 1.15;
+        color: #ffffff;
+        width: 100%;
+        background: black;
+        padding: 0.4rem 1rem;
+    }
+    h3 {
+        font-size: 2rem;
+        font-weight: 500;
+    }
+}
+.project-title-part {
+    position: relative;
 }
 
 .project-title {
@@ -323,5 +351,49 @@ $reveal-duration: 0.3s;
     }
     @media screen and (max-width: $mobile-breakpoint) {
         width: 100%;
+    }
+}
+
+
+.noise-canvas {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+.project-slider-canvas {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    filter: grayscale(100%);
+}
+.project-slider-info {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    background: rgba($color: #000000, $alpha: 0.2);
+    
+}
+.project-slider-meta {
+    height: 100%;
+    transform: translate3d(0, 100vh, 0);
+    transition: transform 0.8s ease-in-out;
+    a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+    h2 {
+        font-size: 8rem;
+        font-weight: 900;
     }
 }
