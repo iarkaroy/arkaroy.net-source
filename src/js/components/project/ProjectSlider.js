@@ -44,7 +44,7 @@ void main() {
     vec2 dispVec = texture2D(u_disp, uv - delta).rg;
     vec2 distortedPosition1 = uv + dispVec * intensity * dispFactor - (intensity * dispFactor / 2.);
     vec2 distortedPosition2 = uv + dispVec * intensity * (1.0 - dispFactor) - (intensity * (1.0 - dispFactor) / 2.);
-    vec2 baseDistortion = dispVec * 0.005;
+    vec2 baseDistortion = dispVec * 0.008;
     vec4 _texture1 = texture2D(u_texture1, distortedPosition1 + baseDistortion);
     vec4 _texture2 = texture2D(u_texture2, distortedPosition2 + baseDistortion);
     gl_FragColor = mix(_texture1, _texture2, dispFactor);
@@ -66,7 +66,6 @@ class ProjectSlider extends Component {
         this.dispTexture = null;
         this.nullTexture = null;
         this.values = {
-            intensity: 0.005,
             displacement: 0
         };
         this.projects = [];
@@ -141,8 +140,7 @@ class ProjectSlider extends Component {
         this.program.setUniforms({
             u_resolution: new Float32Array([this.state.width, this.state.height]),
             dispFactor: this.values.displacement,
-            u_time: time,
-            u_intensity: this.values.intensity
+            u_time: time
         });
         this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, QUAD.length / 2);
     };
