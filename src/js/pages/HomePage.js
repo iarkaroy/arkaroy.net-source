@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Title from '../components/Title';
 import styles from '../../scss/index.scss';
 import * as store from '../store';
-import { listen, unlisten } from '../libs/broadcast';
+import { listen, unlisten, broadcast } from '../libs/broadcast';
 import ProjectSlider from '../components/project/ProjectSlider';
 import NoiseCanvas from '../components/NoiseCanvas';
 import { Link } from '../router';
@@ -113,6 +113,7 @@ class HomePage extends Component {
                     }
                 });
             }
+            broadcast('project-slider:change', next);
             this.setState({ selected: next });
         }
     };
@@ -145,6 +146,7 @@ class HomePage extends Component {
                     }
                 });
             }
+            broadcast('project-slider:change', prev);
             this.setState({ selected: prev });
         }
     };
@@ -171,7 +173,7 @@ class HomePage extends Component {
                     </defs>
                 </svg>
 
-                <ProjectSlider selected={selected} />
+                {/*<ProjectSlider selected={selected} />*/}
 
                 {/*
                 <div className={styles['project-slider-info']}>

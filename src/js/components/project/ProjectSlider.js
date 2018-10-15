@@ -74,6 +74,7 @@ class ProjectSlider extends Component {
 
     componentDidMount() {
         listen('resize', this.handleResize);
+        listen('project-slider:change', this.changeProject);
         this.initWebGL();
         this.handleResize();
         loadImage(require('../../../images/clouds.jpg')).then(img => {
@@ -93,35 +94,45 @@ class ProjectSlider extends Component {
                     });
                 }
             });
-
-
-
     }
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.selected !== this.props.selected) {
-            const { selected } = this.props;
-            this.texture1 = prevProps.selected < 0 ? this.nullTexture : this.projects[prevProps.selected].data.texture;
-            this.texture2 = this.projects[selected] ? this.projects[selected].data.texture : this.nullTexture;
-            this.values.displacement = 0;
-            this.change();
-        }
+    componentWillUnmount() {
+        unlisten('resize', this.handleResize);
+        unlisten('project-slider:change', this.changeProject);
     }
+
+    changeProject = index => {
+        const prevIndex = this.currIndex;
+        this.currIndex = index;
+        this.texture1 = prevIndex < 0 ? this.nullTexture : this.projects[prevIndex].data.texture;
+        this.texture2 = this.projects[this.currIndex] ? this.projects[this.currIndex].data.texture : this.nullTexture;
+        this.values.displacement = 0;
+        this.change();
+    };
 
     updateProjectTexture = project => {
         const { width, height } = getDimension();
         if (!project.data.image) {
             return false;
         }
+
+        // Create canvas with project image as background
         project.data.canvas = image2canvas(project.data.image, width * 2, height * 2);
+
         const ctx = project.data.canvas.getContext('2d');
+
+        // Fill light transparent background
         ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
         ctx.fillRect(0, 0, width * 2, height * 2);
+
+        // Draw project title
         const fontSize = Math.max(Math.floor(width * 0.015), 8);
         ctx.font = `900 ${fontSize}rem 'Inter UI'`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = '#ffffff';
+
+        // Draw project title in single or multi line based on title width
         const textWidth = ctx.measureText(project.data.title).width;
         if (textWidth > width * 2 * 0.8) {
             const titleParts = project.data.title.split(' ');
@@ -133,6 +144,7 @@ class ProjectSlider extends Component {
             ctx.fillText(project.data.title, width, height);
         }
 
+        // Generate texture
         project.data.texture = new Texture(this.gl, width * 2, height * 2, project.data.canvas);
     };
 
@@ -171,10 +183,6 @@ class ProjectSlider extends Component {
         this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, QUAD.length / 2);
     };
 
-    componentWillUnmount() {
-        unlisten('resize', this.handleResize);
-    }
-
     initWebGL = () => {
         this.gl = getWebGLContext(this.canvas);
         this.program = new Program(this.gl, vs, fs);
@@ -191,8 +199,8 @@ class ProjectSlider extends Component {
             this.updateProjectTexture(project);
         });
         this.updateNullTexture();
-        if (this.props.selected >= 0) {
-            this.texture1 = this.projects[this.props.selected] ? this.projects[this.props.selected].data.texture : null;
+        if (this.currIndex >= 0) {
+            this.texture1 = this.projects[this.currIndex] ? this.projects[this.currIndex].data.texture : null;
             this.texture2 = this.nullTexture;
         } else {
             this.texture1 = this.nullTexture;

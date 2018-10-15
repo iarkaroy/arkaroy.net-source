@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import { Header } from './components/shared';
 import { Router, Outlet } from './router';
+import ProjectSlider from './components/project/ProjectSlider';
 
 import { broadcast, listen, unlisten } from './libs/broadcast';
 import { getDimension } from './libs/getDimension';
@@ -50,6 +51,7 @@ class App extends Component {
         return (
             <Router>
                 <Header />
+                <ProjectSlider/>
                 <Outlet routes={routes} />
                 <Footer />
             </Router>
