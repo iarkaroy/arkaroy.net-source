@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {matchPath} from './matchPath';
+import { matchRoutes } from './matchRoutes';
 
 class Outlet extends Component {
 
@@ -24,7 +25,7 @@ class Outlet extends Component {
             if (this.child && this.child.componentWillLeave) {
                 this.child.componentWillLeave(() => {
                     this.forceUpdate();
-                });
+                }, location);
             } else {
                 this.forceUpdate();
             }
@@ -36,6 +37,7 @@ class Outlet extends Component {
     }
 
     render() {
+        /*
         var MatchedComponent = null;
         var params = {};
         const { routes } = this.props;
@@ -51,10 +53,13 @@ class Outlet extends Component {
                 break;
             }
         }
+        */
 
-        if (MatchedComponent) {
+        const match = matchRoutes(this.history.location.pathname, this.props.routes);
+
+        if (match.component) {
             return (
-                <MatchedComponent ref={instance => { this.child = instance; }} params={params} />
+                <match.component ref={instance => { this.child = instance; }} params={match.params} />
             )
         }
 
