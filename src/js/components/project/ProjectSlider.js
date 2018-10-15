@@ -81,13 +81,20 @@ class ProjectSlider extends Component {
             this.renderCanvas();
         });
 
-        this.projects = store.projects();
-        this.projects.forEach(project => {
-            loadImage(`/images/${project.data.thumb}`).then(img => {
-                project.data.image = img;
-                this.updateProjectTexture(project);
+        document.fonts.load(`900 8rem 'Inter UI'`, 'BESbswy')
+            .then(fonts => {
+                if (fonts.length) {
+                    this.projects = store.projects();
+                    this.projects.forEach(project => {
+                        loadImage(`/images/${project.data.thumb}`).then(img => {
+                            project.data.image = img;
+                            this.updateProjectTexture(project);
+                        });
+                    });
+                }
             });
-        });
+
+
 
     }
 
@@ -106,8 +113,27 @@ class ProjectSlider extends Component {
         if (!project.data.image) {
             return false;
         }
-        project.data.canvas = image2canvas(project.data.image, width, height);
-        project.data.texture = new Texture(this.gl, width, height, project.data.canvas);
+        project.data.canvas = image2canvas(project.data.image, width * 2, height * 2);
+        const ctx = project.data.canvas.getContext('2d');
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillRect(0, 0, width * 2, height * 2);
+        const fontSize = Math.max(Math.floor(width * 0.015), 8);
+        ctx.font = `900 ${fontSize}rem 'Inter UI'`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#ffffff';
+        const textWidth = ctx.measureText(project.data.title).width;
+        if (textWidth > width * 2 * 0.8) {
+            const titleParts = project.data.title.split(' ');
+            const lineHeight = fontSize * 1.2 * 10;
+            for (let i = 0; i < titleParts.length; ++i) {
+                ctx.fillText(titleParts[i], width, height + (i * lineHeight) - (titleParts.length / 2 * lineHeight - lineHeight / 2));
+            }
+        } else {
+            ctx.fillText(project.data.title, width, height);
+        }
+
+        project.data.texture = new Texture(this.gl, width * 2, height * 2, project.data.canvas);
     };
 
     change = () => {
@@ -115,12 +141,12 @@ class ProjectSlider extends Component {
             targets: this.values,
             displacement: 1,
             duration: 1000,
-            complete: () => {}
+            complete: () => { }
         });
     };
 
     renderCanvas = () => {
-        
+
         requestAnimationFrame(this.renderCanvas);
 
         if (!this.texture1 || !this.texture2 || !this.dispTexture) {
@@ -138,7 +164,7 @@ class ProjectSlider extends Component {
         });
         this.program.setBuffer('a_position', QUAD, 2);
         this.program.setUniforms({
-            u_resolution: new Float32Array([this.state.width, this.state.height]),
+            u_resolution: new Float32Array([this.state.width * 2, this.state.height * 2]),
             dispFactor: this.values.displacement,
             u_time: time
         });
@@ -160,13 +186,13 @@ class ProjectSlider extends Component {
     handleResize = event => {
         const { width, height } = getDimension();
         this.setState({ width, height });
-        this.gl.viewport(0, 0, width, height);
+        this.gl.viewport(0, 0, width * 2, height * 2);
         this.projects.forEach(project => {
             this.updateProjectTexture(project);
         });
         this.updateNullTexture();
-        if(this.props.selected >= 0) {
-            this.texture1 = this.projects[this.props.selected].data.texture ? this.projects[this.props.selected].data.texture : null;
+        if (this.props.selected >= 0) {
+            this.texture1 = this.projects[this.props.selected] ? this.projects[this.props.selected].data.texture : null;
             this.texture2 = this.nullTexture;
         } else {
             this.texture1 = this.nullTexture;
@@ -177,7 +203,7 @@ class ProjectSlider extends Component {
 
     updateNullTexture = () => {
         const { width, height } = getDimension();
-        this.nullTexture = new Texture(this.gl, width, height, null);
+        this.nullTexture = new Texture(this.gl, width * 2, height * 2, null);
     };
 
     render() {
@@ -185,8 +211,12 @@ class ProjectSlider extends Component {
         return (
             <canvas
                 ref={o => this.canvas = o}
-                width={width}
-                height={height}
+                width={width * 2}
+                height={height * 2}
+                style={{
+                    width,
+                    height
+                }}
                 className={styles['project-slider-canvas']}
             />
         );

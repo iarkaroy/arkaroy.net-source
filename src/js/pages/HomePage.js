@@ -172,8 +172,8 @@ class HomePage extends Component {
                 </svg>
 
                 <ProjectSlider selected={selected} />
-                <NoiseCanvas />
 
+                {/*
                 <div className={styles['project-slider-info']}>
                     <div className={styles['project-slider-meta']} style={{ transform: `translate3d(0, ${-selected * (height || 9999)}px, 0)` }}>
                         {projects.map((project, index) => {
@@ -184,8 +184,8 @@ class HomePage extends Component {
                             );
                         })}
                     </div>
-
                 </div>
+                */}
             </main>
         );
     }
