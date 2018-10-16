@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { getDimension } from '../../libs/getDimension';
 import { listen, unlisten } from '../../libs/broadcast';
 import { getWebGLContext, Program, Texture } from '../../webgl';
@@ -8,6 +9,7 @@ import * as store from '../../store';
 import { image2canvas } from '../../libs/imgToCanvas';
 import styles from '../../../scss/index.scss';
 import { isPrerender } from '../../libs/isPrerender';
+import { matchRoutes } from '../../router/matchRoutes';
 
 const QUAD = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
@@ -54,6 +56,10 @@ void main() {
 
 class ProjectSlider extends Component {
 
+    static contextTypes = {
+        router: PropTypes.object.isRequired
+    }
+
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -79,6 +85,14 @@ class ProjectSlider extends Component {
         this.initWebGL();
         this.handleResize();
         if (!isPrerender()) {
+            const { router } = this.context;
+            const { history } = router;
+            const { location } = history;
+            const match = matchRoutes(location.pathname, this.props.routes);
+            if(match.component.name === 'ProjectPage') {
+                const id = match.params.id;
+                this.currIndex = store.projectIndex(id);
+            }
             loadImage(require('../../../images/clouds.jpg')).then(img => {
                 this.dispTexture = new Texture(this.gl, 512, 512, img, this.gl.REPEAT);
                 requestAnimationFrame(this.renderCanvas);
@@ -88,10 +102,10 @@ class ProjectSlider extends Component {
                 .then(fonts => {
                     if (fonts.length) {
                         this.projects = store.projects();
-                        this.projects.forEach(project => {
+                        this.projects.forEach((project, index) => {
                             loadImage(`/images/${project.data.thumb}`).then(img => {
                                 project.data.image = img;
-                                this.updateProjectTexture(project);
+                                this.updateProjectTexture(project, index);
                             });
                         });
                     }
@@ -113,7 +127,7 @@ class ProjectSlider extends Component {
         this.change();
     };
 
-    updateProjectTexture = project => {
+    updateProjectTexture = (project, index) => {
         const { width, height } = getDimension();
         if (!project.data.image) {
             return false;
@@ -149,6 +163,10 @@ class ProjectSlider extends Component {
 
         // Generate texture
         project.data.texture = new Texture(this.gl, width * 2, height * 2, project.data.canvas);
+
+        if(index === this.currIndex) {
+            this.texture1 = project.data.texture;
+        }
     };
 
     change = () => {
@@ -198,8 +216,8 @@ class ProjectSlider extends Component {
         const { width, height } = getDimension();
         this.setState({ width, height });
         this.gl.viewport(0, 0, width * 2, height * 2);
-        this.projects.forEach(project => {
-            this.updateProjectTexture(project);
+        this.projects.forEach((project, index) => {
+            this.updateProjectTexture(project, index);
         });
         this.updateNullTexture();
         if (this.currIndex >= 0) {

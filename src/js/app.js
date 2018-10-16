@@ -51,7 +51,7 @@ class App extends Component {
         return (
             <Router>
                 <Header />
-                <ProjectSlider/>
+                <ProjectSlider routes={routes}/>
                 <Outlet routes={routes} />
                 <Footer />
             </Router>
