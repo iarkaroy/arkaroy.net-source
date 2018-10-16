@@ -6,14 +6,8 @@ import styles from '../../scss/index.scss';
 import { OVERLAY_TOGGLE, OVERLAY_OPEN, OVERLAY_CLOSE, OVERLAY_BLOCK } from '../libs/shape-overlays';
 import { Link } from '../router';
 import { broadcast, listen, unlisten } from '../libs/broadcast';
-
-const classNames = {
-    metaWrapper: 'project-meta--wrapper',
-    metaInfo: 'project-meta--info',
-    nextWrapper: 'next-project--wrapper',
-    nextInfoWrapper: 'next-project--info-wrapper',
-    nextInfo: 'next-project--info'
-};
+import { getDimension } from '../libs/getDimension';
+import * as scroller from '../libs/scroller';
 
 class ProjectPage extends Component {
 
@@ -25,51 +19,31 @@ class ProjectPage extends Component {
             prev: null,
             width: 0,
             height: 0,
-            bgOpacity: 1,
-            bgTop: 0,
-            liquifyScale: 0
+            scroll: 0,
+            contentHeight: 0
         };
-        this.timeoutId = 0;
+        this.frameId = 0;
     }
 
     componentDidMount() {
-        broadcast(OVERLAY_BLOCK);
         const slug = this.props.params.id
         this.loadProject(slug);
-        window.addEventListener('resize', this.handleResize);
-        listen('scroll', this.handleScroll);
-        this.handleResize();
+        this.frameId = requestAnimationFrame(this.handleResize);
+        scroller.bind();
+        listen('scroller:scroll', this.updateScroll);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.handleResize);
-        unlisten('scroll', this.handleScroll);
+        cancelAnimationFrame(this.frameId);
+        scroller.unbind();
+        unlisten('scroller:scroll', this.updateScroll);
     }
 
-    handleScroll = event => {
-        const { scrollY } = window;
-        var opacity = 1 - scrollY * .003;
-        if (opacity < 0) {
-            opacity = 0;
-        }
+    updateScroll = scroll => {
         this.setState({
-            bgOpacity: opacity,
-            bgTop: -scrollY * .2,
-            // liquifyScale: scrollY
+            scroll
         });
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId);
-        }
-        setTimeout(() => {
-
-        }, 80);
-
     };
-
-    componentWillLeave(callback) {
-        broadcast(OVERLAY_OPEN);
-        setTimeout(callback, 850);
-    }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const prevSlug = prevProps.params.id;
@@ -85,51 +59,41 @@ class ProjectPage extends Component {
             next: store.next(slug),
             prev: store.prev(slug)
         });
-        window.scrollTo(0, 0);
-        if (!isPrerender()) {
-            setTimeout(() => {
-                broadcast(OVERLAY_CLOSE);
-            }, 200);
-        }
     };
 
-    handleResize = event => {
-        const { clientWidth, clientHeight } = window.document.documentElement;
-        this.setState({
-            width: clientWidth,
-            height: clientHeight
-        });
+    handleResize = () => {
+        this.frameId = requestAnimationFrame(this.handleResize);
+        const { width, height } = getDimension();
+        const contentHeight = this.content ? this.content.clientHeight : 0;
+        if (contentHeight) {
+            scroller.setMaxScroll(contentHeight);
+        }
+        if (width !== this.state.width || height !== this.state.height || contentHeight !== this.state.contentHeight) {
+            this.setState({
+                width,
+                height,
+                contentHeight
+            });
+        }
     }
 
     render() {
-        const { project, next, prev, width, height, bgOpacity, bgTop, liquifyScale } = this.state;
+        const { project, next, prev, width, height, scroll, contentHeight } = this.state;
         if (!project) {
             return null;
         }
         const { data } = project;
         const thumb = `/images/${data.thumb}`;
         return (
-            <main>
+            <main className={styles['main']}>
 
                 <Helmet>
                     <title>{data.title} &#8211; Arka Roy &#8211; Web Developer</title>
                 </Helmet>
 
-                <div className={styles['project-background']} style={{ backgroundImage: `url('${thumb}')`, height: height * 1.5, opacity: bgOpacity, transform: `translateY(${bgTop}px)` }}></div>
-
-                <div className={styles['project-single']}>
+                <div className={styles['project-single']} ref={o => this.content = o} style={{ transform: `translate3d(0, ${height - scroll}px, 0)` }} onLoad={console.log}>
 
                     <div className={styles['project-content']}>
-                        <h1 style={{ filter: `url(#liquify)` }}>{data.title}</h1>
-
-                        <svg style={{ display: 'none' }}>
-                            <defs>
-                                <filter id="liquify">
-                                    <feTurbulence baseFrequency="0.015" numOctaves="3" result="warp" type="fractalNoise" />
-                                    <feDisplacementMap in="SourceGraphic" in2="warp" scale={liquifyScale} xChannelSelector="R" yChannelSelector="R" />
-                                </filter>
-                            </defs>
-                        </svg>
 
                         <div className={styles['project-intro']}>
                             <div className={styles['project-overview']}>
@@ -149,7 +113,10 @@ class ProjectPage extends Component {
 
                 </div>
 
+                <div className={styles['scrollbar']} style={{ transform: `translate3d(0, ${(height * scroll / contentHeight).toFixed(2) - height}px, 0)` }}></div>
 
+
+                {/*
 
                 <div className={styles.body}>
 
@@ -168,7 +135,7 @@ class ProjectPage extends Component {
                         </div>
                     }
                 </div>
-
+*/}
             </main>
         );
     }
