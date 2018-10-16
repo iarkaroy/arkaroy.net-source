@@ -9,6 +9,13 @@ var scroll = 0,
 
 const SPEED = 20, SMOOTH = 40;
 
+var min = 0,
+    max = 99999;
+
+const clamp = (val) => {
+    return Math.max(min, Math.min(max, val));
+};
+
 export function bind() {
     document.addEventListener('wheel', wheel);
     if (typeof window.ontouchstart !== "undefined") {
@@ -22,10 +29,15 @@ export function unbind() {
 
 }
 
+export function setMaxScroll(m) {
+    max = m || 99999;
+}
+
 function wheel(event) {
     var delta = event.delta || event.wheelDelta || -event.detail;
     delta = Math.max(-1, Math.min(1, delta));
     pos += -delta * SPEED;
+    pos = clamp(pos);
     if (!scrolling) {
         updateScroll();
     }
@@ -38,7 +50,6 @@ function tap(event) {
     diffY = 0;
     e.stopPropagation();
     return false;
-
 }
 
 function drag(e) {
@@ -49,6 +60,7 @@ function drag(e) {
         lastY = y;
         if (diffY > 2 || diffY < -2) {
             scroll += diffY;
+            scroll = clamp(scroll);
             broadcastScroll();
         }
     }
@@ -67,6 +79,7 @@ function release(event) {
             window.cancelAnimationFrame(animate);
         } else {
             scroll += diffY * step;
+            scroll = clamp(scroll);
             start -= 0.02;
             window.requestAnimationFrame(animate);
             broadcastScroll();
@@ -80,6 +93,7 @@ function release(event) {
 function updateScroll() {
     var delta = (pos - scroll) / SMOOTH;
     scroll += delta;
+    scroll = clamp(scroll);
     broadcastScroll();
     if (Math.abs(delta) > 0.01) {
         requestAnimationFrame(updateScroll);
@@ -89,9 +103,6 @@ function updateScroll() {
 }
 
 function broadcastScroll() {
-    const min = 0;
-    const max = 9999;
-    scroll = Math.max(min, Math.min(max, scroll));
     broadcast('scroller:scroll', scroll);
 }
 
