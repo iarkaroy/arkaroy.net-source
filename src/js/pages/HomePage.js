@@ -15,8 +15,6 @@ class HomePage extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            width: 0,
-            height: 0,
             ready: false,
             projects: [],
             selected: -1,
@@ -30,10 +28,8 @@ class HomePage extends Component {
 
     componentDidMount() {
         this.setState({
-            ready: true,
             projects: store.projects()
         });
-        listen('resize', this.handleResize);
         listen('wheel', this.handleWheel);
         listen('keydown', this.handleKeyDown);
         if ('ontouchmove' in document) {
@@ -49,11 +45,17 @@ class HomePage extends Component {
                 }
             })
         }
-        this.handleResize();
+        document.fonts.load(`900 8rem 'Inter UI'`, 'BESbswy')
+            .then(fonts => {
+                if (fonts.length) {
+                    this.setState({
+                        ready: true
+                    });
+                }
+            });
     }
 
     componentWillUnmount() {
-        unlisten('resize', this.handleResize);
         unlisten('wheel', this.handleWheel);
         unlisten('keydown', this.handleKeyDown);
         if ('ontouchmove' in document) {
@@ -151,12 +153,8 @@ class HomePage extends Component {
         }
     };
 
-    handleResize = () => {
-        this.setState(getDimension());
-    };
-
     render() {
-        const { width, height, projects, ready, selected, liquify } = this.state;
+        const { projects, ready, selected, liquify } = this.state;
         const titleOpacity = 1 - liquify / 400;
         return (
             <main className={styles['main']}>
@@ -173,21 +171,17 @@ class HomePage extends Component {
                     </defs>
                 </svg>
 
-                {/*<ProjectSlider selected={selected} />*/}
 
-                {/*
                 <div className={styles['project-slider-info']}>
-                    <div className={styles['project-slider-meta']} style={{ transform: `translate3d(0, ${-selected * (height || 9999)}px, 0)` }}>
-                        {projects.map((project, index) => {
-                            return (
-                                <Link to={`/projects/${project.data.slug}`} key={index}>
-                                    <h2>{project.data.title}</h2>
-                                </Link>
-                            );
-                        })}
-                    </div>
+                    {projects.map((project, index) => {
+                        return (
+                            <Link to={`/projects/${project.data.slug}`} key={index} style={{display: selected === index ? 'block' : 'none'}}>
+                                <h2>{project.data.title}</h2>
+                            </Link>
+                        );
+                    })}
                 </div>
-                */}
+
             </main>
         );
     }
