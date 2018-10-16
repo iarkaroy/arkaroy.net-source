@@ -7,6 +7,7 @@ import animate from '../../libs/animate';
 import * as store from '../../store';
 import { image2canvas } from '../../libs/imgToCanvas';
 import styles from '../../../scss/index.scss';
+import { isPrerender } from '../../libs/isPrerender';
 
 const QUAD = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
@@ -77,23 +78,25 @@ class ProjectSlider extends Component {
         listen('project-slider:change', this.changeProject);
         this.initWebGL();
         this.handleResize();
-        loadImage(require('../../../images/clouds.jpg')).then(img => {
-            this.dispTexture = new Texture(this.gl, 512, 512, img, this.gl.REPEAT);
-            this.renderCanvas();
-        });
-
-        document.fonts.load(`900 8rem 'Inter UI'`, 'BESbswy')
-            .then(fonts => {
-                if (fonts.length) {
-                    this.projects = store.projects();
-                    this.projects.forEach(project => {
-                        loadImage(`/images/${project.data.thumb}`).then(img => {
-                            project.data.image = img;
-                            this.updateProjectTexture(project);
-                        });
-                    });
-                }
+        if (!isPrerender()) {
+            loadImage(require('../../../images/clouds.jpg')).then(img => {
+                this.dispTexture = new Texture(this.gl, 512, 512, img, this.gl.REPEAT);
+                requestAnimationFrame(this.renderCanvas);
             });
+
+            document.fonts.load(`900 8rem 'Inter UI'`, 'BESbswy')
+                .then(fonts => {
+                    if (fonts.length) {
+                        this.projects = store.projects();
+                        this.projects.forEach(project => {
+                            loadImage(`/images/${project.data.thumb}`).then(img => {
+                                project.data.image = img;
+                                this.updateProjectTexture(project);
+                            });
+                        });
+                    }
+                });
+        }
     }
 
     componentWillUnmount() {
