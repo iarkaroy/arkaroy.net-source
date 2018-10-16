@@ -23,6 +23,12 @@ export const project = slug => {
     });
 };
 
+export const projectIndex = slug => {
+    return projects().findIndex(obj => {
+        return obj.data.slug == slug;
+    });
+};
+
 export const article = slug => {
     return articles().find(obj => {
         return obj.data.slug == slug;
