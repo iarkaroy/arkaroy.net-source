@@ -92,7 +92,7 @@ class ProjectSlider extends Component {
         const { history } = router;
         const { location } = history;
         const match = matchRoutes(location.pathname, this.props.routes);
-        if (match.component.name === 'ProjectPage') {
+        if (match.component && match.component.name === 'ProjectPage') {
             const id = match.params.id;
             const index = store.projectIndex(id);
             this.currIndex = -100;
