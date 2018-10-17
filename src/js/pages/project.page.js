@@ -39,6 +39,10 @@ class ProjectPage extends Component {
         unlisten('scroller:scroll', this.updateScroll);
     }
 
+    componentWillLeave(callback) {
+        scroller.scrollTo(0, callback);
+    }
+
     updateScroll = scroll => {
         this.setState({
             scroll
@@ -90,6 +94,10 @@ class ProjectPage extends Component {
                 <Helmet>
                     <title>{data.title} &#8211; Arka Roy &#8211; Web Developer</title>
                 </Helmet>
+
+                <div className={styles['scroll-down']}>
+                    <div className={styles['arrow-down']}></div>
+                </div>
 
                 <div className={styles['project-single']} ref={o => this.content = o} style={{ transform: `translate3d(0, ${height - scroll}px, 0)` }} onLoad={console.log}>
 

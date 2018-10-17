@@ -27,7 +27,7 @@ class HomePage extends Component {
     }
 
     componentDidMount() {
-        if(this.state.selected >= 0) {
+        if (this.state.selected >= 0) {
             this.setState({
                 liquify: 400
             });
@@ -178,11 +178,14 @@ class HomePage extends Component {
                     </defs>
                 </svg>
 
+                <div className={styles['scroll-down']} style={{ opacity: titleOpacity, display: titleOpacity === 0 ? 'none' : 'block' }}>
+                    <div className={styles['arrow-down']}></div>
+                </div>
 
                 <div className={styles['project-slider-info']}>
                     {projects.map((project, index) => {
                         return (
-                            <Link to={`/projects/${project.data.slug}`} key={index} style={{display: selected === index ? 'block' : 'none'}}>
+                            <Link to={`/projects/${project.data.slug}`} key={index} style={{ display: selected === index ? 'block' : 'none' }}>
                                 <h2>{project.data.title}</h2>
                             </Link>
                         );

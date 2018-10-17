@@ -12,6 +12,8 @@ const SPEED = 20, SMOOTH = 40;
 var min = 0,
     max = 99999;
 
+var pendingCallback = null;
+
 const clamp = (val) => {
     return Math.max(min, Math.min(max, val));
 };
@@ -27,6 +29,14 @@ export function bind() {
 
 export function unbind() {
 
+}
+
+export function scrollTo(y, callback) {
+    pos = clamp(y);
+    pendingCallback = callback;
+    if (!scrolling) {
+        updateScroll();
+    }
 }
 
 export function setMaxScroll(m) {
@@ -99,6 +109,10 @@ function updateScroll() {
         requestAnimationFrame(updateScroll);
     } else {
         scrolling = false;
+        if(pendingCallback) {
+            pendingCallback();
+            pendingCallback = null;
+        }
     }
 }
 
