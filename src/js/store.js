@@ -1,4 +1,7 @@
 import json from '../../data/data.json';
+import { broadcast } from './libs/broadcast.js';
+
+var selectedProject = -1;
 
 /**
  * Get all projects
@@ -74,3 +77,11 @@ export const prev = slug => {
     return projects()[i];
 };
 
+export const setSelectedProject = index => {
+    selectedProject = index;
+    broadcast('projectchange', selectedProject);
+};
+
+export const getSelectedProject = () => {
+    return selectedProject;
+};
