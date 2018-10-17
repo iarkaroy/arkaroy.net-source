@@ -182,6 +182,12 @@ class HomePage extends Component {
                     <div className={styles['arrow-down']}></div>
                 </div>
 
+                <div className={styles['project-index']} style={{ display: selected === -1 ? 'none' : 'block' }}>
+                    <div className={styles['curr']}>{(selected + 1) < 10 ? '0' + (selected + 1) : (selected + 1)}</div>
+                    <div className={styles['sep']}></div>
+                    <div className={styles['total']}>{projects.length < 10 ? '0' + projects.length : projects.length}</div>
+                </div>
+
                 <div className={styles['project-slider-info']}>
                     {projects.map((project, index) => {
                         return (
