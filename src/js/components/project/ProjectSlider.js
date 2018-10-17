@@ -81,43 +81,44 @@ class ProjectSlider extends Component {
     }
 
     componentDidMount() {
+        if (isPrerender()) {
+            return false;
+        }
         listen('resize', this.handleResize);
         listen('projectchange', this.changeProject);
         this.initWebGL();
         this.handleResize();
-        if (!isPrerender()) {
-            const { router } = this.context;
-            const { history } = router;
-            const { location } = history;
-            const match = matchRoutes(location.pathname, this.props.routes);
-            if(match.component.name === 'ProjectPage') {
-                const id = match.params.id;
-                const index = store.projectIndex(id);
-                this.currIndex = -100;
-                store.setSelectedProject(index);
-            }
-            loadImage(require('../../../images/clouds.jpg')).then(img => {
-                this.dispTexture = new Texture(this.gl, 512, 512, img, this.gl.REPEAT);
-                requestAnimationFrame(this.renderCanvas);
-            });
-
-            document.fonts.load(`900 8rem 'Inter UI'`, 'BESbswy')
-                .then(fonts => {
-                    if (fonts.length) {
-                        this.projects = store.projects();
-                        this.projects.forEach((project, index) => {
-                            loadImage(`/images/${project.data.thumb}`).then(img => {
-                                project.data.image = img;
-                                this.updateProjectTexture(project, index);
-                                this.loaded++;
-                                if(this.loaded === this.projects.length) {
-                                    // console.log('loaded');
-                                }
-                            });
-                        });
-                    }
-                });
+        const { router } = this.context;
+        const { history } = router;
+        const { location } = history;
+        const match = matchRoutes(location.pathname, this.props.routes);
+        if (match.component.name === 'ProjectPage') {
+            const id = match.params.id;
+            const index = store.projectIndex(id);
+            this.currIndex = -100;
+            store.setSelectedProject(index);
         }
+        loadImage(require('../../../images/clouds.jpg')).then(img => {
+            this.dispTexture = new Texture(this.gl, 512, 512, img, this.gl.REPEAT);
+            requestAnimationFrame(this.renderCanvas);
+        });
+
+        document.fonts.load(`900 8rem 'Inter UI'`, 'BESbswy')
+            .then(fonts => {
+                if (fonts.length) {
+                    this.projects = store.projects();
+                    this.projects.forEach((project, index) => {
+                        loadImage(`/images/${project.data.thumb}`).then(img => {
+                            project.data.image = img;
+                            this.updateProjectTexture(project, index);
+                            this.loaded++;
+                            if (this.loaded === this.projects.length) {
+                                // console.log('loaded');
+                            }
+                        });
+                    });
+                }
+            });
     }
 
     componentWillUnmount() {
@@ -126,7 +127,7 @@ class ProjectSlider extends Component {
     }
 
     changeProject = index => {
-        if(this.currIndex === -100) {
+        if (this.currIndex === -100) {
             this.currIndex = index;
         } else {
             const prevIndex = this.currIndex;
@@ -175,7 +176,7 @@ class ProjectSlider extends Component {
         // Generate texture
         project.data.texture = new Texture(this.gl, width * 2, height * 2, project.data.canvas);
 
-        if(index === this.currIndex) {
+        if (index === this.currIndex) {
             this.texture1 = project.data.texture;
         }
     };
