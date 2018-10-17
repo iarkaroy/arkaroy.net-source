@@ -20,6 +20,6 @@ deploy:
   on:
     branch: master
 
-after_success:
+after_deploy:
   - chmod +x ./publish.sh
   - ./publish.sh
