@@ -76,12 +76,13 @@ class ProjectSlider extends Component {
             displacement: 0
         };
         this.projects = [];
-        this.currIndex = -1;
+        this.currIndex = store.getSelectedProject();
+        this.loaded = 0;
     }
 
     componentDidMount() {
         listen('resize', this.handleResize);
-        listen('project-slider:change', this.changeProject);
+        listen('projectchange', this.changeProject);
         this.initWebGL();
         this.handleResize();
         if (!isPrerender()) {
@@ -91,7 +92,9 @@ class ProjectSlider extends Component {
             const match = matchRoutes(location.pathname, this.props.routes);
             if(match.component.name === 'ProjectPage') {
                 const id = match.params.id;
-                this.currIndex = store.projectIndex(id);
+                const index = store.projectIndex(id);
+                this.currIndex = -100;
+                store.setSelectedProject(index);
             }
             loadImage(require('../../../images/clouds.jpg')).then(img => {
                 this.dispTexture = new Texture(this.gl, 512, 512, img, this.gl.REPEAT);
@@ -106,6 +109,10 @@ class ProjectSlider extends Component {
                             loadImage(`/images/${project.data.thumb}`).then(img => {
                                 project.data.image = img;
                                 this.updateProjectTexture(project, index);
+                                this.loaded++;
+                                if(this.loaded === this.projects.length) {
+                                    // console.log('loaded');
+                                }
                             });
                         });
                     }
@@ -115,16 +122,20 @@ class ProjectSlider extends Component {
 
     componentWillUnmount() {
         unlisten('resize', this.handleResize);
-        unlisten('project-slider:change', this.changeProject);
+        unlisten('projectchange', this.changeProject);
     }
 
     changeProject = index => {
-        const prevIndex = this.currIndex;
-        this.currIndex = index;
-        this.texture1 = prevIndex < 0 ? this.nullTexture : this.projects[prevIndex].data.texture;
-        this.texture2 = this.projects[this.currIndex] ? this.projects[this.currIndex].data.texture : this.nullTexture;
-        this.values.displacement = 0;
-        this.change();
+        if(this.currIndex === -100) {
+            this.currIndex = index;
+        } else {
+            const prevIndex = this.currIndex;
+            this.currIndex = index;
+            this.texture1 = prevIndex < 0 ? this.nullTexture : this.projects[prevIndex].data.texture;
+            this.texture2 = this.projects[this.currIndex] ? this.projects[this.currIndex].data.texture : this.nullTexture;
+            this.values.displacement = 0;
+            this.change();
+        }
     };
 
     updateProjectTexture = (project, index) => {

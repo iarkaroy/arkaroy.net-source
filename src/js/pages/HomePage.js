@@ -16,8 +16,8 @@ class HomePage extends Component {
         super(props, context);
         this.state = {
             ready: false,
-            projects: [],
-            selected: -1,
+            projects: store.projects(),
+            selected: store.getSelectedProject(),
             liquify: 0
         };
         this.lastTransition = 0;
@@ -27,9 +27,12 @@ class HomePage extends Component {
     }
 
     componentDidMount() {
-        this.setState({
-            projects: store.projects()
-        });
+        if(this.state.selected >= 0) {
+            this.setState({
+                liquify: 400
+            });
+            this.values.liquify = 400;
+        }
         listen('wheel', this.handleWheel);
         listen('keydown', this.handleKeyDown);
         if ('ontouchmove' in document) {
@@ -45,6 +48,7 @@ class HomePage extends Component {
                 }
             })
         }
+        listen('projectchange', this.onProjectChange);
         document.fonts.load(`900 8rem 'Inter UI'`, 'BESbswy')
             .then(fonts => {
                 if (fonts.length) {
@@ -61,7 +65,12 @@ class HomePage extends Component {
         if ('ontouchmove' in document) {
             swipeDetector.unbind();
         }
+        unlisten('projectchange', this.onProjectChange);
     }
+
+    onProjectChange = index => {
+        this.setState({ selected: index });
+    };
 
     handleWheel = event => {
         const { deltaY } = event;
@@ -115,8 +124,7 @@ class HomePage extends Component {
                     }
                 });
             }
-            broadcast('project-slider:change', next);
-            this.setState({ selected: next });
+            store.setSelectedProject(next);
         }
     };
 
@@ -148,8 +156,7 @@ class HomePage extends Component {
                     }
                 });
             }
-            broadcast('project-slider:change', prev);
-            this.setState({ selected: prev });
+            store.setSelectedProject(prev);
         }
     };
 
