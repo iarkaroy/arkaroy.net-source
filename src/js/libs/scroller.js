@@ -45,7 +45,7 @@ export function setMaxScroll(m) {
 }
 
 function wheel(event) {
-    var delta = event.delta || event.wheelDelta || -event.detail;
+    var delta = -event.deltaY || event.delta || event.wheelDelta || -event.detail;
     delta = Math.max(-1, Math.min(1, delta));
     pos += -delta * SPEED;
     pos = clamp(pos);
