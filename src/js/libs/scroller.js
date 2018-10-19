@@ -28,7 +28,12 @@ export function bind() {
 }
 
 export function unbind() {
-
+    document.removeEventListener('wheel', wheel);
+    if (typeof window.ontouchstart !== "undefined") {
+        document.removeEventListener("touchstart", tap);
+        document.removeEventListener("touchmove", drag);
+        document.removeEventListener("touchend", release);
+    }
 }
 
 export function scrollTo(y, callback) {
