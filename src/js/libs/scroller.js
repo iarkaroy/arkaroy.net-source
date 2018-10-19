@@ -7,7 +7,7 @@ var scroll = 0,
     lastY = 0,
     diffY = 0;
 
-const SPEED = 20, SMOOTH = 40;
+var SPEED = 20, SMOOTH = 40;
 
 var min = 0,
     max = 99999;
@@ -34,6 +34,7 @@ export function unbind() {
 export function scrollTo(y, callback) {
     pos = clamp(y);
     pendingCallback = callback;
+    SMOOTH = 10;
     if (!scrolling) {
         updateScroll();
     }
@@ -112,6 +113,7 @@ function updateScroll() {
         if(pendingCallback) {
             pendingCallback();
             pendingCallback = null;
+            SMOOTH = 40;
         }
     }
 }
