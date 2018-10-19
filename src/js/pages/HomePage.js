@@ -169,7 +169,15 @@ class HomePage extends Component {
                     <Title title="ARKA ROY|WEB DEVELOPER" h1={true} split={false} reveal={ready} />
                 </div>
 
-                <svg style={{ display: 'none' }}>
+                <svg style={{
+                    display: 'block',
+                    position: 'fixed',
+                    top: -1,
+                    left: -1,
+                    width: 0,
+                    height: 0,
+                    overflow: 'hidden'
+                }}>
                     <defs>
                         <filter id="liquify">
                             <feTurbulence baseFrequency="0.015" numOctaves="3" result="warp" type="fractalNoise" />
