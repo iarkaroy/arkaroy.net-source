@@ -46,7 +46,10 @@ export function scrollTo(y, callback) {
 }
 
 export function setMaxScroll(m) {
+    const progress = scroll / max;
     max = m || 99999;
+    scroll = progress * max;
+    broadcastScroll();
 }
 
 function wheel(event) {
