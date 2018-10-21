@@ -10,7 +10,7 @@ class Header extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            active: false
+            loaded: false
         };
     }
 
@@ -21,7 +21,7 @@ class Header extends Component {
         listen(OVERLAY_CLOSE, this.closeOverlay);
         listen(OVERLAY_BLOCK, this.blockOverlay);
         this.blockOverlay();
-        listen('assetsloaded', this.closeOverlay);
+        listen('assetsloaded', this.assetsLoaded);
     }
 
     componentWillUnmount() {
@@ -29,8 +29,15 @@ class Header extends Component {
         unlisten(OVERLAY_OPEN, this.openOverlay);
         unlisten(OVERLAY_CLOSE, this.closeOverlay);
         unlisten(OVERLAY_BLOCK, this.blockOverlay);
-        unlisten('assetsloaded', this.closeOverlay);
+        unlisten('assetsloaded', this.assetsLoaded);
     }
+
+    assetsLoaded = () => {
+        this.setState({ loaded: true });
+        setTimeout(() => {
+            this.closeOverlay();
+        }, 100);
+    };
 
     toggleOverlay = () => {
         if (this.overlay.isAnimating) {
@@ -58,6 +65,7 @@ class Header extends Component {
     };
 
     render() {
+        const { loaded } = this.state;
         return (
             <div>
                 <header className={styles['site-header']}>
@@ -71,9 +79,18 @@ class Header extends Component {
                     <svg className={styles['shape-overlays']} viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
                         <path></path>
                     </svg>
+                    <div className={styles['loading']} style={{ opacity: loaded ? 0 : 1 }}>
+                        <span>l</span>
+                        <span>o</span>
+                        <span>a</span>
+                        <span>d</span>
+                        <span>i</span>
+                        <span>n</span>
+                        <span>g</span>
+                    </div>
 
                 </header>
-                
+
             </div>
         );
     }
