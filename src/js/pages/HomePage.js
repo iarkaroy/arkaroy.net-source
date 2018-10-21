@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import Title from '../components/Title';
 import styles from '../../scss/index.scss';
 import * as store from '../store';
 import { listen, unlisten, broadcast } from '../libs/broadcast';
-import ProjectSlider from '../components/project/ProjectSlider';
-import NoiseCanvas from '../components/NoiseCanvas';
 import { Link } from '../router';
 import { swipeDetector } from '../libs/swipeDetector';
-import { getDimension } from '../libs/getDimension';
-import animate from '../libs/animate';
 
 class HomePage extends Component {
 
@@ -153,30 +148,6 @@ class HomePage extends Component {
         }
         return (
             <main className={styles['main']}>
-
-                {/*
-                <div className={styles['home-intro']} style={{ filter: `url(#liquify)`, opacity: titleOpacity, display: titleOpacity === 0 ? 'none' : 'block' }}>
-                    <Title title="ARKA ROY|WEB DEVELOPER" h1={true} split={false} reveal={ready} />
-                </div>
-
-                <svg style={{
-                    display: 'block',
-                    position: 'fixed',
-                    top: -1,
-                    left: -1,
-                    width: 0,
-                    height: 0,
-                    overflow: 'hidden'
-                }}>
-                    <defs>
-                        <filter id="liquify">
-                            <feTurbulence baseFrequency="0.015" numOctaves="3" result="warp" type="fractalNoise" />
-                            <feDisplacementMap in="SourceGraphic" in2="warp" scale={liquify} xChannelSelector="R" yChannelSelector="R" />
-                        </filter>
-                    </defs>
-                </svg>
-
-                */}
 
                 <div className={styles['project-index']} style={{ opacity: navVisible ? 1 : 0 }}>
                     <div className={styles['index']}>{projectIndexes}</div>
