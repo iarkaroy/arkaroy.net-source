@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getDimension } from '../../libs/getDimension';
-import { listen, unlisten } from '../../libs/broadcast';
+import { listen, unlisten, broadcast } from '../../libs/broadcast';
 import { getWebGLContext, Program, Texture } from '../../webgl';
 import { loadImage } from '../../libs/loadImage';
 import animate from '../../libs/animate';
@@ -31,6 +31,7 @@ uniform sampler2D u_texture2;
 uniform sampler2D u_disp;
 uniform vec2 u_resolution;
 uniform float u_time;
+uniform float u_scroll;
 
 uniform float dispFactor;
 
@@ -47,7 +48,7 @@ void main() {
     vec2 dispVec = texture2D(u_disp, uv - delta).rg;
     vec2 distortedPosition1 = uv + dispVec * intensity * dispFactor - (intensity * dispFactor / 2.);
     vec2 distortedPosition2 = uv + dispVec * intensity * (1.0 - dispFactor) - (intensity * (1.0 - dispFactor) / 2.);
-    vec2 baseDistortion = dispVec * 0.008;
+    vec2 baseDistortion = dispVec * (u_scroll * 0.0005 + 0.008) - ((u_scroll * 0.0005 + 0.008) / 2.);
     vec4 _texture1 = texture2D(u_texture1, distortedPosition1 + baseDistortion);
     vec4 _texture2 = texture2D(u_texture2, distortedPosition2 + baseDistortion);
     gl_FragColor = mix(_texture1, _texture2, dispFactor);
@@ -64,20 +65,29 @@ class ProjectSlider extends Component {
         super(props, context);
         this.state = {
             width: 0,
-            height: 0
+            height: 0,
+            scroll: 0,
+            scale: 1.3,
+            opacity: 0
         };
         this.gl = null;
         this.program = null;
         this.texture1 = null;
         this.texture2 = null;
         this.dispTexture = null;
-        this.nullTexture = null;
         this.values = {
-            displacement: 0
+            displacement: 0,
+            scale: 1.3,
+            opacity: 0
         };
         this.projects = [];
         this.currIndex = store.getSelectedProject();
-        this.loaded = 0;
+        this.imagesLoaded = 0;
+        this.config = {
+            isHome: false,
+            isProject: false,
+            inTransition: false,
+        };
     }
 
     componentDidMount() {
@@ -85,57 +95,105 @@ class ProjectSlider extends Component {
             return false;
         }
         listen('resize', this.handleResize);
-        listen('projectchange', this.changeProject);
         this.initWebGL();
-        this.handleResize();
+
         const { router } = this.context;
         const { history } = router;
-        const { location } = history;
-        const match = matchRoutes(location.pathname, this.props.routes);
-        if (match.component && match.component.name === 'ProjectPage') {
-            const id = match.params.id;
-            const index = store.projectIndex(id);
-            this.currIndex = -100;
-            store.setSelectedProject(index);
-        }
+        this.history = history;
+        this.unlisten = this.history.listen(this.handleNavigation);
+
+        this.projects = store.projects();
+
         loadImage(require('../../../images/clouds.jpg')).then(img => {
             this.dispTexture = new Texture(this.gl, 512, 512, img, this.gl.REPEAT);
-            requestAnimationFrame(this.renderCanvas);
+            this.imagesLoaded++;
+            if (this.imagesLoaded === this.projects.length + 1) {
+                this.onAssetsLoaded();
+            }
         });
 
-        document.fonts.load(`900 8rem 'Inter UI'`, 'BESbswy')
-            .then(fonts => {
-                if (fonts.length) {
-                    this.projects = store.projects();
-                    this.projects.forEach((project, index) => {
-                        loadImage(`/images/${project.data.thumb}`).then(img => {
-                            project.data.image = img;
-                            this.updateProjectTexture(project, index);
-                            this.loaded++;
-                            if (this.loaded === this.projects.length) {
-                                // console.log('loaded');
-                            }
-                        });
-                    });
+
+        this.projects.forEach((project, index) => {
+            loadImage(`/images/${project.data.thumb}`).then(img => {
+                project.data.image = img;
+                this.imagesLoaded++;
+                if (this.imagesLoaded === this.projects.length + 1) {
+                    this.onAssetsLoaded();
                 }
             });
+        });
+        listen('projectchange', this.changeProject);
+        listen('scroller:scroll', this.updateScroll);
+        listen('overlayclosed', this.onOverlayClosed);
     }
 
     componentWillUnmount() {
         unlisten('resize', this.handleResize);
         unlisten('projectchange', this.changeProject);
+        unlisten('scroller:scroll', this.updateScroll);
+        if (this.unlisten) {
+            this.unlisten();
+        }
+        unlisten('overlayclosed', this.onOverlayClosed);
     }
 
+    onAssetsLoaded = () => {
+        this.handleResize();
+        this.handleNavigation();
+        requestAnimationFrame(this.renderCanvas);
+        broadcast('assetsloaded');
+        animate({
+            targets: this.values,
+            scale: 1,
+            opacity: 1,
+            duration: 1200,
+            easing: 'cubicOut',
+            update: () => {
+                this.setState({
+                    scale: this.values.scale,
+                    opacity: this.values.opacity
+                })
+            }
+        });
+    }
+
+    onOverlayClosed = () => {
+        
+    };
+
+    handleNavigation = location => {
+        location = location || this.history.location;
+        const match = matchRoutes(location.pathname, this.props.routes);
+        if (!match.component) {
+
+        } else if (match.component.name === 'HomePage') {
+            this.config.isHome = true;
+            this.config.isProject = false;
+        } else if (match.component.name === 'ProjectPage') {
+            this.config.isHome = false;
+            this.config.isProject = true;
+            const id = match.params.id;
+            const index = store.projectIndex(id);
+            store.setSelectedProject(index);
+        }
+    };
+
+    updateScroll = scroll => {
+        this.setState({ scroll });
+    };
+
     changeProject = index => {
-        if (this.currIndex === -100) {
-            this.currIndex = index;
-        } else {
+        if(this.config.isHome) {
             const prevIndex = this.currIndex;
             this.currIndex = index;
-            this.texture1 = prevIndex < 0 ? this.nullTexture : this.projects[prevIndex].data.texture;
-            this.texture2 = this.projects[this.currIndex] ? this.projects[this.currIndex].data.texture : this.nullTexture;
+            this.texture1 = this.projects[prevIndex].data.texture;
+            this.texture2 = this.projects[this.currIndex].data.texture;
             this.values.displacement = 0;
             this.change();
+        } else if(this.config.isProject) {
+            this.currIndex = index;
+            this.texture1 = this.texture2 = this.projects[this.currIndex].data.texture;
+            this.values.displacement = 0;
         }
     };
 
@@ -147,31 +205,11 @@ class ProjectSlider extends Component {
 
         // Create canvas with project image as background
         project.data.canvas = image2canvas(project.data.image, width * 2, height * 2);
-
         const ctx = project.data.canvas.getContext('2d');
 
         // Fill light transparent background
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
         ctx.fillRect(0, 0, width * 2, height * 2);
-
-        // Draw project title
-        const fontSize = Math.max(Math.floor(width * 0.015), 8);
-        ctx.font = `900 ${fontSize}rem 'Inter UI'`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = '#ffffff';
-
-        // Draw project title in single or multi line based on title width
-        const textWidth = ctx.measureText(project.data.title).width;
-        if (textWidth > width * 2 * 0.8) {
-            const titleParts = project.data.title.split(' ');
-            const lineHeight = fontSize * 1.2 * 10;
-            for (let i = 0; i < titleParts.length; ++i) {
-                ctx.fillText(titleParts[i], width, height + (i * lineHeight) - (titleParts.length / 2 * lineHeight - lineHeight / 2));
-            }
-        } else {
-            ctx.fillText(project.data.title, width, height);
-        }
 
         // Generate texture
         project.data.texture = new Texture(this.gl, width * 2, height * 2, project.data.canvas);
@@ -185,7 +223,8 @@ class ProjectSlider extends Component {
         animate({
             targets: this.values,
             displacement: 1,
-            duration: 1000,
+            duration: 600,
+            easing: 'cubicInOut',
             complete: () => { }
         });
     };
@@ -194,9 +233,15 @@ class ProjectSlider extends Component {
 
         requestAnimationFrame(this.renderCanvas);
 
+        if (!this.config.isHome && !this.config.isProject) {
+            return false;
+        }
+
         if (!this.texture1 || !this.texture2 || !this.dispTexture) {
             return false;
         }
+
+        const { width, height, scroll } = this.state;
 
         const time = performance.now() / 1e3;
 
@@ -209,9 +254,10 @@ class ProjectSlider extends Component {
         });
         this.program.setBuffer('a_position', QUAD, 2);
         this.program.setUniforms({
-            u_resolution: new Float32Array([this.state.width * 2, this.state.height * 2]),
+            u_resolution: new Float32Array([width * 2, height * 2]),
             dispFactor: this.values.displacement,
-            u_time: time
+            u_time: time,
+            u_scroll: scroll
         });
         this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, QUAD.length / 2);
     };
@@ -231,24 +277,14 @@ class ProjectSlider extends Component {
         this.projects.forEach((project, index) => {
             this.updateProjectTexture(project, index);
         });
-        this.updateNullTexture();
-        if (this.currIndex >= 0) {
-            this.texture1 = this.projects[this.currIndex] ? this.projects[this.currIndex].data.texture : null;
-            this.texture2 = this.nullTexture;
-        } else {
-            this.texture1 = this.nullTexture;
-            this.texture2 = this.nullTexture;
-        }
+
+        this.texture1 = this.texture2 = this.projects[this.currIndex].data.texture;
+
         this.values.displacement = 0;
     };
 
-    updateNullTexture = () => {
-        const { width, height } = getDimension();
-        this.nullTexture = new Texture(this.gl, width * 2, height * 2, null);
-    };
-
     render() {
-        const { width, height } = this.state;
+        const { width, height, scroll, scale, opacity } = this.state;
         return (
             <canvas
                 ref={o => this.canvas = o}
@@ -256,7 +292,9 @@ class ProjectSlider extends Component {
                 height={height * 2}
                 style={{
                     width,
-                    height
+                    height,
+                    transform: `translate3d(0, ${-scroll / 2}px, 0) scale(${scale}, ${scale})`,
+                    opacity: opacity
                 }}
                 className={styles['project-slider-canvas']}
             />

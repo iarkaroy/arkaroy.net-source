@@ -20,7 +20,8 @@ class ProjectPage extends Component {
             width: 0,
             height: 0,
             scroll: 0,
-            contentHeight: 0
+            contentHeight: 0,
+            subtitle: false
         };
         this.frameId = 0;
     }
@@ -31,6 +32,9 @@ class ProjectPage extends Component {
         this.frameId = requestAnimationFrame(this.handleResize);
         scroller.bind();
         listen('scroller:scroll', this.updateScroll);
+        setTimeout(() => {
+            this.setState({ subtitle: true });
+        }, 400);
     }
 
     componentWillUnmount() {
@@ -40,7 +44,10 @@ class ProjectPage extends Component {
     }
 
     componentWillLeave(callback) {
-        scroller.scrollTo(0, callback);
+        scroller.scrollTo(0, () => {
+            this.setState({ subtitle: false });
+            setTimeout(callback, 500);
+        });
     }
 
     updateScroll = scroll => {
@@ -69,7 +76,7 @@ class ProjectPage extends Component {
         this.frameId = requestAnimationFrame(this.handleResize);
         const { width, height } = getDimension();
         const contentHeight = this.content ? this.content.clientHeight : 0;
-        if (contentHeight) {
+        if (contentHeight && contentHeight !== this.state.contentHeight) {
             scroller.setMaxScroll(contentHeight);
         }
         if (width !== this.state.width || height !== this.state.height || contentHeight !== this.state.contentHeight) {
@@ -82,7 +89,7 @@ class ProjectPage extends Component {
     }
 
     render() {
-        const { project, next, prev, width, height, scroll, contentHeight } = this.state;
+        const { project, next, prev, width, height, scroll, contentHeight, subtitle } = this.state;
         if (!project) {
             return null;
         }
@@ -95,11 +102,20 @@ class ProjectPage extends Component {
                     <title>{data.title} &#8211; Arka Roy &#8211; Web Developer</title>
                 </Helmet>
 
+                <div className={styles['project-slider-info']} style={{ transform: `translate3d(0, ${-scroll}px, 0)` }}>
+                    <div className={[styles['project-slider-link'], styles['curr']].join(' ')}>
+                        <div className={styles['project-title']}>
+                            <h2>{project.data.title}</h2>
+                            {data.overview && <h4 className={subtitle ? styles['active'] : ''}>{data.overview}</h4>}
+                        </div>
+                    </div>
+                </div>
+
                 <div className={styles['scroll-down']}>
                     <div className={styles['arrow-down']}></div>
                 </div>
 
-                <div className={styles['project-single']} ref={o => this.content = o} style={{ transform: `translate3d(0, ${height - scroll}px, 0)` }} onLoad={console.log}>
+                <div className={styles['project-single']} ref={o => this.content = o} style={{ transform: `translate3d(0, ${height - scroll}px, 0)` }}>
 
                     <div className={styles['project-content']}>
 

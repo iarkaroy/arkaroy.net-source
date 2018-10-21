@@ -1,7 +1,7 @@
 import json from '../../data/data.json';
 import { broadcast } from './libs/broadcast.js';
 
-var selectedProject = -1;
+var selectedProject = 0;
 
 /**
  * Get all projects

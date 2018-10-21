@@ -88,6 +88,7 @@ $reveal-duration: 0.3s;
     height: auto;
     background: #111111;
     padding: 4rem 0;
+    z-index: 4;
 }
 .project-content {
     position: relative;
@@ -152,7 +153,7 @@ $reveal-duration: 0.3s;
     top: 0;
     left: 0;
     z-index: 1;
-    filter: grayscale(100%);
+    /*filter: grayscale(100%);*/
 }
 .project-slider-info {
     display: block;
@@ -162,16 +163,58 @@ $reveal-duration: 0.3s;
     width: 100%;
     height: 100%;
     z-index: 3;
-    a {
-        display: block;
+    .project-slider-link {
+        display: flex;
         position: absolute;
+        justify-content: center;
+        align-items: center;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-    }
-    h2 {
-        font-size: 0;
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+        transition-delay: 0s;
+        h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 8rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-align: center;
+            @media screen and (max-width: $mobile-breakpoint) {
+                font-size: 4rem;
+            }
+            @media screen and (max-width: 600px) {
+                font-size: 2.4rem;
+            }
+        }
+        &.curr {
+            z-index: 2;
+            opacity: 1;
+            transition-delay: 0.2s;
+        }
+        .project-title {
+            position: relative;
+            h4 {
+                position: absolute;
+                width: 100%;
+                max-width: 600px;
+                font-weight: 500;
+                font-size: 1.4rem;
+                text-align: center;
+                left: 50%;
+                top: 100%;
+                transform: translate3d(-50%, 2rem, 0);
+                transition: all 0.4s ease-in-out;
+                opacity: 0;
+                &.active {
+                    opacity: 1;
+                    transform: translate3d(-50%, 0, 0);
+                }
+            }
+        }
     }
 }
 .project-index {
@@ -179,21 +222,32 @@ $reveal-duration: 0.3s;
     position: fixed;
     left: 4rem;
     bottom: 4rem;
-    font-size: 1.4rem;
-    font-weight: 500;
-    line-height: 1;
-    .curr {
-        transform: translate3d(0, 0, 0);
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.6rem;
+    .index, .sep, .total {
+        display: inline-block;
+        vertical-align: middle;
+        width: 3rem;
+        text-align: left;
     }
     .sep {
-        display: block;
-        width: 100%;
         height: 1px;
         background: #ffffff;
-        transform: translate3d(1rem, 0, 0) rotate(-45deg);
+        /*width: 2rem;*/
     }
     .total {
-        transform: translate3d(2rem, 0, 0);
+        text-align: right;
+    }
+    .index {
+        height: 1.4rem;
+        position: relative;
+    }
+    .num {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: all 0.4s;
     }
 }
 
