@@ -88,6 +88,14 @@ class ProjectPage extends Component {
         }
     }
 
+    onScrollDownClicked = event => {
+        if (event) {
+            event.preventDefault();
+        }
+        const { height } = this.state;
+        scroller.scrollTo(height, null, true);
+    };
+
     render() {
         const { project, next, prev, width, height, scroll, contentHeight, subtitle } = this.state;
         if (!project) {
@@ -109,10 +117,13 @@ class ProjectPage extends Component {
                             {data.overview && <h4 className={subtitle ? styles['active'] : ''}>{data.overview}</h4>}
                         </div>
                     </div>
-                </div>
-
-                <div className={styles['scroll-down']}>
-                    <div className={styles['arrow-down']}></div>
+                    <div className={subtitle ? [styles['scroll-indicator-wrapper'], styles['active']].join(' ') : styles['scroll-indicator-wrapper']}>
+                        <a href="#" className={styles['scroll-indicator']} onClick={this.onScrollDownClicked}>
+                            <svg viewBox="0 0 30 45" enableBackground="new 0 0 30 45">
+                                <path fill="none" stroke="#ffffff" strokeWidth="2" strokeMiterlimit="10" d="M15,1.118c12.352,0,13.967,12.88,13.967,12.88v18.76  c0,0-1.514,11.204-13.967,11.204S0.931,32.966,0.931,32.966V14.05C0.931,14.05,2.648,1.118,15,1.118z" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
 
                 <div className={styles['project-single']} ref={o => this.content = o} style={{ transform: `translate3d(0, ${height - scroll}px, 0)` }}>
@@ -121,7 +132,6 @@ class ProjectPage extends Component {
 
                         <div className={styles['project-intro']}>
                             <div className={styles['project-overview']}>
-                                {data.overview && <h4>{data.overview}</h4>}
                                 {data.summary && <p>{data.summary}</p>}
                             </div>
                             <div className={styles['project-meta']}>

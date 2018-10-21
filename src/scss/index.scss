@@ -113,7 +113,7 @@ $reveal-duration: 0.3s;
         font-weight: 400;
     }
     p {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
     }
     @media screen and (max-width: $mobile-breakpoint) {
         width: 100%;
@@ -125,14 +125,14 @@ $reveal-duration: 0.3s;
         margin: 0;
         padding: 0;
         margin-bottom: 4rem;
-        font-size: 2rem;
+        font-size: 1.4rem;
         font-weight: 400;
     }
     h5 {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         text-transform: uppercase;
         color: #cccccc;
-        margin-bottom: 1rem;
+        margin-bottom: 0.6rem;
     }
     @media screen and (max-width: $mobile-breakpoint) {
         width: 100%;
@@ -272,5 +272,92 @@ $reveal-duration: 0.3s;
         font-weight: 700;
         font-size: 8rem;
         line-height: 1.1;
+    }
+}
+
+.scroll-indicator-wrapper {
+    display: block;
+    position: absolute;
+    bottom: 4rem;
+    left: 50%;
+    z-index: 9;
+    transform: translate3d(-50%, 10px, 0) scale(0.8);
+    opacity: 0;
+    transition: all 0.4s;
+    &.active {
+        opacity: 1;
+        transform: translate3d(-50%, 0, 0) scale(0.8);
+    }
+}
+.scroll-indicator {
+    display: block;
+    width: 30px;
+    animation: nudgeMouse 2.4s cubic-bezier(0.250,0.460,0.450,0.940) infinite;
+    &::before {
+        display: block;
+        position: absolute;
+        content: '';
+        width: 30px;
+        height: 45px;
+        border: 2px solid rgba($color: #ffffff, $alpha: 0.5);
+        border-radius: 30px;
+    }
+    &::after {
+        display: block;
+        position: absolute;
+        content: '';
+        width: 2px;
+        height: 6px;
+        left: 50%;
+        margin-left: -1px;
+        top: 20px;
+        background: rgba($color: #ffffff, $alpha: 0.5);
+        animation: trackBallSlide 2.4s cubic-bezier(0.000,0.000,0.725,1.000) infinite;
+    }
+    svg {
+        display: block;
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    path {
+        stroke-dasharray: 120;
+        stroke-dashoffset: 120;
+        transition: stroke-dashoffset 1s;
+    }
+    &:hover {
+        path {
+            stroke-dashoffset: 0;
+        }
+    }
+}
+
+@keyframes nudgeMouse{
+    0%{
+        transform:translateY(0);
+    }
+    45%{
+        transform:translateY(8px);
+    }
+    65%,100%{
+        transform:translateY(0);
+    }
+}
+@keyframes trackBallSlide{
+    0%{
+        opacity:1;
+        transform:scaleY(1) translateY(-10px);
+    }
+    45%{
+        opacity:0;
+        transform:scaleY(0.5) translateY(13px);
+    }
+    46%{
+        opacity:0;
+        transform:scaleY(1) translateY(-10px);
+    }
+    65%,100%{
+        opacity:1;
+        transform:scaleY(1) translateY(-10px);
     }
 }
