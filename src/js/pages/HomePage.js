@@ -16,7 +16,8 @@ class HomePage extends Component {
         super(props, context);
         this.state = {
             projects: store.projects(),
-            selected: store.getSelectedProject()
+            selected: store.getSelectedProject(),
+            navVisible: false
         };
         this.lastTransition = 0;
     }
@@ -44,6 +45,12 @@ class HomePage extends Component {
                     // Font loader
                 }
             });
+
+        setTimeout(() => {
+            this.setState({
+                navVisible: true
+            });
+        }, 200);
     }
 
     componentWillUnmount() {
@@ -53,6 +60,13 @@ class HomePage extends Component {
             swipeDetector.unbind();
         }
         unlisten('projectchange', this.onProjectChange);
+    }
+
+    componentWillLeave(callback) {
+        this.setState({
+            navVisible: false
+        });
+        setTimeout(callback, 600);
     }
 
     onProjectChange = index => {
@@ -125,7 +139,7 @@ class HomePage extends Component {
     };
 
     render() {
-        const { projects, selected } = this.state;
+        const { projects, selected, navVisible } = this.state;
         // const titleOpacity = 1 - liquify / 400;
         var projectIndexes = [];
         for (let i = 0; i < projects.length; ++i) {
@@ -162,12 +176,9 @@ class HomePage extends Component {
                     </defs>
                 </svg>
 
-                <div className={styles['scroll-down']} style={{ opacity: titleOpacity, display: titleOpacity === 0 ? 'none' : 'block' }}>
-                    <div className={styles['arrow-down']}></div>
-                </div>
                 */}
 
-                <div className={styles['project-index']}>
+                <div className={styles['project-index']} style={{ opacity: navVisible ? 1 : 0 }}>
                     <div className={styles['index']}>{projectIndexes}</div>
                     <div className={styles['sep']}></div>
                     <div className={styles['total']}>{projects.length < 10 ? '0' + projects.length : projects.length}</div>

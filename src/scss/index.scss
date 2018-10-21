@@ -225,6 +225,7 @@ $reveal-duration: 0.3s;
     font-size: 1.2rem;
     font-weight: 700;
     line-height: 1.6rem;
+    transition: opacity 0.4s;
     .index, .sep, .total {
         display: inline-block;
         vertical-align: middle;
