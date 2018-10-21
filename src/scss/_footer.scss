@@ -1,20 +1,18 @@
 .site-footer {
-    display: block;
-    position: fixed;
+    @extend .block, .fixed;
     z-index: 98;
     .connect {
-        display: block;
-        position: fixed;
+        @extend .block, .fixed;
         right: 4rem;
         bottom: 4rem;
     }
     a {
-        display: inline-block;
+        @extend .inline-block;
         line-height: 1;
         margin-left: 1.5rem;
     }
     svg {
-        display: inline-block;
+        @extend .inline-block;
         width: 1.2rem;
         height: auto;
         vertical-align: middle

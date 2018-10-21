@@ -1,17 +1,32 @@
-.logo {
-    /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'icomoon' !important;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    &:before {
-        content: "\e900";
-    }
+.block {
+    display: block;
+}
+.inline-block {
+    display: inline-block;
+}
+.width100 {
+    width: 100%;
+}
+.height100 {
+    height: 100%;
+}
+.width100height100 {
+    width: 100%;
+    height: 100%;
+}
+.absolute {
+    position: absolute;
+}
+.fixed {
+    position: fixed;
+}
+.top0left0 {
+    top: 0;
+    left: 0;
+}
+.margin0padding0 {
+    margin: 0;
+    padding: 0;
 }
 
 .hidden {
@@ -48,8 +63,7 @@
 }
 
 .main {
-    display: block;
-    position: fixed;
+    @extend .block, .fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -59,12 +73,10 @@
 }
 
 .scrollbar {
-    display: block;
-    position: fixed;
+    @extend .block, .fixed, .height100;
     z-index: 10;
     top: 0;
     right: 0;
     width: 2px;
-    height: 100%;
     background: rgba($color: #ffffff, $alpha: 0.6);
 }

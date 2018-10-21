@@ -1,10 +1,8 @@
 .site-header {
-    display: block;
-    position: fixed;
+    @extend .block, .fixed;
     z-index: 99;
     .home-link {
-        display: block;
-        position: fixed;
+        @extend .block, .fixed;
         font-size: 1.6rem;
         line-height: 1;
         text-transform: uppercase;
@@ -16,10 +14,10 @@
 }
 
 .shape-overlays {
+    @extend .fixed;
 	width: 100vw;
 	height: 100vh;
 	pointer-events: none;
-	position: fixed;
 	top: 0;
     left: 0;
     z-index: 998;
@@ -32,7 +30,7 @@
 }
 
 .loading {
-    position: fixed;
+    @extend .fixed;
     top: 50%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
@@ -46,7 +44,7 @@
     pointer-events: none;
     user-select: none;
     span {
-        display: inline-block;
+        @extend .inline-block;
         padding: 0 2px;
         animation: letters 0.8s infinite linear;
         &:nth-child(1) {
