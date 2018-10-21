@@ -1,21 +1,21 @@
 .site-footer {
     display: block;
     position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 4rem;
-    padding: 0 4rem;
-    text-align: right;
     z-index: 98;
+    .connect {
+        display: block;
+        position: fixed;
+        right: 4rem;
+        bottom: 4rem;
+    }
     a {
         display: inline-block;
-        line-height: 4rem;
-        margin-left: 1rem;
+        line-height: 1;
+        margin-left: 1.5rem;
     }
     svg {
         display: inline-block;
-        width: 1.4rem;
+        width: 1.2rem;
         height: auto;
         vertical-align: middle
     }
