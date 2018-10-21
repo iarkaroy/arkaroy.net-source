@@ -1,3 +1,4 @@
+import { broadcast } from "./broadcast";
 
 export const OVERLAY_TOGGLE = 'overlay:toggle';
 export const OVERLAY_OPEN = 'overlay:open';
@@ -94,9 +95,13 @@ class ShapeOverlays {
             requestAnimationFrame(() => {
                 this.renderLoop();
             });
-        }
-        else {
+        } else {
             this.isAnimating = false;
+            if(this.isOpened) {
+                broadcast('overlayopened');
+            } else {
+                broadcast('overlayclosed');
+            }
         }
     }
 
