@@ -208,7 +208,7 @@ class ProjectSlider extends Component {
         const ctx = project.data.canvas.getContext('2d');
 
         // Fill light transparent background
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
         ctx.fillRect(0, 0, width * 2, height * 2);
 
         // Generate texture
