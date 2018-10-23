@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from '../../router';
-import ShapeOverlays, { OVERLAY_TOGGLE, OVERLAY_OPEN, OVERLAY_CLOSE, OVERLAY_BLOCK } from '../../libs/shape-overlays';
+import ShapeOverlays from '../../libs/shape-overlays';
 import styles from '../../../scss/index.scss';
 import { broadcast, listen, unlisten } from '../../libs/broadcast';
 
@@ -16,19 +16,11 @@ class Header extends Component {
 
     componentDidMount() {
         this.overlay = new ShapeOverlays(this.overlays);
-        listen(OVERLAY_TOGGLE, this.toggleOverlay);
-        listen(OVERLAY_OPEN, this.openOverlay);
-        listen(OVERLAY_CLOSE, this.closeOverlay);
-        listen(OVERLAY_BLOCK, this.blockOverlay);
         this.blockOverlay();
         listen('assetsloaded', this.assetsLoaded);
     }
 
     componentWillUnmount() {
-        unlisten(OVERLAY_TOGGLE, this.toggleOverlay);
-        unlisten(OVERLAY_OPEN, this.openOverlay);
-        unlisten(OVERLAY_CLOSE, this.closeOverlay);
-        unlisten(OVERLAY_BLOCK, this.blockOverlay);
         unlisten('assetsloaded', this.assetsLoaded);
     }
 

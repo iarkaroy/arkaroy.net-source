@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { isPrerender } from '../libs/isPrerender';
 import * as store from '../store';
 import { Helmet } from 'react-helmet';
 import styles from '../../scss/index.scss';
-import { OVERLAY_TOGGLE, OVERLAY_OPEN, OVERLAY_CLOSE, OVERLAY_BLOCK } from '../libs/shape-overlays';
 import { Link } from '../router';
 import { broadcast, listen, unlisten } from '../libs/broadcast';
 import { getDimension } from '../libs/getDimension';

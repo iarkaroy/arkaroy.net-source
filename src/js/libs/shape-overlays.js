@@ -1,10 +1,5 @@
 import { broadcast } from "./broadcast";
 
-export const OVERLAY_TOGGLE = 'overlay:toggle';
-export const OVERLAY_OPEN = 'overlay:open';
-export const OVERLAY_CLOSE = 'overlay:close';
-export const OVERLAY_BLOCK = 'overlay:block';
-
 const ease = {
     cubicInOut: t => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
 };
