@@ -49,7 +49,7 @@
     width: 30%;
     h4, h5 {
         @extend .margin0padding0;
-        margin-bottom: 4rem;
+        margin-bottom: 3rem;
         font-size: 1.4rem;
         font-weight: 400;
     }
@@ -57,7 +57,7 @@
         font-size: 1.2rem;
         text-transform: uppercase;
         color: #cccccc;
-        margin-bottom: 0.6rem;
+        margin-bottom: 0;
     }
     @media screen and (max-width: $mobile-breakpoint) {
         width: 100%;
@@ -254,5 +254,78 @@
     65%,100%{
         opacity:1;
         transform:scaleY(1) translateY(-10px);
+    }
+}
+
+.project-body {
+    font-size: 1.4rem;
+    h2, h3 {
+        @extend .margin0padding0;
+        font-size: 1.6rem;
+        font-weight: 500;
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        &::after {
+            @extend .block, .absolute;
+            content: '';
+            left: 0;
+            bottom: 0;
+            width: 20px;
+            height: 2px;
+            background: #ffffff;
+        }
+    }
+    p {
+        @extend .margin0padding0;
+        margin-bottom: 1.2rem;
+    }
+    img, video {
+        @extend .block;
+        margin: 0 auto 4rem auto;
+    }
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 6rem;
+        &:nth-child(even) {
+            .col {
+                &:nth-child(1) {
+                    transform: translate3d(66.66%, 0, 0);
+                    @media screen and (max-width: 800px) {
+                        transform: translate3d(0, 0, 0);
+                    }
+                }
+                &:nth-child(2) {
+                    padding-left: 0;
+                    padding-right: 6rem;
+                    transform: translate3d(-150%, 0, 0);
+                    @media screen and (max-width: 800px) {
+                        padding-right: 0;
+                        transform: translate3d(0, 0, 0);
+                    }
+                }
+            }
+        }
+        img, video {
+            margin-bottom: 2rem;
+        }
+    }
+    .col {
+        &:nth-child(1) {
+            width: 60%;
+            @media screen and (max-width: 800px) {
+                width: 100%;
+            }
+        }
+        &:nth-child(2) {
+            width: 40%;
+            padding-left: 6rem;
+            @media screen and (max-width: 800px) {
+                width: 100%;
+                padding-left: 0;
+            }
+        }
     }
 }

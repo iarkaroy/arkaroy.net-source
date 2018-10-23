@@ -103,6 +103,9 @@ class ProjectPage extends Component {
         }
         const { data } = project;
         const thumb = `/images/${data.thumb}`;
+        var html = project.html;
+        html = html.replace(/\"row\"/g, `"${styles['row']}"`);
+        html = html.replace(/\"col\"/g, `"${styles['col']}"`);
         return (
             <main className={styles['main']}>
 
@@ -142,7 +145,7 @@ class ProjectPage extends Component {
                             </div>
                         </div>
 
-                        <div className={styles['project-body']} dangerouslySetInnerHTML={{ __html: project.html }}></div>
+                        <div className={styles['project-body']} dangerouslySetInnerHTML={{ __html: html }}></div>
                     </div>
 
                 </div>

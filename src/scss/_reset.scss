@@ -30,7 +30,7 @@ strong {
     font-weight: 700;
 }
 
-img {
+img, video {
     @extend .inline-block;
     width: auto;
     height: auto;
