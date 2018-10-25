@@ -16,6 +16,7 @@
     background: #111111;
     padding: 4rem 0;
     z-index: 4;
+    will-change: transform;
 }
 .project-content {
     position: relative;
@@ -71,10 +72,12 @@
 }
 .project-slider-canvas {
     @extend .block, .fixed, .top0left0;
+    will-change: transform;
     z-index: 1;
 }
 .project-slider-info {
     @extend .block, .fixed, .width100height100, .top0left0;
+    will-change: transform;
     z-index: 3;
     .project-slider-link {
         @extend .absolute, .width100height100, .top0left0;
