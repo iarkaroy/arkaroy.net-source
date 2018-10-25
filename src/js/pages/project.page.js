@@ -49,9 +49,11 @@ class ProjectPage extends Component {
     }
 
     updateScroll = scroll => {
-        this.setState({
-            scroll
-        });
+        if (scroll !== this.state.scroll) {
+            this.setState({
+                scroll
+            });
+        }
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -63,10 +65,16 @@ class ProjectPage extends Component {
     }
 
     loadProject = slug => {
+        const project = store.project(slug);
         this.setState({
-            project: store.project(slug),
+            project,
             next: store.next(slug),
             prev: store.prev(slug)
+        }, () => {
+            var html = project.html;
+            html = html.replace(/\"row\"/g, `"${styles['row']}"`);
+            html = html.replace(/\"col\"/g, `"${styles['col']}"`);
+            this.contentBody.innerHTML = html;
         });
     };
 
@@ -101,9 +109,7 @@ class ProjectPage extends Component {
         }
         const { data } = project;
         const thumb = `/images/${data.thumb}`;
-        var html = project.html;
-        html = html.replace(/\"row\"/g, `"${styles['row']}"`);
-        html = html.replace(/\"col\"/g, `"${styles['col']}"`);
+
         return (
             <main className={styles['main']}>
 
@@ -143,12 +149,12 @@ class ProjectPage extends Component {
                             </div>
                         </div>
 
-                        <div className={styles['project-body']} dangerouslySetInnerHTML={{ __html: html }}></div>
+                        <div className={styles['project-body']} ref={o => this.contentBody = o}></div>
                     </div>
 
                 </div>
 
-                <div className={styles['scrollbar']} style={{ transform: `translate3d(0, ${(height * scroll / contentHeight).toFixed(2) - height}px, 0)` }}></div>
+                <div className={styles['scrollbar']} style={{ transform: `translate3d(0, ${parseInt((height * scroll / contentHeight) - height)}px, 0)` }}></div>
 
 
                 {/*
