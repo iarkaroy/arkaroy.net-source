@@ -164,17 +164,19 @@ class ProjectSlider extends Component {
     handleNavigation = location => {
         location = location || this.history.location;
         const match = matchRoutes(location.pathname, this.props.routes);
-        if (!match.component) {
-
-        } else if (match.component.name === 'HomePage') {
+        const page = match.component ? match.component.name : null;
+        if (page === 'HomePage') {
             this.config.isHome = true;
             this.config.isProject = false;
-        } else if (match.component.name === 'ProjectPage') {
+        } else if (page === 'ProjectPage') {
             this.config.isHome = false;
             this.config.isProject = true;
             const id = match.params.id;
             const index = store.projectIndex(id);
             store.setSelectedProject(index);
+        } else {
+            this.config.isHome = false;
+            this.config.isProject = false;
         }
     };
 
@@ -234,6 +236,7 @@ class ProjectSlider extends Component {
         requestAnimationFrame(this.renderCanvas);
 
         if (!this.config.isHome && !this.config.isProject) {
+            this.gl.clear(this.gl.COLOR_BUFFER_BIT);
             return false;
         }
 
@@ -293,7 +296,7 @@ class ProjectSlider extends Component {
                 style={{
                     width,
                     height,
-                    transform: `translate3d(0, ${-scroll / 2}px, 0) scale(${scale}, ${scale})`,
+                    transform: `translate3d(0, ${parseInt(-scroll / 2)}px, 0) scale(${scale}, ${scale})`,
                     opacity: opacity
                 }}
                 className={styles['project-slider-canvas']}
