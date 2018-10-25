@@ -127,7 +127,7 @@ function updateScroll() {
 }
 
 function broadcastScroll() {
-    broadcast('scroller:scroll', scroll);
+    broadcast('scroller:scroll', parseInt(scroll));
 }
 
 function ypos(e) {
