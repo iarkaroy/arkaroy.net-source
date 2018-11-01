@@ -7,12 +7,14 @@ var scroll = 0,
     lastY = 0,
     diffY = 0;
 
-var SPEED = 40, SMOOTH = 40;
+var SPEED = 60, SMOOTH = 30;
 
 var min = 0,
     max = 99999;
 
 var pendingCallback = null;
+
+var trackingPoints = [];
 
 const clamp = (val) => {
     return Math.max(min, Math.min(max, val));
@@ -67,6 +69,8 @@ function tap(event) {
     pressed = true;
     lastY = ypos(e);
     diffY = 0;
+    trackingPoints = [];
+    addTrackingPoint(lastY);
     e.stopPropagation();
     return false;
 }
@@ -77,6 +81,7 @@ function drag(e) {
         y = ypos(e);
         diffY = lastY - y;
         lastY = y;
+        addTrackingPoint(lastY);
         if (diffY > 2 || diffY < -2) {
             scroll += diffY;
             scroll = clamp(scroll);
@@ -90,26 +95,38 @@ function drag(e) {
 function release(event) {
     const e = event || window.event;
     pressed = false;
-    var start = 1;
+    const firstPoint = trackingPoints[0];
+    const lastPoint = trackingPoints[trackingPoints.length - 1];
+    const yOffset = lastPoint.y - firstPoint.y;
+    const timeOffset = lastPoint.time - firstPoint.time;
+    var velocity = (yOffset / timeOffset * 15) || 0;
     const animate = function () {
-        var step = Math.sin(start);
-        if (step <= 0) {
-            diffY = 0;
-            window.cancelAnimationFrame(animate);
-        } else {
-            scroll += diffY * step;
-            scroll = clamp(scroll);
-            start -= 0.02;
-            window.requestAnimationFrame(animate);
-            broadcastScroll();
+        velocity *= 0.95;
+        scroll -= velocity;
+        scroll = clamp(scroll);
+        broadcastScroll();
+        if (Math.abs(velocity) > 0.3) {
+            requestAnimationFrame(animate);
         }
     };
-    animate();
+    requestAnimationFrame(animate);
     e.stopPropagation();
     return false;
 }
 
+function addTrackingPoint(y) {
+    const time = Date.now();
+    while (trackingPoints.length > 0) {
+        if (time - trackingPoints[0].time <= 100) {
+            break;
+        }
+        trackingPoints.shift();
+    }
+    trackingPoints.push({ y, time });
+}
+
 function updateScroll() {
+    scrolling = true;
     var delta = (pos - scroll) / SMOOTH;
     scroll += delta;
     scroll = clamp(scroll);
@@ -121,7 +138,7 @@ function updateScroll() {
         if (pendingCallback) {
             pendingCallback();
             pendingCallback = null;
-            SMOOTH = 40;
+            SMOOTH = 30;
         }
     }
 }
