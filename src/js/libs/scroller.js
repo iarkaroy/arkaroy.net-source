@@ -54,6 +54,14 @@ export function setMaxScroll(m) {
     broadcastScroll();
 }
 
+export function reset() {
+    scroll = 0;
+    pos = 0;
+    scrolling = false;
+    pressed = false;
+    broadcastScroll();
+}
+
 function wheel(event) {
     var delta = -event.deltaY || event.delta || event.wheelDelta || -event.detail;
     delta = Math.max(-1, Math.min(1, delta));
