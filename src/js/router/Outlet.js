@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {matchPath} from './matchPath';
 import { matchRoutes } from './matchRoutes';
 
 class Outlet extends Component {
@@ -23,9 +22,10 @@ class Outlet extends Component {
         this.history = history;
         this.unlisten = this.history.listen((location, action) => {
             if (this.child && this.child.componentWillLeave) {
+                const match = matchRoutes(location.pathname, this.props.routes);
                 this.child.componentWillLeave(() => {
                     this.forceUpdate();
-                }, location);
+                }, match.component ? match.component.name : null, location);
             } else {
                 this.forceUpdate();
             }
@@ -37,24 +37,6 @@ class Outlet extends Component {
     }
 
     render() {
-        /*
-        var MatchedComponent = null;
-        var params = {};
-        const { routes } = this.props;
-        const len = routes.length;
-        for (let i = 0; i < len; ++i) {
-            const route = routes[i];
-            const { path, exact = false, component } = route;
-            const match = matchPath(this.history.location.pathname, { path, exact });
-
-            if (match) {
-                MatchedComponent = component;
-                params = match.params;
-                break;
-            }
-        }
-        */
-
         const match = matchRoutes(this.history.location.pathname, this.props.routes);
 
         if (match.component) {
