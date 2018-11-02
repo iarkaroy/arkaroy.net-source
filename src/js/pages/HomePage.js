@@ -58,11 +58,15 @@ class HomePage extends Component {
         unlisten('projectchange', this.onProjectChange);
     }
 
-    componentWillLeave(callback) {
-        this.setState({
-            navVisible: false
-        });
-        setTimeout(callback, 600);
+    componentWillLeave(callback, to) {
+        if (to === 'ProjectPage') {
+            this.setState({
+                navVisible: false
+            });
+            setTimeout(callback, 600);
+        } else {
+            callback();
+        }
     }
 
     onProjectChange = index => {

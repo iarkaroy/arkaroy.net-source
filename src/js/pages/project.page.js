@@ -41,11 +41,16 @@ class ProjectPage extends Component {
         unlisten('scroller:scroll', this.updateScroll);
     }
 
-    componentWillLeave(callback) {
-        scroller.scrollTo(0, () => {
-            this.setState({ subtitle: false });
-            setTimeout(callback, 500);
-        });
+    componentWillLeave(callback, to) {
+        if (to === 'HomePage') {
+            scroller.scrollTo(0, () => {
+                this.setState({ subtitle: false });
+                setTimeout(callback, 500);
+            });
+        } else {
+            scroller.reset();
+            callback();
+        }
     }
 
     updateScroll = scroll => {
