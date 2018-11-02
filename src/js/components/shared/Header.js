@@ -3,6 +3,7 @@ import { Link } from '../../router';
 import ShapeOverlays from '../../libs/shape-overlays';
 import styles from '../../../scss/index.scss';
 import { broadcast, listen, unlisten } from '../../libs/broadcast';
+import { isPrerender } from '../../libs/isPrerender';
 
 
 class Header extends Component {
@@ -25,10 +26,15 @@ class Header extends Component {
     }
 
     assetsLoaded = () => {
-        this.setState({ loaded: true });
+        if(isPrerender()) {
+            return false;
+        }
+        setTimeout(()=>{
+            this.setState({ loaded: true });
+        }, 1000);
         setTimeout(() => {
             this.closeOverlay();
-        }, 100);
+        }, 1100);
     };
 
     toggleOverlay = () => {
@@ -68,6 +74,7 @@ class Header extends Component {
         </svg>*/}
                         Arka Roy
                     </Link>
+                    <Link to="/about" className={styles['about-link']}>About</Link>
                     <svg className={styles['shape-overlays']} viewBox="0 0 100 100" preserveAspectRatio="none" ref={o => { this.overlays = o; }}>
                         <path></path>
                     </svg>

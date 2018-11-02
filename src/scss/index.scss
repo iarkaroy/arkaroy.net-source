@@ -1,9 +1,11 @@
 @import url('https://rsms.me/inter/inter-ui.css');
+@import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:400,700');
 @import "_variable";
 @import "_reset";
 @import "_mixin";
 @import "_header";
 @import "_footer";
+@import "_about.sass";
 
 .fixed-center {
     @extend .block, .fixed;
@@ -89,16 +91,16 @@
         transition: opacity 0.2s ease-in-out;
         transition-delay: 0s;
         h2 {
-            @extend .margin0padding0;
-            font-size: 8rem;
-            font-weight: 900;
+            @extend .margin0padding0, .condensed;
+            font-size: 10rem;
+            font-weight: 700;
             color: #ffffff;
             text-align: center;
             @media screen and (max-width: $mobile-breakpoint) {
-                font-size: 4rem;
+                font-size: 6rem;
             }
             @media screen and (max-width: 600px) {
-                font-size: 2.4rem;
+                font-size: 4rem;
             }
         }
         &.curr {

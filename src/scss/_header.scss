@@ -3,13 +3,22 @@
     z-index: 99;
     .home-link {
         @extend .block, .fixed;
-        font-size: 1.6rem;
+        font-size: 1.4rem;
         line-height: 1;
         text-transform: uppercase;
         font-weight: 500;
         color: #ffffff;
         top: 4rem;
         left: 4rem;
+    }
+    .about-link {
+        @extend .block, .fixed;
+        font-size: 1.4rem;
+        line-height: 1;
+        font-weight: 500;
+        color: #ffffff;
+        top: 4rem;
+        right: 4rem;
     }
 }
 
