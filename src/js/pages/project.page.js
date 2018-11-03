@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import * as store from '../store';
 import { Helmet } from 'react-helmet';
 import styles from '../../scss/index.scss';
-import { Link } from '../router';
 import { broadcast, listen, unlisten } from '../libs/broadcast';
 import { getDimension } from '../libs/getDimension';
 import * as scroller from '../libs/scroller';
@@ -21,23 +20,23 @@ class ProjectPage extends Component {
             contentHeight: 0,
             subtitle: false
         };
-        this.frameId = 0;
     }
 
     componentDidMount() {
         const slug = this.props.params.id
         this.loadProject(slug);
-        this.frameId = requestAnimationFrame(this.handleResize);
         scroller.bind();
+        listen('resize', this.handleResize);
         listen('scroller:scroll', this.updateScroll);
         setTimeout(() => {
             this.setState({ subtitle: true });
         }, 400);
+        this.handleResize();
     }
 
     componentWillUnmount() {
-        cancelAnimationFrame(this.frameId);
         scroller.unbind();
+        unlisten('resize', this.handleResize);
         unlisten('scroller:scroll', this.updateScroll);
     }
 
@@ -80,23 +79,35 @@ class ProjectPage extends Component {
             html = html.replace(/\"row\"/g, `"${styles['row']}"`);
             html = html.replace(/\"col\"/g, `"${styles['col']}"`);
             this.contentBody.innerHTML = html;
+            var images = this.contentBody.querySelectorAll('img');
+            var loaded = 0;
+            const onLoad = () => {
+                loaded++;
+                if (loaded === images.length) {
+                    const contentHeight = this.content.clientHeight;
+                    this.setState({ contentHeight });
+                    scroller.setMaxScroll(contentHeight);
+                }
+            };
+            for (let i = 0; i < images.length; ++i) {
+                if (images[i].complete) {
+                    onLoad();
+                } else {
+                    images[i].onload = onLoad;
+                }
+            }
         });
     };
 
     handleResize = () => {
-        this.frameId = requestAnimationFrame(this.handleResize);
         const { width, height } = getDimension();
         const contentHeight = this.content ? this.content.clientHeight : 0;
-        if (contentHeight && contentHeight !== this.state.contentHeight) {
-            scroller.setMaxScroll(contentHeight);
-        }
-        if (width !== this.state.width || height !== this.state.height || contentHeight !== this.state.contentHeight) {
-            this.setState({
-                width,
-                height,
-                contentHeight
-            });
-        }
+        this.setState({
+            width,
+            height,
+            contentHeight
+        });
+        scroller.setMaxScroll(contentHeight);
     }
 
     onScrollDownClicked = event => {
@@ -104,7 +115,7 @@ class ProjectPage extends Component {
             event.preventDefault();
         }
         const { height } = this.state;
-        scroller.scrollTo(height, null, true);
+        scroller.scrollTo(height + 1, null, true);
     };
 
     render() {
