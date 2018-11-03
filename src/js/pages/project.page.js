@@ -161,27 +161,6 @@ class ProjectPage extends Component {
 
                 <div className={styles['scrollbar']} style={{ transform: `translate3d(0, ${parseInt((height * scroll / contentHeight) - height)}px, 0)` }}></div>
 
-
-                {/*
-
-                <div className={styles.body}>
-
-
-                    {
-                        next &&
-                        <div className={styles[classNames.nextWrapper]}>
-                            <div className={styles[classNames.nextInfoWrapper]} style={{ backgroundImage: `url('/images/${next.data.thumb}')` }}>
-                                <Link to={`/projects/${next.data.slug}`} className={styles[classNames.nextInfo]}>
-                                    <strong>Next</strong>
-                                    <h3>{next.data.title}</h3>
-                                    <h4>{next.data.categories.join(', ')}</h4>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z" /></svg>
-                                </Link>
-                            </div>
-                        </div>
-                    }
-                </div>
-*/}
             </main>
         );
     }
