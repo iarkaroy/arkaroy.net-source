@@ -158,7 +158,7 @@ class ProjectSlider extends Component {
     }
 
     onOverlayClosed = () => {
-        
+
     };
 
     handleNavigation = location => {
@@ -185,14 +185,14 @@ class ProjectSlider extends Component {
     };
 
     changeProject = index => {
-        if(this.config.isHome) {
+        if (this.config.isHome) {
             const prevIndex = this.currIndex;
             this.currIndex = index;
             this.texture1 = this.projects[prevIndex].data.texture;
             this.texture2 = this.projects[this.currIndex].data.texture;
             this.values.displacement = 0;
             this.change();
-        } else if(this.config.isProject) {
+        } else if (this.config.isProject) {
             this.currIndex = index;
             this.texture1 = this.texture2 = this.projects[this.currIndex].data.texture;
             this.values.displacement = 0;
@@ -235,6 +235,12 @@ class ProjectSlider extends Component {
 
         requestAnimationFrame(this.renderCanvas);
 
+        const { width, height, scroll } = this.state;
+
+        if (scroll >= height) {
+            return false;
+        }
+
         if (!this.config.isHome && !this.config.isProject) {
             this.gl.clear(this.gl.COLOR_BUFFER_BIT);
             return false;
@@ -243,8 +249,6 @@ class ProjectSlider extends Component {
         if (!this.texture1 || !this.texture2 || !this.dispTexture) {
             return false;
         }
-
-        const { width, height, scroll } = this.state;
 
         const time = performance.now() / 1e3;
 
