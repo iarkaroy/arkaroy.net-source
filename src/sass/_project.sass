@@ -1,0 +1,60 @@
+.project
+    @extend %block, %absolute, %full-width, %top, %left
+    background: $bg-color
+    padding: 40px 0
+    z-index: 6
+    will-change: transform
+    .content
+        @extend %relative
+        width: auto
+        max-width: 1200px
+        padding: 0 20px
+        margin: auto
+    .intro
+        @extend %flex, %flex-wrap
+        padding-bottom: 6rem
+        .overview
+            width: 70%
+            padding-right: 40px
+        .meta
+            width: 30%
+        .label
+            @extend %uppercase
+            color: #cccccc
+            font-size: 12px
+            margin-bottom: 5px
+            font-weight: $normal-weight
+        .value
+            font-weight: $normal-weight
+            margin-bottom: 20px
+    .body
+        h2, h3
+            @extend %relative
+            font-size: 16px
+            font-weight: 500
+            padding-bottom: 20px
+            margin-bottom: 20px
+            &::after
+                @extend %block, %absolute, %left, %bottom
+                content: ''
+                width: 20px
+                height: 2px
+                background: #ffffff
+        img, video
+            @extend %block
+            margin: 0 auto 4rem auto
+.row
+    @extend %flex, %flex-wrap
+    align-items: center
+.col
+    &:nth-child(1)
+        width: 60%
+        .row:nth-child(even) &
+            transform: translate3d(66.66%, 0, 0)
+    &:nth-child(2)
+        width: 40%
+        padding-left: 60px
+        .row:nth-child(even) &
+            transform: translate3d(-150%, 0, 0)
+            padding-left: 0
+            padding-right: 60px

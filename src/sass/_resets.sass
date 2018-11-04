@@ -1,0 +1,55 @@
+*, *::before, *::after
+    box-sizing: border-box
+
+html
+    @extend %block, %full-width, %full-height
+    font-family: $font-body
+    font-size: $body-text-size
+    font-feature-settings: $font-features
+    font-weight: $normal-weight
+    color: $text-color
+    line-height: $line-height
+    overflow: hidden
+
+body
+    @extend %block, %fixed, %full-width, %full-height, %no-margin, %no-padding
+    font-family: inherit
+    font-size: inherit
+    font-feature-settings: inherit
+    font-weight: inherit
+    color: inherit
+    line-height: inherit
+    background-color: $bg-color
+    overflow: hidden
+
+b, strong
+    font-weight: $bold-weight
+
+a
+    color: $link-color
+    text-decoration: none
+
+@for $i from 1 through 6
+    h#{$i}
+        @extend %no-margin, %no-padding
+
+p
+    @extend %no-margin, %no-padding
+
+img, video
+    width: auto
+    height: auto
+    max-width: 100%
+
+canvas
+    @extend %block
+
+a:active,
+a:focus,
+input:active,
+input:focus,
+select:active,
+select:focus,
+textarea:active,
+textarea:focus
+    outline: 0

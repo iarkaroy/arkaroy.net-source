@@ -1,0 +1,93 @@
+.slider-canvas
+    @extend %fixed, %top, %left
+    will-change: transform
+    z-index: $z-slider-canvas
+
+.slider-overlay
+    @extend %flex, %fixed, %full-width, %full-height, %top, %left
+    will-change: transform
+    z-index: $z-slider-overlay
+    justify-content: center
+    align-items: center
+    opacity: 0
+    transition: opacity 0.2s ease-in-out
+    transition-delay: 0s
+    text-align: center
+    &.curr
+        opacity: 1
+        transition-delay: 0.2s
+        z-index: $z-slider-overlay + 1
+    .title-container
+        @extend %relative, %full-width
+    .title
+        @extend %condensed, %uppercase
+        font-size: 100px
+        +tablet
+            font-size: 60px
+        +mobile
+            font-size: 40px
+    .subtitle
+        @extend %absolute, %full-width
+        max-width: $mobile
+        font-weight: 500
+        top: 100%
+        left: 50%
+        opacity: 0
+        transition: all 0.4s ease-in-out
+
+.scroll-indicator
+    @extend %block, %absolute
+    bottom: 40px
+    left: 50%
+    z-index: $z-scroll-indicator
+    transition: all 0.4s
+    .indicator
+        @extend %block
+        width: 30px
+        animation: nudgeMouse 2.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) infinite
+        &::before
+            @extend %block, %absolute
+            content: ''
+            width: 30px
+            height: 45px
+            border: 2px solid rgba($color: #ffffff, $alpha: 0.5)
+            border-radius: 30px
+        &::after
+            @extend %block, %absolute
+            content: ''
+            width: 2px
+            height: 6px
+            left: 50%
+            margin-left: -1px
+            top: 20px
+            background: rgba($color: #ffffff, $alpha: 0.5)
+            animation: trackBallSlide 2.4s cubic-bezier(0.000,0.000,0.725,1.000) infinite
+        svg
+            @extend %block, %relative, %full-width
+            height: auto
+        path
+            stroke-dasharray: 120
+            stroke-dashoffset: 120
+            transition: stroke-dashoffset 1s
+        &:hover
+            path
+                stroke-dashoffset: 0
+
+@keyframes nudgeMouse
+    0%
+        transform: translateY(0)
+    45%
+        transform: translateY(8px)
+    65%, 100%
+        transform: translateY(0)
+
+@keyframes trackBallSlide
+    0%, 65%, 100%
+        opacity: 1
+        transform: scaleY(1) translateY(-10px)
+    45%
+        opacity: 0
+        transform: scaleY(0.5) translateY(13px)
+    46%
+        opacity: 0
+        transform: scaleY(1) translateY(-10px)

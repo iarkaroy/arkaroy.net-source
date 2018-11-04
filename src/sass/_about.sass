@@ -1,0 +1,54 @@
+.about-container
+    @extend %block, %absolute, %top, %left, %full-width
+    height: auto
+    will-change: transform
+    padding: 160px 0 100px 0
+
+.about-page
+    @extend %flex, %flex-wrap, %relative
+    width: auto
+    max-width: 1200px
+    margin: auto
+    padding: 0 20px
+    align-items: flex-start
+    h4
+        @extend  %full-width
+        margin-bottom: 30px
+        font-size: 20px
+        font-weight: $normal-weight
+        color: #aaaaaa
+    h2
+        @extend %condensed, %uppercase
+        font-size: 50px
+        font-weight: $normal-weight
+        line-height: 1
+    .about, .skills
+        flex: 1 50%
+        +tablet
+            flex: 1 100%
+    .about
+        padding-right: 40px
+    .margin-left
+        margin-left: 10px
+.skills
+    @extend %flex, %flex-wrap
+    margin-left: -10px
+    margin-right: -10px
+
+.skill
+    @extend %relative
+    width: 50%
+    margin-bottom: 10px
+    font-weight: 500
+    padding-left: 10px
+    padding-right: 10px
+    .bar
+        @extend %relative
+        height: 2px
+        background: #444444
+    .bar-fill
+        @extend %absolute, %top, %left
+        width: 0
+        height: 100%
+        background: #aaaaaa
+        transition: width 0.8s ease-in-out

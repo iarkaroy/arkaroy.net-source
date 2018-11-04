@@ -1,0 +1,25 @@
+.project-indicator
+    @extend %block, %fixed
+    left: 40px
+    bottom: 40px
+    font-size: 12px
+    font-weight: $bold-weight
+    line-height: 16px
+    transition: opacity 0.4s
+    z-index: $z-project-indicator
+    .index, .sep, .total
+        @extend %inline-block;
+        vertical-align: middle
+        width: 30px
+        text-align: left
+    .sep
+        height: 1px
+        background: #ffffff
+    .total
+        text-align: right
+    .index
+        @extend %relative
+        height: 14px
+    .num
+        @extend %absolute, %top, %left
+        transition: all 0.4s
