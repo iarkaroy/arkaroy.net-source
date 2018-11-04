@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getDimension } from '../libs/getDimension';
 import { listen, unlisten } from '../libs/broadcast';
-import styles from '../../scss/index.scss';
+import styles from '../../sass/index.sass';
 import { getWebGLContext, Program, Framebuffer, Texture } from '../webgl';
 import Mat4 from '../libs/mat4';
 import { getOilDispMap } from '../libs/getOilDispMap';

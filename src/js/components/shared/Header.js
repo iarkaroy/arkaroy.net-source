@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from '../../router';
 import ShapeOverlays from '../../libs/shape-overlays';
-import styles from '../../../scss/index.scss';
+import styles from '../../../sass/index.sass';
 import { broadcast, listen, unlisten } from '../../libs/broadcast';
 import { isPrerender } from '../../libs/isPrerender';
 

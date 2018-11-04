@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { listen, unlisten } from '../libs/broadcast';
 import { getDimension } from '../libs/getDimension';
-import styles from '../../scss/index.scss';
+import styles from '../../sass/index.sass';
 
 class NoiseCanvas extends Component {
 

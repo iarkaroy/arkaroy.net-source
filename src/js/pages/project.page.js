@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as store from '../store';
 import { Helmet } from 'react-helmet';
-import styles from '../../scss/index.scss';
+import styles from '../../sass/index.sass';
 import { broadcast, listen, unlisten } from '../libs/broadcast';
 import { getDimension } from '../libs/getDimension';
 import * as scroller from '../libs/scroller';
@@ -30,7 +30,7 @@ class ProjectPage extends Component {
         listen('scroller:scroll', this.updateScroll);
         setTimeout(() => {
             this.setState({ subtitle: true });
-        }, 400);
+        }, 600);
         this.handleResize();
     }
 
@@ -80,10 +80,11 @@ class ProjectPage extends Component {
             html = html.replace(/\"col\"/g, `"${styles['col']}"`);
             this.contentBody.innerHTML = html;
             var images = this.contentBody.querySelectorAll('img');
+            var videos = this.contentBody.querySelectorAll('video');
             var loaded = 0;
             const onLoad = () => {
                 loaded++;
-                if (loaded === images.length) {
+                if (loaded === images.length + videos.length) {
                     const contentHeight = this.content.clientHeight;
                     this.setState({ contentHeight });
                     scroller.setMaxScroll(contentHeight);
@@ -95,6 +96,9 @@ class ProjectPage extends Component {
                 } else {
                     images[i].onload = onLoad;
                 }
+            }
+            for (let j = 0; j < videos.length; ++j) {
+                videos[j].onloadedmetadata = onLoad;
             }
         });
     };
@@ -133,39 +137,55 @@ class ProjectPage extends Component {
                     <title>{data.title} &#8211; Arka Roy &#8211; Web Developer</title>
                 </Helmet>
 
-                <div className={styles['project-slider-info']} style={{ transform: `translate3d(0, ${-scroll}px, 0)` }}>
-                    <div className={[styles['project-slider-link'], styles['curr']].join(' ')}>
-                        <div className={styles['project-title']}>
-                            <h2>{project.data.title}</h2>
-                            {data.overview && <h4 className={subtitle ? styles['active'] : ''}>{data.overview}</h4>}
-                        </div>
+
+                <div className={[styles['slider-overlay'], styles['curr']].join(' ')} style={{ transform: `translate3d(0, ${-scroll}px, 0)` }}>
+
+                    <div className={styles['title-container']}>
+                        <h2 className={styles['title']}>{project.data.title}</h2>
+                        {
+                            data.overview &&
+                            <h4 className={styles['subtitle']} style={{
+                                opacity: subtitle ? 1 : 0,
+                                transform: `translate3d(-50%, ${subtitle ? 0 : 20}px, 0)`
+                            }}>
+                                {data.overview}
+                            </h4>
+                        }
                     </div>
-                    <div className={subtitle ? [styles['scroll-indicator-wrapper'], styles['active']].join(' ') : styles['scroll-indicator-wrapper']}>
-                        <a href="#" className={styles['scroll-indicator']} onClick={this.onScrollDownClicked}>
+
+                    <div className={styles['scroll-indicator']} style={{
+                        opacity: subtitle ? 1 : 0,
+                        transform: `translate3d(-50%, ${subtitle ? 0 : 10}px, 0) scale(0.8)`
+                    }}>
+                        <a href="#" className={styles['indicator']} onClick={this.onScrollDownClicked}>
                             <svg viewBox="0 0 30 45" enableBackground="new 0 0 30 45">
                                 <path fill="none" stroke="#ffffff" strokeWidth="2" strokeMiterlimit="10" d="M15,1.118c12.352,0,13.967,12.88,13.967,12.88v18.76  c0,0-1.514,11.204-13.967,11.204S0.931,32.966,0.931,32.966V14.05C0.931,14.05,2.648,1.118,15,1.118z" />
                             </svg>
                         </a>
                     </div>
+
                 </div>
 
-                <div className={styles['project-single']} ref={o => this.content = o} style={{ transform: `translate3d(0, ${height - scroll}px, 0)` }}>
 
-                    <div className={styles['project-content']}>
 
-                        <div className={styles['project-intro']}>
-                            <div className={styles['project-overview']}>
+                <div className={styles['project']} ref={o => this.content = o} style={{ transform: `translate3d(0, ${height - scroll}px, 0)` }}>
+
+                    <div className={styles['content']}>
+
+                        <div className={styles['intro']}>
+                            <div className={styles['overview']}>
                                 {data.summary && <p>{data.summary}</p>}
                             </div>
-                            <div className={styles['project-meta']}>
-                                <h5>Services</h5>
-                                <h4>{data.categories.join(', ')}</h4>
-                                <h5>Year</h5>
-                                <h4>{(new Date(data.date)).getFullYear()}</h4>
+                            <div className={styles['meta']}>
+                                <h5 className={styles['label']}>Services</h5>
+                                <h4 className={styles['value']}>{data.categories.join(', ')}</h4>
+                                <h5 className={styles['label']}>Year</h5>
+                                <h4 className={styles['value']}>{(new Date(data.date)).getFullYear()}</h4>
                             </div>
                         </div>
 
-                        <div className={styles['project-body']} ref={o => this.contentBody = o}></div>
+                        <div className={styles['body']} ref={o => this.contentBody = o}></div>
+
                     </div>
 
                 </div>

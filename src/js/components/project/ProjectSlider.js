@@ -7,7 +7,7 @@ import { loadImage } from '../../libs/loadImage';
 import animate from '../../libs/animate';
 import * as store from '../../store';
 import { image2canvas } from '../../libs/imgToCanvas';
-import styles from '../../../scss/index.scss';
+import styles from '../../../sass/index.sass';
 import { isPrerender } from '../../libs/isPrerender';
 import { matchRoutes } from '../../router/matchRoutes';
 
@@ -303,7 +303,7 @@ class ProjectSlider extends Component {
                     transform: `translate3d(0, ${parseInt(-scroll / 2)}px, 0) scale(${scale}, ${scale})`,
                     opacity: opacity
                 }}
-                className={styles['project-slider-canvas']}
+                className={styles['slider-canvas']}
             />
         );
     }

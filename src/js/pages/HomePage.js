@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styles from '../../scss/index.scss';
+import styles from '../../sass/index.sass';
 import * as store from '../store';
 import { listen, unlisten, broadcast } from '../libs/broadcast';
 import { Link } from '../router';
@@ -158,34 +158,28 @@ class HomePage extends Component {
                     <title>Arka Roy &#8211; Web Developer</title>
                 </Helmet>
 
-                <div className={styles['project-index']} style={{ opacity: navVisible ? 1 : 0 }}>
+                <div className={styles['project-indicator']} style={{ opacity: navVisible ? 1 : 0 }}>
                     <div className={styles['index']}>{projectIndexes}</div>
                     <div className={styles['sep']}></div>
                     <div className={styles['total']}>{projects.length < 10 ? '0' + projects.length : projects.length}</div>
                 </div>
 
-                <div className={styles['project-slider-info']}>
-                    {projects.map((project, index) => {
-                        var linkClasses = [styles['project-slider-link']];
-                        if (index === selected) {
-                            linkClasses.push(styles['curr']);
-                        } else if (index === selected - 1) {
-                            linkClasses.push(styles['prev']);
-                        } else if (index === selected + 1) {
-                            linkClasses.push(styles['next']);
-                        } else {
-                            linkClasses.push(styles['hidden']);
-                        }
-                        return (
-                            <Link to={`/projects/${project.data.slug}`}
-                                key={index}
-                                className={linkClasses.join(' ')}
-                            >
-                                <h2>{project.data.title}</h2>
-                            </Link>
-                        );
-                    })}
-                </div>
+                {projects.map((project, index) => {
+                    var linkClasses = [styles['slider-overlay']];
+                    if (index === selected) {
+                        linkClasses.push(styles['curr']);
+                    }
+                    return (
+                        <Link to={`/projects/${project.data.slug}`}
+                            key={index}
+                            className={linkClasses.join(' ')}
+                        >
+                            <div className={styles['title-container']}>
+                                <h2 className={styles['title']}>{project.data.title}</h2>
+                            </div>
+                        </Link>
+                    );
+                })}
 
             </main>
         );

@@ -5,7 +5,7 @@ import { OVERLAY_OPEN, OVERLAY_CLOSE, OVERLAY_BLOCK } from '../libs/shape-overla
 import { isPrerender } from '../libs/isPrerender';
 import { swipeDetector } from '../libs/swipeDetector';
 import { Helmet } from 'react-helmet';
-import styles from '../../scss/index.scss';
+import styles from '../../sass/index.sass';
 import StructuredData from 'react-google-structured-data';
 import { broadcast, listen, unlisten } from '../libs/broadcast';
 import { getDimension } from '../libs/getDimension';

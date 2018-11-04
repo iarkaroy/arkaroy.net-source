@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styles from '../../scss/index.scss';
+import styles from '../../sass/index.sass';
 import Skill from '../components/Skill';
 import { unlisten, listen } from '../libs/broadcast';
 import * as scroller from '../libs/scroller';
