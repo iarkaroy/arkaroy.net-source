@@ -91,3 +91,23 @@
     46%
         opacity: 0
         transform: scaleY(1) translateY(-10px)
+
+.loading-indicator
+    @extend %block, %absolute
+    bottom: 40px
+    left: 50%
+    z-index: $z-scroll-indicator
+    stroke: white
+    transform: translate3d(-50%, 0, 0) rotate(-90deg) scale(0.8, 0.8)
+    svg
+        @extend %block
+    circle
+        stroke-dasharray: 130
+        stroke-dashoffset: 130
+        animation: dash 1.5s infinite
+
+@keyframes dash
+    50%
+        stroke-dashoffset: 0
+    100%
+        stroke-dashoffset: -130

@@ -18,14 +18,14 @@ class ProjectPage extends Component {
             height: 0,
             scroll: 0,
             contentHeight: 0,
-            subtitle: false
+            subtitle: false,
+            contentLoaded: false
         };
     }
 
     componentDidMount() {
         const slug = this.props.params.id
         this.loadProject(slug);
-        scroller.bind();
         listen('resize', this.handleResize);
         listen('scroller:scroll', this.updateScroll);
         setTimeout(() => {
@@ -86,7 +86,8 @@ class ProjectPage extends Component {
                 loaded++;
                 if (loaded === images.length + videos.length) {
                     const contentHeight = this.content.clientHeight;
-                    this.setState({ contentHeight });
+                    this.setState({ contentHeight, contentLoaded: true });
+                    scroller.bind();
                     scroller.setMaxScroll(contentHeight);
                 }
             };
@@ -123,7 +124,7 @@ class ProjectPage extends Component {
     };
 
     render() {
-        const { project, next, prev, width, height, scroll, contentHeight, subtitle } = this.state;
+        const { project, next, prev, width, height, scroll, contentHeight, subtitle, contentLoaded } = this.state;
         if (!project) {
             return null;
         }
@@ -154,8 +155,8 @@ class ProjectPage extends Component {
                     </div>
 
                     <div className={styles['scroll-indicator']} style={{
-                        opacity: subtitle ? 1 : 0,
-                        transform: `translate3d(-50%, ${subtitle ? 0 : 10}px, 0) scale(0.8)`
+                        opacity: contentLoaded && subtitle ? 1 : 0,
+                        transform: `translate3d(-50%, ${contentLoaded && subtitle ? 0 : 10}px, 0) scale(0.8)`
                     }}>
                         <a href="#" className={styles['indicator']} onClick={this.onScrollDownClicked}>
                             <svg viewBox="0 0 30 45" enableBackground="new 0 0 30 45">
@@ -163,6 +164,15 @@ class ProjectPage extends Component {
                             </svg>
                         </a>
                     </div>
+
+                    <span className={styles['loading-indicator']} style={{
+                        opacity: contentLoaded ? 0 : 1,
+                        visibility: contentLoaded ? 'hidden' : 'visible'
+                    }}>
+                        <svg height={60} width={60}>
+                            <circle cx={30} cy={30} r={20} strokeWidth="2" fill="none" />
+                        </svg>
+                    </span>
 
                 </div>
 
@@ -190,7 +200,7 @@ class ProjectPage extends Component {
 
                 </div>
 
-                <div className={styles['scrollbar']} style={{ transform: `translate3d(0, ${parseInt((height * scroll / contentHeight) - height)}px, 0)` }}></div>
+                <div className={styles['scrollbar']} style={{ transform: `translate3d(0, ${contentLoaded ? parseInt((height * scroll / contentHeight) - height) : -height}px, 0)` }}></div>
 
             </main>
         );
