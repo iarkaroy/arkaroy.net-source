@@ -46,15 +46,30 @@
 .row
     @extend %flex, %flex-wrap
     align-items: center
+    margin-bottom: 40px
 .col
     &:nth-child(1)
         width: 60%
+        +mobile
+            width: 100%
         .row:nth-child(even) &
             transform: translate3d(66.66%, 0, 0)
+            +mobile
+                transform: translate3d(0, 0, 0)
     &:nth-child(2)
         width: 40%
         padding-left: 60px
+        +mobile
+            width: 100%
+            padding-left: 0
         .row:nth-child(even) &
             transform: translate3d(-150%, 0, 0)
             padding-left: 0
             padding-right: 60px
+            +mobile
+                padding-right: 0
+                transform: translate3d(0, 0, 0)
+    img, video
+        margin-bottom: 0 !important
+        +mobile
+            margin-bottom: 20px !important
