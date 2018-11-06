@@ -114,7 +114,7 @@ module.exports = {
         new ExtractTextPlugin('style.css'),
         new CopyWebpackPlugin([
             { from: 'data/images', to: 'images' },
-            'src/images/favicon'
+            'static'
         ]),
         new ImageminPlugin({
             test: /\.(jpe?g|png|gif|svg)$/i,
