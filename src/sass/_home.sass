@@ -7,6 +7,12 @@
     line-height: 16px
     transition: opacity 0.4s
     z-index: $z-project-indicator
+    +tablet
+        left: 30px
+        bottom: 30px
+    +mobile
+        left: 20px
+        bottom: 20px
     .index, .sep, .total
         @extend %inline-block;
         vertical-align: middle
