@@ -80,11 +80,10 @@ class ProjectPage extends Component {
             html = html.replace(/\"col\"/g, `"${styles['col']}"`);
             this.contentBody.innerHTML = html;
             var images = this.contentBody.querySelectorAll('img');
-            var videos = this.contentBody.querySelectorAll('video');
             var loaded = 0;
             const onLoad = () => {
                 loaded++;
-                if (loaded === images.length + videos.length) {
+                if (loaded === images.length) {
                     const contentHeight = this.content.clientHeight;
                     this.setState({ contentHeight, contentLoaded: true });
                     scroller.bind();
@@ -97,9 +96,6 @@ class ProjectPage extends Component {
                 } else {
                     images[i].onload = onLoad;
                 }
-            }
-            for (let j = 0; j < videos.length; ++j) {
-                videos[j].onloadedmetadata = onLoad;
             }
         });
     };
