@@ -183,7 +183,7 @@ class ProjectPage extends Component {
                                 {data.summary && <p>{data.summary}</p>}
                             </div>
                             <div className={styles['meta']}>
-                                <h5 className={styles['label']}>Services</h5>
+                                <h5 className={styles['label']}>Expertise</h5>
                                 <h4 className={styles['value']}>{data.categories.join(', ')}</h4>
                                 <h5 className={styles['label']}>Year</h5>
                                 <h4 className={styles['value']}>{(new Date(data.date)).getFullYear()}</h4>
