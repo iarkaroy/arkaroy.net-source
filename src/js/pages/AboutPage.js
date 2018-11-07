@@ -70,29 +70,32 @@ class AboutPage extends Component {
                         <div className={styles['about']}>
                             <h4>Hi, there!</h4>
                             <h2>I'm a full stack web developer having 8+ years of experience on building highly sophisticated web applications.</h2>
+                            <p>Hello! I'm Arka Roy. I am a passionate web developer proficient in building scalable, easy-to-navigate web applications and pixel-perfect front-end interfaces. My expertise ranges over a vast space from HTML, CSS to modern JavaScript single page applications with server programming with PHP, MySQL etc.</p>
+                            <p>I love to explore new technologies and concepts in web presence. I am always keen to hear about new interseting projects, so feel free to reach me for your next project.</p>
                         </div>
 
                         <div className={styles['skills']}>
                             <h4 className={styles['margin-left']}>Skills</h4>
-                            <Skill strength={95}>PHP</Skill>
-                            <Skill strength={80}>MySQL</Skill>
-                            <Skill strength={85}>JavaScript</Skill>
+                            <Skill strength={97}>PHP</Skill>
+                            <Skill strength={95}>MySQL</Skill>
+                            <Skill strength={90}>JavaScript</Skill>
                             <Skill strength={90}>jQuery</Skill>
-                            <Skill strength={80}>Laravel</Skill>
+                            <Skill strength={85}>Laravel</Skill>
                             <Skill strength={90}>CodeIgniter</Skill>
-                            <Skill strength={95}>HTML5</Skill>
-                            <Skill strength={90}>CSS3</Skill>
-                            <Skill strength={85}>AJAX</Skill>
-                            <Skill strength={80}>PDO</Skill>
-                            <Skill strength={85}>MVC</Skill>
-                            <Skill strength={90}>JSON</Skill>
-                            <Skill strength={70}>NodeJS</Skill>
-                            <Skill strength={80}>ReactJS</Skill>
+                            <Skill strength={98}>HTML5</Skill>
+                            <Skill strength={95}>CSS3</Skill>
+                            <Skill strength={92}>AJAX</Skill>
+                            <Skill strength={85}>PDO</Skill>
+                            <Skill strength={90}>MVC</Skill>
+                            <Skill strength={96}>JSON</Skill>
+                            <Skill strength={75}>NodeJS</Skill>
+                            <Skill strength={90}>ReactJS</Skill>
                             <Skill strength={65}>ExpressJS</Skill>
                             <Skill strength={60}>MongoDB</Skill>
-                            <Skill strength={75}>REST</Skill>
-                            <Skill strength={90}>OOP</Skill>
-                            <Skill strength={70}>Git</Skill>
+                            <Skill strength={85}>REST</Skill>
+                            <Skill strength={95}>OOP</Skill>
+                            <Skill strength={80}>Git</Skill>
+                            <Skill strength={60}>ElectronJS</Skill>
                         </div>
 
                     </div>

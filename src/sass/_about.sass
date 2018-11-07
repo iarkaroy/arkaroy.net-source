@@ -21,7 +21,15 @@
         @extend %condensed, %uppercase
         font-size: 50px
         font-weight: $normal-weight
-        line-height: 1
+        line-height: 1.2
+        margin-bottom: 30px
+        +tablet
+            font-size: 36px
+        +mobile
+            font-size: 24px
+    p
+        font-size: 16px
+        margin-bottom: 20px
     .about, .skills
         flex: 1 50%
         +tablet
@@ -38,7 +46,7 @@
 .skill
     @extend %relative
     width: 50%
-    margin-bottom: 10px
+    margin-bottom: 15px
     font-weight: 500
     padding-left: 10px
     padding-right: 10px
