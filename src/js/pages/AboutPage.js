@@ -74,14 +74,25 @@ class AboutPage extends Component {
 
                         <div className={styles['skills']}>
                             <h4 className={styles['margin-left']}>Skills</h4>
-                            <Skill strength={60}>PHP</Skill>
-                            <Skill>MySQL</Skill>
-                            <Skill>JavaScript</Skill>
-                            <Skill>jQuery</Skill>
-                            <Skill>HTML5</Skill>
-                            <Skill>CSS3</Skill>
-                            <Skill>PHP</Skill>
-                            <Skill>PHP</Skill>
+                            <Skill strength={95}>PHP</Skill>
+                            <Skill strength={80}>MySQL</Skill>
+                            <Skill strength={85}>JavaScript</Skill>
+                            <Skill strength={90}>jQuery</Skill>
+                            <Skill strength={80}>Laravel</Skill>
+                            <Skill strength={90}>CodeIgniter</Skill>
+                            <Skill strength={95}>HTML5</Skill>
+                            <Skill strength={90}>CSS3</Skill>
+                            <Skill strength={85}>AJAX</Skill>
+                            <Skill strength={80}>PDO</Skill>
+                            <Skill strength={85}>MVC</Skill>
+                            <Skill strength={90}>JSON</Skill>
+                            <Skill strength={70}>NodeJS</Skill>
+                            <Skill strength={80}>ReactJS</Skill>
+                            <Skill strength={65}>ExpressJS</Skill>
+                            <Skill strength={60}>MongoDB</Skill>
+                            <Skill strength={75}>REST</Skill>
+                            <Skill strength={90}>OOP</Skill>
+                            <Skill strength={70}>Git</Skill>
                         </div>
 
                     </div>
