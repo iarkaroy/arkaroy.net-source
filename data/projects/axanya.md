@@ -3,7 +3,7 @@ slug: "axanya"
 date: "2017-10-27"
 title: "Axanya"
 tags: ["test", "project"]
-categories: ["Responsive Website"]
+categories: ["Web Application"]
 thumb: "axanya-thumb.jpg"
 overview: "An intense approach to make room rentals function like blinking of an eye."
 summary: "Axanya provides an unique platform for good-hearted people to offer rooms on rent. It is aimed to bridge the gap between people wanting quality lodging and people willing to offer spare space. The task to build such an application was quite challenging. The system must have features that are required to ease the process along with easy-to-use navigation."
@@ -11,7 +11,7 @@ summary: "Axanya provides an unique platform for good-hearted people to offer ro
 
 <div class="row">
     <div class="col">
-        <img src="/images/axanya-ui.png">
+        <img src="/images/axanya-ui.jpg">
     </div>
     <div class="col">
         <h3>Clean Interface</h3>
@@ -31,7 +31,7 @@ summary: "Axanya provides an unique platform for good-hearted people to offer ro
 
 <div class="row">
     <div class="col">
-        <img src="/images/axanya-messaging.png">
+        <img src="/images/axanya-messaging.jpg">
     </div>
     <div class="col">
         <h3>Real-Time Notification</h3>
