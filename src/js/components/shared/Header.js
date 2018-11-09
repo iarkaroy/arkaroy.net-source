@@ -4,6 +4,7 @@ import ShapeOverlays from '../../libs/shape-overlays';
 import styles from '../../../sass/index.sass';
 import { broadcast, listen, unlisten } from '../../libs/broadcast';
 import { isPrerender } from '../../libs/isPrerender';
+import ReactGA from 'react-ga';
 
 
 class Header extends Component {
@@ -35,6 +36,14 @@ class Header extends Component {
         setTimeout(() => {
             this.closeOverlay();
         }, 1100);
+        if(window.performance) {
+            const elapsed = Math.round(window.performance.now());
+            ReactGA.timing({
+                category: 'Assets Loading',
+                variable: 'pageload',
+                value: elapsed
+            });
+        }
     };
 
     toggleOverlay = () => {
