@@ -10,23 +10,20 @@
         max-width: 1200px
         padding: 0 20px
         margin: auto
-    .intro
-        @extend %flex, %flex-wrap
-        padding-bottom: 6rem
-        .overview
-            width: 70%
-            padding-right: 40px
-        .meta
-            width: 30%
-        .label
-            @extend %uppercase
-            color: #cccccc
-            font-size: 12px
-            margin-bottom: 5px
+    .overview
+        @extend %relative
+        margin-bottom: 60px
+        font-size: 16px
+        padding-left: 30%
+        h5
+            @extend %absolute, %top, %left, %uppercase
             font-weight: $normal-weight
-        .value
-            font-weight: $normal-weight
-            margin-bottom: 20px
+            font-size: 16px
+            color: #c0c0c0
+        +mobile
+            padding-left: 0
+            padding-top: 30px
+        
     .body
         h2, h3
             @extend %relative

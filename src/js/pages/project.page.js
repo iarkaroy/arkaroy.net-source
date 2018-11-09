@@ -178,17 +178,21 @@ class ProjectPage extends Component {
 
                     <div className={styles['content']}>
 
-                        <div className={styles['intro']}>
+                        {data.summary &&
                             <div className={styles['overview']}>
-                                {data.summary && <p>{data.summary}</p>}
+                                <h5>Overview</h5>
+                                <p>{data.summary}</p>
                             </div>
-                            <div className={styles['meta']}>
-                                <h5 className={styles['label']}>Expertise</h5>
-                                <h4 className={styles['value']}>{data.categories.join(', ')}</h4>
-                                <h5 className={styles['label']}>Year</h5>
-                                <h4 className={styles['value']}>{(new Date(data.date)).getFullYear()}</h4>
-                            </div>
+                        }
+
+                        {/*
+                        <div className={styles['meta']}>
+                            <h5 className={styles['label']}>Expertise</h5>
+                            <h4 className={styles['value']}>{data.categories.join(', ')}</h4>
+                            <h5 className={styles['label']}>Year</h5>
+                            <h4 className={styles['value']}>{(new Date(data.date)).getFullYear()}</h4>
                         </div>
+                        */}
 
                         <div className={styles['body']} ref={o => this.contentBody = o}></div>
 
