@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Helmet } from 'react-helmet';
 import styles from '../../sass/index.sass';
 import Skill from '../components/Skill';
 import { unlisten, listen } from '../libs/broadcast';
@@ -63,6 +64,11 @@ class AboutPage extends Component {
         const { width, height, scroll, contentHeight } = this.state;
         return (
             <main className={styles['main']}>
+
+                <Helmet>
+                    <title>About &#8211; Arka Roy &#8211; Web Developer</title>
+                </Helmet>
+
                 <div className={styles['about-container']} ref={o => this.content = o} style={{ transform: `translate3d(0, ${-scroll}px, 0)` }}>
 
                     <div className={styles['about-page']}>
@@ -70,7 +76,7 @@ class AboutPage extends Component {
                         <div className={styles['about']}>
                             <h4>Hi, there!</h4>
                             <h2>I'm a full stack web developer having 8+ years of experience on building highly sophisticated web applications.</h2>
-                            <p>Hello! I'm Arka Roy. I am a passionate web developer proficient in building scalable, easy-to-navigate web applications and pixel-perfect front-end interfaces. My expertise ranges over a vast space from HTML, CSS to modern JavaScript single page applications with server programming with PHP, MySQL etc.</p>
+                            <p>Hello! I'm Arka Roy. I am a passionate self-taught web developer proficient in building scalable, easy-to-navigate web applications and pixel-perfect front-end interfaces. My expertise ranges over a vast space from HTML, CSS to modern JavaScript single page applications with server programming with PHP, MySQL etc.</p>
                             <p>I love to explore new technologies and concepts in web presence. I am always keen to hear about new interseting projects, so feel free to reach me for your next project.</p>
                         </div>
 
