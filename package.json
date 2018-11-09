@@ -81,6 +81,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-ga": "^2.5.3",
     "react-google-structured-data": "^3.0.0",
     "react-helmet": "^5.2.0",
     "remark": "^9.0.0",

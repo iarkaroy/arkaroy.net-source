@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { matchRoutes } from './matchRoutes';
+import ReactGA from 'react-ga';
 
 class Outlet extends Component {
 
@@ -16,11 +17,18 @@ class Outlet extends Component {
         router: PropTypes.object.isRequired
     }
 
+    componentDidMount() {
+        ReactGA.initialize('UA-61692534-1');
+        ReactGA.pageview(window.location.pathname + window.location.search);
+    }
+
     componentWillMount() {
         const { router } = this.context;
         const { history } = router;
         this.history = history;
         this.unlisten = this.history.listen((location, action) => {
+            ReactGA.set({ page: location.pathname });
+            ReactGA.pageview(location.pathname);
             if (this.child && this.child.componentWillLeave) {
                 const match = matchRoutes(location.pathname, this.props.routes);
                 this.child.componentWillLeave(() => {
