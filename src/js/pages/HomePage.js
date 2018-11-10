@@ -4,7 +4,7 @@ import * as store from '../store';
 import { listen, unlisten, broadcast } from '../libs/broadcast';
 import { Link } from '../router';
 import { swipeDetector } from '../libs/swipeDetector';
-import { Helmet } from 'react-helmet';
+import Head from '../components/shared/Head';
 
 class HomePage extends Component {
 
@@ -154,9 +154,7 @@ class HomePage extends Component {
         return (
             <main className={styles['main']}>
 
-                <Helmet>
-                    <title>Arka Roy &#8211; Web Developer</title>
-                </Helmet>
+                <Head/>
 
                 <div className={styles['project-indicator']} style={{ opacity: navVisible ? 1 : 0 }}>
                     <div className={styles['index']}>{projectIndexes}</div>

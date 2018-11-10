@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Helmet } from 'react-helmet';
 import styles from '../../sass/index.sass';
 import Skill from '../components/Skill';
 import { unlisten, listen } from '../libs/broadcast';
 import * as scroller from '../libs/scroller';
 import { getDimension } from '../libs/getDimension';
+import Head from '../components/shared/Head';
 
 class AboutPage extends Component {
 
@@ -65,9 +65,7 @@ class AboutPage extends Component {
         return (
             <main className={styles['main']}>
 
-                <Helmet>
-                    <title>About &#8211; Arka Roy &#8211; Web Developer</title>
-                </Helmet>
+                <Head title="About" />
 
                 <div className={styles['about-container']} ref={o => this.content = o} style={{ transform: `translate3d(0, ${-scroll}px, 0)` }}>
 

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import * as store from '../store';
-import { Helmet } from 'react-helmet';
 import styles from '../../sass/index.sass';
 import { broadcast, listen, unlisten } from '../libs/broadcast';
 import { getDimension } from '../libs/getDimension';
 import * as scroller from '../libs/scroller';
+import Head from '../components/shared/Head';
 
 class ProjectPage extends Component {
 
@@ -130,10 +130,7 @@ class ProjectPage extends Component {
         return (
             <main className={styles['main']}>
 
-                <Helmet>
-                    <title>{data.title} &#8211; Arka Roy &#8211; Web Developer</title>
-                </Helmet>
-
+                <Head title={data.title} />
 
                 <div className={[styles['slider-overlay'], styles['curr']].join(' ')} style={{ transform: `translate3d(0, ${-scroll}px, 0)` }}>
 
