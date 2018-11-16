@@ -21,8 +21,10 @@ class HomePage extends Component {
     componentDidMount() {
         listen('wheel', this.handleWheel);
         listen('keydown', this.handleKeyDown);
+        listen('swipe', this.onSwipe);
         if ('ontouchmove' in document) {
             swipeDetector.bind();
+            /*
             swipeDetector.onSwipe(direction => {
                 switch (direction) {
                     case 'up':
@@ -33,6 +35,7 @@ class HomePage extends Component {
                         break;
                 }
             })
+            */
         }
         listen('projectchange', this.onProjectChange);
         document.fonts.load(`900 8rem 'Inter UI'`, 'BESbswy')
@@ -52,6 +55,7 @@ class HomePage extends Component {
     componentWillUnmount() {
         unlisten('wheel', this.handleWheel);
         unlisten('keydown', this.handleKeyDown);
+        unlisten('swipe', this.onSwipe);
         if ('ontouchmove' in document) {
             swipeDetector.unbind();
         }
@@ -68,6 +72,17 @@ class HomePage extends Component {
             callback();
         }
     }
+
+    onSwipe = direction => {
+        switch (direction) {
+            case 'up':
+                this.gotoPrev();
+                break;
+            case 'dn':
+                this.gotoNext();
+                break;
+        }
+    };
 
     onProjectChange = index => {
         this.setState({ selected: index });
@@ -154,7 +169,7 @@ class HomePage extends Component {
         return (
             <main className={styles['main']}>
 
-                <Head/>
+                <Head />
 
                 <div className={styles['project-indicator']} style={{ opacity: navVisible ? 1 : 0 }}>
                     <div className={styles['index']}>{projectIndexes}</div>

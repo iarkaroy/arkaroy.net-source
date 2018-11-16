@@ -1,3 +1,5 @@
+import { broadcast } from "./broadcast";
+
 export const swipeDetector = {
     callbacks: [],
     touches: {
@@ -30,7 +32,8 @@ export const swipeDetector = {
                             }
                             swipeDetector.touches.touchstart = { x: -1, y: -1 };
                             swipeDetector.touches.touchmove = { x: -1, y: -1 };
-                            swipeDetector.callbacks.forEach(callback => callback(swipeDetector.touches.direction));
+                            broadcast('swipe', swipeDetector.touches.direction);
+                            // swipeDetector.callbacks.forEach(callback => callback(swipeDetector.touches.direction));
                         }
                     default:
                         break;
