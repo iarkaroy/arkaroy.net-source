@@ -1,0 +1,8 @@
+/*
+    Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+    Content-Security-Policy: default-src 'self' arkaroy.net www.arkaroy.net www.google-analytics.com stats.g.doubleclick.net
+    X-Frame-Options: SAMEORIGIN
+    X-XSS-Protection: 1; mode=block
+    X-Content-Type-Options: nosniff
+    Referrer-Policy: strict-origin
+    Feature-Policy: autoplay 'none'; camera 'none'; document-domain 'none'; encrypted-media 'none'; fullscreen 'none'; geolocation 'none'; microphone 'none'; midi 'none'; payment 'none'; vr 'none'
